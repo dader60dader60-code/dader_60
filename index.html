@@ -16,7 +16,6 @@
         
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
-        /* 天氣細節網格 */
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
@@ -43,9 +42,7 @@
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-
     <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
-
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
@@ -77,16 +74,16 @@
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
         
         <div class="weather-grid">
-            <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">10%</span></div>
+            <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">--%</span></div>
             <div class="weather-item">💧 今日雨量: <span id="dayRain">0.0mm</span></div>
             <div class="weather-item">🌬️ 風向: <span id="windDir">北風</span></div>
-            <div class="weather-item">🌪️ 風速: <span id="windSpeed">2 m/s</span></div>
+            <div class="weather-item">🌪️ 風速: <span id="windSpeed">2.5 m/s</span></div>
             <div class="weather-item sun-info">
                 🌅 日出 <span id="sunriseTime">06:35</span> | 🌇 日落 <span id="sunsetTime">18:02</span><br>
-                <small id="sunCountdown">載入倒數中...</small>
+                <small id="sunCountdown">倒數計算中...</small>
             </div>
         </div>
-        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--</span> | 來源：中央氣象署</div>
+        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--:--</span> | 來源：中央氣象署</div>
     </div>
 
     <div class="card earthquake-box">
@@ -102,12 +99,18 @@
         <div style="font-size: 14px; margin-bottom: 5px;">🔮 今日星座運勢</div>
         <select id="constellationSelect" class="fortune-select" onchange="updateFortune()">
             <option value="">請選擇你的星座</option>
-            <option value="白羊座">白羊座</option><option value="金牛座">金牛座</option>
-            <option value="雙子座">雙子座</option><option value="巨蟹座">巨蟹座</option>
-            <option value="獅子座">獅子座</option><option value="處女座">處女座</option>
-            <option value="天秤座">天秤座</option><option value="天蠍座">天蠍座</option>
-            <option value="射手座">射手座</option><option value="摩羯座">摩羯座</option>
-            <option value="水瓶座">水瓶座</option><option value="雙魚座">雙魚座</option>
+            <option value="白羊座">白羊座 (3/21-4/19)</option>
+            <option value="金牛座">金牛座 (4/20-5/20)</option>
+            <option value="雙子座">雙子座 (5/21-6/21)</option>
+            <option value="巨蟹座">巨蟹座 (6/22-7/22)</option>
+            <option value="獅子座">獅子座 (7/23-8/22)</option>
+            <option value="處女座">處女座 (8/23-9/22)</option>
+            <option value="天秤座">天秤座 (9/23-10/23)</option>
+            <option value="天蠍座">天蠍座 (10/24-11/22)</option>
+            <option value="射手座">射手座 (11/23-12/21)</option>
+            <option value="摩羯座">摩羯座 (12/22-1/19)</option>
+            <option value="水瓶座">水瓶座 (1/20-2/18)</option>
+            <option value="雙魚座">雙魚座 (2/19-3/20)</option>
         </select>
         <div id="fortuneResult" class="fortune-result"></div>
     </div>
@@ -143,16 +146,20 @@
 <script>
     function updateData() {
         const now = new Date();
-        // 開學倒數
+        // 開學/畢業倒數
         const schoolDate = new Date(2026, 1, 23);
         const sDiff = Math.ceil((schoolDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('school-days').innerText = sDiff > 0 ? sDiff + " 天" : "已開學";
-        // 畢業倒數
         const gradDate = new Date(2026, 5, 1);
         const gDiff = Math.ceil((gradDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('grad-days').innerText = gDiff > 0 ? gDiff + " 天" : "畢業快樂";
-        // 時間
-        document.getElementById('updateTime').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+
+        // 更新時間 (包含秒)
+        document.getElementById('updateTime').innerText = 
+            now.getHours().toString().padStart(2, '0') + ":" + 
+            now.getMinutes().toString().padStart(2, '0') + ":" + 
+            now.getSeconds().toString().padStart(2, '0');
+        
         updateSunLogic();
     }
 
@@ -162,8 +169,6 @@
         document.getElementById('weatherDisplay').innerHTML = `${temp}°C ${icons[Math.floor(Math.random()*4)]}`;
         document.getElementById('rainProb').innerText = Math.floor(Math.random() * 30) + "%";
         document.getElementById('dayRain').innerText = (Math.random() * 2).toFixed(1) + "mm";
-        document.getElementById('windDir').innerText = "北風";
-        document.getElementById('windSpeed').innerText = "2.5 m/s";
     }
 
     function updateSunLogic() {
@@ -189,13 +194,13 @@
         const resultDiv = document.getElementById('fortuneResult');
         if (!constellation) { resultDiv.style.display = 'none'; return; }
         const fortunes = ["⭐ 運勢大吉！", "⭐⭐ 穩定發揮。", "⭐⭐⭐ 財運不錯。", "⭐⭐ 今日建議低調。"];
-        resultDiv.innerHTML = `<strong>${constellation}</strong>：${fortunes[Math.floor(Math.random() * fortunes.length)]}`;
+        resultDiv.innerHTML = `<strong>${constellation.split(' ')[0]}</strong>：${fortunes[Math.floor(Math.random() * fortunes.length)]}`;
         resultDiv.style.display = 'block';
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID"); }); }
 
-    setInterval(updateData, 1000);
+    setInterval(updateData, 1000); // 每一秒刷新一次數據
     updateData();
     updateWeather();
 </script>
