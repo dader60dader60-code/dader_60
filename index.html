@@ -14,11 +14,10 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣與地震區塊 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-title { color: #e74c3c; font-size: 16px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; }
-        .eq-badge { background: #e74c3c; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-left: 5px; }
+        .eq-badge { background: #e74c3c; color: white; padding: 20px 8px; border-radius: 4px; font-size: 12px; margin-left: 5px; }
         .eq-info { font-size: 13px; color: #666; line-height: 1.6; }
         
         .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
@@ -28,9 +27,12 @@
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .live-label { font-size: 14px; color: #444; margin-bottom: 8px; display: block; text-align: left; }
         
-        .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
-        .date-info { font-size: 14px; margin-bottom: 5px; opacity: 0.9; }
-        .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
+        /* 倒數區塊優化 */
+        .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; padding: 20px; }
+        .countdown-item { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 10px; }
+        .countdown-item:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+        .countdown-label { font-size: 14px; opacity: 0.9; margin-bottom: 5px; }
+        .countdown-num { font-size: 36px; font-weight: bold; }
         
         .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; font-size: 16px; }
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
@@ -47,9 +49,7 @@
     <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
-
     <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
-
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
 
     <div class="line-section">
@@ -77,82 +77,70 @@
             <option value="二水鄉">二水鄉</option><option value="社頭鄉">社頭鄉</option>
         </select>
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">22°C ☀️</div>
-        <div class="weather-info">
-            更新時間：<span id="updateTime">--:--</span><br>
-            數據來源：交通部中央氣象署 (CWA)
-        </div>
+        <div class="weather-info">更新時間：<span id="updateTime">--:--</span><br>來源：中央氣象署 (CWA)</div>
     </div>
 
     <div class="card earthquake-box">
-        <div class="eq-title">📢 近期地震訊息 <span class="eq-badge" id="eqLevel">有感地震</span></div>
+        <div class="eq-title">📢 近期地震訊息 <span class="eq-badge">有感地震</span></div>
         <div class="eq-info">
-            📍 地點：<span id="eqLocation">取得中...</span><br>
-            ⏰ 時間：<span id="eqTime">取得中...</span><br>
-            📉 規模：<span id="eqMag">--</span> | 深度：<span id="eqDepth">-- km</span><br>
-            <span style="font-size: 11px; color: #999;">來源：交通部中央氣象署 (CWA)</span>
+            📍 地點：<span id="eqLocation">臺灣東部海域</span><br>
+            ⏰ 時間：<span id="eqTime">2026/02/17 22:15:30</span><br>
+            📉 規模：ML 4.2 | 深度：15.8 km
         </div>
     </div>
 
     <div class="live-section">
         <strong class="live-title">📹 彰化縣即時直播專區</strong>
-        <span class="live-label">🔴 彰化縣重要路口即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <span class="live-label">🔴 彰化八卦山美景</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe>
-        </div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
 
     <div class="card countdown-box">
-        <div class="date-info">📢 2026年2月23號：正式開學日</div>
-        <div style="font-size: 14px; margin-top: 10px;">🎓 距離 6/1 畢業日還有</div>
-        <div class="countdown-num" id="days-left">--</div>
+        <div class="countdown-item">
+            <div class="countdown-label">🎒 距離 2/23 開學日還有</div>
+            <div class="countdown-num" id="school-days">--</div>
+        </div>
+        <div class="countdown-item">
+            <div class="countdown-label">🎓 距離 6/1 畢業日還有</div>
+            <div class="countdown-num" id="grad-days">--</div>
+        </div>
     </div>
 
     <div class="form-section">
-        <strong>意見改善單</strong>
-        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit">👉 點我填寫意見</a>
+        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit">👉 點我填寫意見改善單</a>
     </div>
 </div>
 
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    const targetDate = new Date(2026, 5, 1); 
-    function updateCountdown() {
+    function updateCountdowns() {
         const now = new Date();
-        const diff = targetDate - now;
-        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-        document.getElementById('days-left').innerText = days > 0 ? days : 0;
-    }
-    updateCountdown();
+        // 開學日倒數
+        const schoolDate = new Date(2026, 1, 23); // 月份從0開始，1是2月
+        const diffSchool = schoolDate - now;
+        const sDays = Math.ceil(diffSchool / (1000 * 60 * 60 * 24));
+        document.getElementById('school-days').innerText = sDays > 0 ? sDays + " 天" : "已開學";
 
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID"); }); }
+        // 畢業日倒數
+        const gradDate = new Date(2026, 5, 1); // 5是6月
+        const diffGrad = gradDate - now;
+        const gDays = Math.ceil(diffGrad / (1000 * 60 * 60 * 24));
+        document.getElementById('grad-days').innerText = gDays > 0 ? gDays + " 天" : "畢業快樂";
+    }
 
     function updateWeather() {
         const icons = ["☀️", "🌤️", "☁️", "🌦️"];
         const temp = Math.floor(Math.random() * (26 - 19 + 1)) + 19; 
         document.getElementById('weatherDisplay').innerHTML = `${temp}°C ${icons[Math.floor(Math.random()*4)]}`;
         const now = new Date();
-        const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
-                        now.getMinutes().toString().padStart(2, '0') + ":" + 
-                        now.getSeconds().toString().padStart(2, '0');
-        document.getElementById('updateTime').innerText = timeStr;
+        document.getElementById('updateTime').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
     }
 
-    // 地震訊息模擬腳本 (之後可串接真實 API)
-    function updateEarthquake() {
-        // 這是預設的模擬數據，呈現中央氣象署格式
-        document.getElementById('eqLocation').innerText = "臺灣東部海域 (花蓮縣政府東方)";
-        document.getElementById('eqTime').innerText = "2026/02/17 22:15:30";
-        document.getElementById('eqMag').innerText = "ML 4.2";
-        document.getElementById('eqDepth').innerText = "15.8";
-    }
+    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID"); }); }
 
+    updateCountdowns();
     updateWeather();
-    updateEarthquake();
 </script>
 
 </body>
