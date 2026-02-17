@@ -14,24 +14,21 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
+        /* 天氣、地震、星座區塊 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-title { color: #e74c3c; font-size: 16px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; }
-        .eq-badge { background: #e74c3c; color: white; padding: 20px 8px; border-radius: 4px; font-size: 12px; margin-left: 5px; }
-        .eq-info { font-size: 13px; color: #666; line-height: 1.6; }
+        .fortune-box { background: #6c5ce7; color: white; padding: 20px; }
         
-        .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
-        .weather-info { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 10px; font-weight: normal; }
+        .weather-select, .fortune-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
+        .fortune-select { background: white; color: #6c5ce7; }
+        .fortune-result { margin-top: 15px; font-size: 15px; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; display: none; }
         
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
-        .live-label { font-size: 14px; color: #444; margin-bottom: 8px; display: block; text-align: left; }
         
-        /* 倒數區塊優化 */
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; padding: 20px; }
         .countdown-item { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 10px; }
-        .countdown-item:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
-        .countdown-label { font-size: 14px; opacity: 0.9; margin-bottom: 5px; }
+        .countdown-item:last-child { border-bottom: none; }
         .countdown-num { font-size: 36px; font-weight: bold; }
         
         .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; font-size: 16px; }
@@ -45,12 +42,7 @@
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-
     <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
-
-    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
-    <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
-    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
@@ -76,32 +68,51 @@
             <option value="溪州鄉">溪州鄉</option><option value="田尾鄉">田尾鄉</option>
             <option value="二水鄉">二水鄉</option><option value="社頭鄉">社頭鄉</option>
         </select>
-        <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">22°C ☀️</div>
-        <div class="weather-info">更新時間：<span id="updateTime">--:--</span><br>來源：中央氣象署 (CWA)</div>
+        <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
+        <div style="font-size: 11px; opacity: 0.8;">來源：中央氣象署 (CWA)</div>
     </div>
 
     <div class="card earthquake-box">
-        <div class="eq-title">📢 近期地震訊息 <span class="eq-badge">有感地震</span></div>
-        <div class="eq-info">
-            📍 地點：<span id="eqLocation">臺灣東部海域</span><br>
-            ⏰ 時間：<span id="eqTime">2026/02/17 22:15:30</span><br>
+        <div style="color: #e74c3c; font-size: 16px; margin-bottom: 8px;">📢 近期地震訊息</div>
+        <div style="font-size: 13px; color: #666; line-height: 1.6;">
+            📍 地點：臺灣東部海域<br>
+            ⏰ 時間：2026/02/17 22:15:30<br>
             📉 規模：ML 4.2 | 深度：15.8 km
         </div>
     </div>
 
+    <div class="card fortune-box">
+        <div style="font-size: 14px; margin-bottom: 5px;">🔮 今日星座運勢</div>
+        <select id="constellationSelect" class="fortune-select" onchange="updateFortune()">
+            <option value="">請選擇你的星座</option>
+            <option value="白羊座">白羊座 (03/21-04/19)</option>
+            <option value="金牛座">金牛座 (04/20-05/20)</option>
+            <option value="雙子座">雙子座 (05/21-06/21)</option>
+            <option value="巨蟹座">巨蟹座 (06/22-07/22)</option>
+            <option value="獅子座">獅子座 (07/23-08/22)</option>
+            <option value="處女座">處女座 (08/23-09/22)</option>
+            <option value="天秤座">天秤座 (09/23-10/23)</option>
+            <option value="天蠍座">天蠍座 (10/24-11/22)</option>
+            <option value="射手座">射手座 (11/23-12/21)</option>
+            <option value="摩羯座">摩羯座 (12/22-01/19)</option>
+            <option value="水瓶座">水瓶座 (01/20-02/18)</option>
+            <option value="雙魚座">雙魚座 (02/19-03/20)</option>
+        </select>
+        <div id="fortuneResult" class="fortune-result"></div>
+    </div>
+
     <div class="live-section">
-        <strong class="live-title">📹 彰化縣即時直播專區</strong>
+        <strong>📹 彰化縣即時直播</strong>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
 
     <div class="card countdown-box">
         <div class="countdown-item">
-            <div class="countdown-label">🎒 距離 2/23 開學日還有</div>
+            <div style="font-size: 14px;">🎒 距離 2/23 開學還有</div>
             <div class="countdown-num" id="school-days">--</div>
         </div>
         <div class="countdown-item">
-            <div class="countdown-label">🎓 距離 6/1 畢業日還有</div>
+            <div style="font-size: 14px;">🎓 距離 6/1 畢業還有</div>
             <div class="countdown-num" id="grad-days">--</div>
         </div>
     </div>
@@ -116,25 +127,39 @@
 <script>
     function updateCountdowns() {
         const now = new Date();
-        // 開學日倒數
-        const schoolDate = new Date(2026, 1, 23); // 月份從0開始，1是2月
-        const diffSchool = schoolDate - now;
-        const sDays = Math.ceil(diffSchool / (1000 * 60 * 60 * 24));
+        const schoolDate = new Date(2026, 1, 23);
+        const diffS = schoolDate - now;
+        const sDays = Math.ceil(diffS / (1000 * 60 * 60 * 24));
         document.getElementById('school-days').innerText = sDays > 0 ? sDays + " 天" : "已開學";
 
-        // 畢業日倒數
-        const gradDate = new Date(2026, 5, 1); // 5是6月
-        const diffGrad = gradDate - now;
-        const gDays = Math.ceil(diffGrad / (1000 * 60 * 60 * 24));
+        const gradDate = new Date(2026, 5, 1);
+        const diffG = gradDate - now;
+        const gDays = Math.ceil(diffG / (1000 * 60 * 60 * 24));
         document.getElementById('grad-days').innerText = gDays > 0 ? gDays + " 天" : "畢業快樂";
     }
 
     function updateWeather() {
         const icons = ["☀️", "🌤️", "☁️", "🌦️"];
-        const temp = Math.floor(Math.random() * (26 - 19 + 1)) + 19; 
+        const temp = Math.floor(Math.random() * 7) + 19; 
         document.getElementById('weatherDisplay').innerHTML = `${temp}°C ${icons[Math.floor(Math.random()*4)]}`;
-        const now = new Date();
-        document.getElementById('updateTime').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+    }
+
+    function updateFortune() {
+        const constellation = document.getElementById('constellationSelect').value;
+        const resultDiv = document.getElementById('fortuneResult');
+        if (!constellation) { resultDiv.style.display = 'none'; return; }
+        
+        const fortunes = [
+            "⭐ 運勢大吉！適合嘗試新事物。", "⭐⭐ 穩定發揮，注意與人溝通。", 
+            "⭐⭐⭐ 財運不錯，可能有意外驚喜。", "⭐⭐ 稍微疲累，建議多休息。"
+        ];
+        const advice = ["幸運色：藍色", "幸運數字：7", "今日指南：保持微笑", "今日指南：避開衝突"];
+        
+        const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+        const randomAdvice = advice[Math.floor(Math.random() * advice.length)];
+        
+        resultDiv.innerHTML = `<strong>${constellation}</strong>：${randomFortune}<br><small>${randomAdvice}</small>`;
+        resultDiv.style.display = 'block';
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID"); }); }
