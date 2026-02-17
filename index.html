@@ -16,6 +16,7 @@
         
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
+        /* 天氣細節網格 */
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
@@ -42,7 +43,9 @@
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
+
     <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
+
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
@@ -71,7 +74,6 @@
             <option value="溪州鄉">溪州鄉</option><option value="田尾鄉">田尾鄉</option>
             <option value="二水鄉">二水鄉</option><option value="社頭鄉">社頭鄉</option>
         </select>
-        
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
         
         <div class="weather-grid">
@@ -81,15 +83,19 @@
             <div class="weather-item">🌪️ 風速: <span id="windSpeed">2 m/s</span></div>
             <div class="weather-item sun-info">
                 🌅 日出 <span id="sunriseTime">06:35</span> | 🌇 日落 <span id="sunsetTime">18:02</span><br>
-                <small id="sunCountdown">倒數計算中...</small>
+                <small id="sunCountdown">載入倒數中...</small>
             </div>
         </div>
-        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新：<span id="updateTime">--:--</span> | 來源：中央氣象署</div>
+        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--</span> | 來源：中央氣象署</div>
     </div>
 
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 16px; margin-bottom: 8px;">📢 近期地震訊息</div>
-        <div style="font-size: 13px; color: #666; line-height: 1.6;">📍 臺灣東部海域 ML 4.2</div>
+        <div style="font-size: 13px; color: #666; line-height: 1.6;">
+            📍 地點：臺灣東部海域<br>
+            ⏰ 時間：2026/02/17 22:15:30<br>
+            📉 規模：ML 4.2 | 深度：15.8 km
+        </div>
     </div>
 
     <div class="card fortune-box">
@@ -107,8 +113,15 @@
     </div>
 
     <div class="live-section">
-        <strong>📹 彰化縣即時直播專區</strong>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
+        <strong style="display: block; margin-bottom: 10px;">📹 彰化縣即時直播專區</strong>
+        <span class="live-label">🔴 彰化縣重要路口即時影像</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <span class="live-label">🔴 彰化八卦山美景</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe>
+        </div>
     </div>
 
     <div class="card countdown-box">
@@ -120,7 +133,8 @@
     </div>
 
     <div class="form-section">
-        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit">👉 點我填寫意見改善單</a>
+        <strong>意見改善單</strong>
+        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit">👉 點我填寫意見</a>
     </div>
 </div>
 
@@ -129,12 +143,15 @@
 <script>
     function updateData() {
         const now = new Date();
+        // 開學倒數
         const schoolDate = new Date(2026, 1, 23);
         const sDiff = Math.ceil((schoolDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('school-days').innerText = sDiff > 0 ? sDiff + " 天" : "已開學";
+        // 畢業倒數
         const gradDate = new Date(2026, 5, 1);
         const gDiff = Math.ceil((gradDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('grad-days').innerText = gDiff > 0 ? gDiff + " 天" : "畢業快樂";
+        // 時間
         document.getElementById('updateTime').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
         updateSunLogic();
     }
@@ -145,6 +162,8 @@
         document.getElementById('weatherDisplay').innerHTML = `${temp}°C ${icons[Math.floor(Math.random()*4)]}`;
         document.getElementById('rainProb').innerText = Math.floor(Math.random() * 30) + "%";
         document.getElementById('dayRain').innerText = (Math.random() * 2).toFixed(1) + "mm";
+        document.getElementById('windDir').innerText = "北風";
+        document.getElementById('windSpeed').innerText = "2.5 m/s";
     }
 
     function updateSunLogic() {
@@ -169,12 +188,12 @@
         const constellation = document.getElementById('constellationSelect').value;
         const resultDiv = document.getElementById('fortuneResult');
         if (!constellation) { resultDiv.style.display = 'none'; return; }
-        const fortunes = ["⭐ 運勢大吉！", "⭐⭐ 穩定發揮。", "⭐⭐⭐ 財運不錯。", "⭐⭐ 低調行事。"];
+        const fortunes = ["⭐ 運勢大吉！", "⭐⭐ 穩定發揮。", "⭐⭐⭐ 財運不錯。", "⭐⭐ 今日建議低調。"];
         resultDiv.innerHTML = `<strong>${constellation}</strong>：${fortunes[Math.floor(Math.random() * fortunes.length)]}`;
         resultDiv.style.display = 'block';
     }
 
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已複製 ID"); }); }
+    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID"); }); }
 
     setInterval(updateData, 1000);
     updateData();
