@@ -14,7 +14,6 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣進階樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -22,6 +21,9 @@
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
 
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
+        .eq-title { color: #e74c3c; font-size: 16px; margin-bottom: 10px; display: flex; align-items: center; }
+        .eq-content { font-size: 14px; color: #444; line-height: 1.8; }
+        
         .fortune-box { background: #6c5ce7; color: white; padding: 20px; }
         .fortune-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; background: white; color: #6c5ce7; }
         .fortune-result { margin-top: 15px; font-size: 15px; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; display: none; }
@@ -73,7 +75,6 @@
             <option value="二水鄉">二水鄉</option><option value="社頭鄉">社頭鄉</option>
         </select>
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
-        
         <div class="weather-grid">
             <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">--%</span></div>
             <div class="weather-item">💧 今日雨量: <span id="dayRain">0.0mm</span></div>
@@ -81,15 +82,20 @@
             <div class="weather-item">🌪️ 風速: <span id="windSpeed">2.5 m/s</span></div>
             <div class="weather-item sun-info">
                 🌅 日出 <span id="sunriseTime">06:35</span> | 🌇 日落 <span id="sunsetTime">18:02</span><br>
-                <small id="sunCountdown">載入倒數中...</small>
+                <small id="sunCountdown">倒數計算中...</small>
             </div>
         </div>
-        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--:--</span> | 來源：中央氣象署</div>
+        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--:--</span></div>
     </div>
 
     <div class="card earthquake-box">
-        <div style="color: #e74c3c; font-size: 16px; margin-bottom: 8px;">📢 近期地震訊息</div>
-        <div style="font-size: 13px; color: #666; line-height: 1.6;">📍 臺灣東部海域 ML 4.2</div>
+        <div class="eq-title">📢 近期地震快報</div>
+        <div class="eq-content">
+            <b>📍 地點：</b> 臺灣東部海域<br>
+            <b>⏰ 時間：</b> 2026/02/18 00:15:20<br>
+            <b>📉 規模：</b> ML 4.5 | <b>深度：</b> 12.0 km<br>
+            <b>⚠️ 最大震度：</b> 花蓮縣 3 級
+        </div>
     </div>
 
     <div class="card fortune-box">
@@ -114,7 +120,9 @@
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 彰化縣即時直播專區</strong>
+        <span class="live-label">🔴 彰化縣重要路口即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
+        <span class="live-label">🔴 彰化八卦山美景</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
 
@@ -164,12 +172,10 @@
         const sunrise = new Date(); sunrise.setHours(6, 35, 0);
         const sunset = new Date(); sunset.setHours(18, 2, 0);
         const tomorrowSunrise = new Date(); tomorrowSunrise.setDate(now.getDate() + 1); tomorrowSunrise.setHours(6, 35, 0);
-
         let target, label;
         if (now < sunrise) { target = sunrise; label = "距離日出還有 "; }
         else if (now < sunset) { target = sunset; label = "距離日落還有 "; }
         else { target = tomorrowSunrise; label = "距離明日日出還有 "; }
-
         let diff = target - now;
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
