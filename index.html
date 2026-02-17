@@ -14,6 +14,7 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
+        /* 天氣進階樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -60,8 +61,8 @@
             <option value="彰化市">彰化市</option><option value="員林市">員林市</option>
             <option value="和美鎮">和美鎮</option><option value="鹿港鎮">鹿港鎮</option>
             <option value="溪湖鎮">溪湖鎮</option><option value="二林鎮">二林鎮</option>
-            <option value="田中鎮" selected>田中鎮</option><option value="芳苑王功">芳苑王功</option>
-            <option value="大城西港">大城西港</option><option value="北斗鎮">北斗鎮</option>
+            <option value="田中鎮" selected>田中鎮</option><option value="北斗鎮">北斗鎮</option>
+            <option value="芳苑鄉">芳苑鄉</option><option value="大城鄉">大城鄉</option>
             <option value="花壇鄉">花壇鄉</option><option value="芬園鄉">芬園鄉</option>
             <option value="大村鄉">大村鄉</option><option value="永靖鄉">永靖鄉</option>
             <option value="伸港鄉">伸港鄉</option><option value="線西鄉">線西鄉</option>
@@ -88,11 +89,7 @@
 
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 16px; margin-bottom: 8px;">📢 近期地震訊息</div>
-        <div style="font-size: 13px; color: #666; line-height: 1.6;">
-            📍 地點：臺灣東部海域<br>
-            ⏰ 時間：2026/02/17 22:15:30<br>
-            📉 規模：ML 4.2 | 深度：15.8 km
-        </div>
+        <div style="font-size: 13px; color: #666; line-height: 1.6;">📍 臺灣東部海域 ML 4.2</div>
     </div>
 
     <div class="card fortune-box">
@@ -117,14 +114,8 @@
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 彰化縣即時直播專區</strong>
-        <span class="live-label">🔴 彰化縣重要路口即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <span class="live-label">🔴 彰化八卦山美景</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe>
-        </div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
 
     <div class="card countdown-box">
@@ -136,8 +127,7 @@
     </div>
 
     <div class="form-section">
-        <strong>意見改善單</strong>
-        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit">👉 點我填寫意見</a>
+        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit">👉 點我填寫意見改善單</a>
     </div>
 </div>
 
