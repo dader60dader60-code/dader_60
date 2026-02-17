@@ -15,20 +15,16 @@
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
-        .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
+        .weather-select, .fortune-select, .eq-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
 
-        /* 地震清單專用樣式 */
+        /* 地震區塊樣式 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-item { border-bottom: 1px dotted #ccc; padding: 10px 0; font-size: 13px; color: #444; }
-        .eq-item:last-child { border-bottom: none; }
-        .eq-tag { background: #e74c3c; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-right: 5px; font-weight: bold; }
-        .eq-time { color: #888; font-size: 11px; display: block; margin-top: 3px; }
+        .eq-detail { margin-top: 12px; padding: 10px; background: #fff5f5; border-radius: 10px; font-size: 14px; color: #333; line-height: 1.6; display: none; border: 1px solid #ffcccc; }
         
         .fortune-box { background: #6c5ce7; color: white; padding: 20px; }
-        .fortune-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; background: white; color: #6c5ce7; }
         .fortune-result { margin-top: 15px; font-size: 15px; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; display: none; }
         
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
@@ -92,21 +88,10 @@
     </div>
 
     <div class="card earthquake-box">
-        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 5px;">📢 近 7 天有感地震快報 (CWA)</div>
-        <div id="earthquakeList">
-            <div class="eq-item">
-                <span class="eq-tag">M 4.5</span><strong>臺灣東部海域</strong>
-                <span class="eq-time">2026/02/18 00:15 | 深度: 12km | 震度: 3級</span>
+        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 8px;">📢 近 7 天有感地震紀錄 (CWA)</div>
+        <div id="eqContainer">
             </div>
-            <div class="eq-item">
-                <span class="eq-tag" style="background:#f39c12">M 3.8</span><strong>花蓮縣近海</strong>
-                <span class="eq-time">2026/02/16 14:22 | 深度: 5.5km | 震度: 2級</span>
-            </div>
-            <div class="eq-item">
-                <span class="eq-tag">M 4.1</span><strong>臺東縣成功鎮</strong>
-                <span class="eq-time">2026/02/14 09:10 | 深度: 18km | 震度: 3級</span>
-            </div>
-        </div>
+        <div id="eqDetailBox" class="eq-detail"></div>
     </div>
 
     <div class="card fortune-box">
@@ -131,9 +116,7 @@
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 彰化縣即時直播專區</strong>
-        <span class="live-label">🔴 彰化路口即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
-        <span class="live-label">🔴 彰化八卦山美景</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
 
@@ -153,6 +136,46 @@
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
+    // 模擬 7 天內地震數據 (如需清空測試, 將陣列設為空 [])
+    const eqData = [
+        { date: "2/18", time: "00:15", loc: "臺灣東部海域", mag: "4.5", dep: "12.0km", max: "3級" },
+        { date: "2/16", time: "14:22", loc: "花蓮縣近海", mag: "3.8", dep: "5.5km", max: "2級" },
+        { date: "2/14", time: "09:10", loc: "臺東縣成功鎮", mag: "4.1", dep: "18.0km", max: "3級" }
+    ];
+
+    function initEarthquake() {
+        const container = document.getElementById('eqContainer');
+        const detailBox = document.getElementById('eqDetailBox');
+
+        if (eqData.length > 0) {
+            let selectHTML = `<select class="eq-select" onchange="showEQDetail(this.value)">`;
+            selectHTML += `<option value="">-- 點我選擇地震次數 (共 ${eqData.length} 起) --</option>`;
+            eqData.forEach((eq, index) => {
+                selectHTML += `<option value="${index}">${eq.date} ${eq.time} - ${eq.loc} (M${eq.mag})</option>`;
+            });
+            selectHTML += `</select>`;
+            container.innerHTML = selectHTML;
+        } else {
+            container.innerHTML = `<div style="font-size:14px; color:#666; padding:5px;">✅ 近 7 天無有感地震紀錄。</div>`;
+        }
+    }
+
+    function showEQDetail(index) {
+        const detailBox = document.getElementById('eqDetailBox');
+        if (index === "") {
+            detailBox.style.display = "none";
+            return;
+        }
+        const eq = eqData[index];
+        detailBox.innerHTML = `
+            <b>📅 時間：</b>${eq.date} ${eq.time}<br>
+            <b>📍 地點：</b>${eq.loc}<br>
+            <b>📉 規模：</b>M ${eq.mag} | <b>深度：</b>${eq.dep}<br>
+            <b>⚠️ 最大震度：</b><span style="color:red">${eq.max}</span>
+        `;
+        detailBox.style.display = "block";
+    }
+
     function updateData() {
         const now = new Date();
         const schoolDate = new Date(2026, 1, 23);
@@ -208,6 +231,7 @@
     setInterval(updateData, 1000);
     updateData();
     updateWeather();
+    initEarthquake();
 </script>
 
 </body>
