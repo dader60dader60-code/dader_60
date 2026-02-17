@@ -14,15 +14,19 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
+        /* 天氣樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select, .fortune-select, .eq-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
 
-        /* 地震區塊樣式 */
+        /* 地震區塊樣式：固定顯示 + 選單 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-detail { margin-top: 12px; padding: 10px; background: #fff5f5; border-radius: 10px; font-size: 14px; color: #333; line-height: 1.6; display: none; border: 1px solid #ffcccc; }
+        .eq-latest-badge { background: #e74c3c; color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; margin-bottom: 8px; display: inline-block; }
+        .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; }
+        .eq-info-line { font-size: 14px; color: #333; line-height: 1.6; }
+        .eq-history-label { font-size: 12px; color: #666; margin-top: 10px; margin-bottom: 5px; font-weight: normal; border-top: 1px solid #eee; padding-top: 10px; }
         
         .fortune-box { background: #6c5ce7; color: white; padding: 20px; }
         .fortune-result { margin-top: 15px; font-size: 15px; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; display: none; }
@@ -88,10 +92,12 @@
     </div>
 
     <div class="card earthquake-box">
-        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 8px;">📢 近 7 天有感地震紀錄 (CWA)</div>
-        <div id="eqContainer">
+        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 近 7 天有感地震快報 (CWA)</div>
+        
+        <div id="eqDisplayArea" class="eq-display-card">
             </div>
-        <div id="eqDetailBox" class="eq-detail"></div>
+
+        <div id="eqHistoryArea"></div>
     </div>
 
     <div class="card fortune-box">
@@ -136,7 +142,7 @@
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    // 模擬 7 天內地震數據 (如需清空測試, 將陣列設為空 [])
+    // 模擬地震數據 (最上面是最新)
     const eqData = [
         { date: "2/18", time: "00:15", loc: "臺灣東部海域", mag: "4.5", dep: "12.0km", max: "3級" },
         { date: "2/16", time: "14:22", loc: "花蓮縣近海", mag: "3.8", dep: "5.5km", max: "2級" },
@@ -144,36 +150,44 @@
     ];
 
     function initEarthquake() {
-        const container = document.getElementById('eqContainer');
-        const detailBox = document.getElementById('eqDetailBox');
+        const displayArea = document.getElementById('eqDisplayArea');
+        const historyArea = document.getElementById('eqHistoryArea');
 
-        if (eqData.length > 0) {
-            let selectHTML = `<select class="eq-select" onchange="showEQDetail(this.value)">`;
-            selectHTML += `<option value="">-- 點我選擇地震次數 (共 ${eqData.length} 起) --</option>`;
+        if (eqData.length === 0) {
+            displayArea.innerHTML = `<div style="text-align:center; color:#666;">✅ 近 7 天無有感地震紀錄</div>`;
+            return;
+        }
+
+        // 1. 固定顯示最新的地震
+        renderEQ(0);
+
+        // 2. 如果有多起，顯示下拉選單
+        if (eqData.length > 1) {
+            let html = `<div class="eq-history-label">查看近 7 天其他有感地震：</div>`;
+            html += `<select class="eq-select" onchange="renderEQ(this.value)">`;
             eqData.forEach((eq, index) => {
-                selectHTML += `<option value="${index}">${eq.date} ${eq.time} - ${eq.loc} (M${eq.mag})</option>`;
+                const label = index === 0 ? "最新地震" : `地震紀錄 ${index + 1}`;
+                html += `<option value="${index}">${label}: ${eq.date} ${eq.loc} (M${eq.mag})</option>`;
             });
-            selectHTML += `</select>`;
-            container.innerHTML = selectHTML;
-        } else {
-            container.innerHTML = `<div style="font-size:14px; color:#666; padding:5px;">✅ 近 7 天無有感地震紀錄。</div>`;
+            html += `</select>`;
+            historyArea.innerHTML = html;
         }
     }
 
-    function showEQDetail(index) {
-        const detailBox = document.getElementById('eqDetailBox');
-        if (index === "") {
-            detailBox.style.display = "none";
-            return;
-        }
+    function renderEQ(index) {
         const eq = eqData[index];
-        detailBox.innerHTML = `
-            <b>📅 時間：</b>${eq.date} ${eq.time}<br>
-            <b>📍 地點：</b>${eq.loc}<br>
-            <b>📉 規模：</b>M ${eq.mag} | <b>深度：</b>${eq.dep}<br>
-            <b>⚠️ 最大震度：</b><span style="color:red">${eq.max}</span>
+        const displayArea = document.getElementById('eqDisplayArea');
+        const badge = index == 0 ? `<span class="eq-latest-badge">最新有感地震</span>` : `<span class="eq-latest-badge" style="background:#666">歷史紀錄回顧</span>`;
+        
+        displayArea.innerHTML = `
+            ${badge}
+            <div class="eq-info-line">
+                <b>📅 時間：</b>${eq.date} ${eq.time}<br>
+                <b>📍 地點：</b>${eq.loc}<br>
+                <b>📉 規模：</b>M ${eq.mag} | <b>深度：</b>${eq.dep}<br>
+                <b>⚠️ 最大震度：</b><span style="color:red; font-weight:bold;">${eq.max}</span>
+            </div>
         `;
-        detailBox.style.display = "block";
     }
 
     function updateData() {
