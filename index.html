@@ -14,7 +14,6 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣區塊進階樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -60,8 +59,8 @@
         <select id="townshipSelect" class="weather-select" onchange="updateWeather()">
             <option value="彰化市">彰化市</option><option value="員林市">員林市</option>
             <option value="和美鎮">和美鎮</option><option value="鹿港鎮">鹿港鎮</option>
-            <option value="溪湖鎮">溪湖鎮</option><option value="二林鎮" selected>二林鎮</option>
-            <option value="田中鎮">田中鎮</option><option value="北斗鎮">北斗鎮</option>
+            <option value="溪湖鎮">溪湖鎮</option><option value="二林鎮">二林鎮</option>
+            <option value="田中鎮" selected>田中鎮</option><option value="北斗鎮">北斗鎮</option>
             <option value="花壇鄉">花壇鄉</option><option value="芬園鄉">芬園鄉</option>
             <option value="大村鄉">大村鄉</option><option value="永靖鄉">永靖鄉</option>
             <option value="伸港鄉">伸港鄉</option><option value="線西鄉">線西鄉</option>
@@ -82,19 +81,15 @@
             <div class="weather-item">🌪️ 風速: <span id="windSpeed">2 m/s</span></div>
             <div class="weather-item sun-info">
                 🌅 日出 <span id="sunriseTime">06:35</span> | 🌇 日落 <span id="sunsetTime">18:02</span><br>
-                <small id="sunCountdown">距離日落還有 --:--:--</small>
+                <small id="sunCountdown">倒數計算中...</small>
             </div>
         </div>
-        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--</span> | 來源：中央氣象署</div>
+        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新：<span id="updateTime">--:--</span> | 來源：中央氣象署</div>
     </div>
 
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 16px; margin-bottom: 8px;">📢 近期地震訊息</div>
-        <div style="font-size: 13px; color: #666; line-height: 1.6;">
-            📍 地點：臺灣東部海域<br>
-            ⏰ 時間：2026/02/17 22:15:30<br>
-            📉 規模：ML 4.2 | 深度：15.8 km
-        </div>
+        <div style="font-size: 13px; color: #666; line-height: 1.6;">📍 臺灣東部海域 ML 4.2</div>
     </div>
 
     <div class="card fortune-box">
@@ -112,11 +107,8 @@
     </div>
 
     <div class="live-section">
-        <strong style="display: block; margin-bottom: 10px;">📹 彰化縣即時直播專區</strong>
-        <span class="live-label">🔴 彰化縣重要路口即時影像</span>
+        <strong>📹 彰化縣即時直播專區</strong>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
-        <span class="live-label">🔴 彰化八卦山美景</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
 
     <div class="card countdown-box">
@@ -140,52 +132,49 @@
         const schoolDate = new Date(2026, 1, 23);
         const sDiff = Math.ceil((schoolDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('school-days').innerText = sDiff > 0 ? sDiff + " 天" : "已開學";
-        
         const gradDate = new Date(2026, 5, 1);
         const gDiff = Math.ceil((gradDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('grad-days').innerText = gDiff > 0 ? gDiff + " 天" : "畢業快樂";
-
         document.getElementById('updateTime').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-        updateSunCountdown();
+        updateSunLogic();
     }
 
     function updateWeather() {
         const icons = ["☀️", "🌤️", "☁️", "🌦️"];
-        const windDirs = ["北風", "東北風", "東風", "南風", "西北風"];
         const temp = Math.floor(Math.random() * 7) + 18; 
         document.getElementById('weatherDisplay').innerHTML = `${temp}°C ${icons[Math.floor(Math.random()*4)]}`;
         document.getElementById('rainProb').innerText = Math.floor(Math.random() * 30) + "%";
         document.getElementById('dayRain').innerText = (Math.random() * 2).toFixed(1) + "mm";
-        document.getElementById('windDir').innerText = windDirs[Math.floor(Math.random()*windDirs.length)];
-        document.getElementById('windSpeed').innerText = (Math.random() * 5 + 1).toFixed(1) + " m/s";
     }
 
-    function updateSunCountdown() {
+    function updateSunLogic() {
         const now = new Date();
-        const sunset = new Date();
-        sunset.setHours(18, 2, 0); // 模擬今日日落時間
-        
-        let diff = sunset - now;
-        if (diff < 0) {
-            document.getElementById('sunCountdown').innerText = "日落已結束，期待明日日出";
-        } else {
-            const h = Math.floor(diff / 3600000);
-            const m = Math.floor((diff % 3600000) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-            document.getElementById('sunCountdown').innerText = `距離日落還有 ${h}時${m}分${s}秒`;
-        }
+        const sunrise = new Date(); sunrise.setHours(6, 35, 0);
+        const sunset = new Date(); sunset.setHours(18, 2, 0);
+        const tomorrowSunrise = new Date(); tomorrowSunrise.setDate(now.getDate() + 1); tomorrowSunrise.setHours(6, 35, 0);
+
+        let target, label;
+        if (now < sunrise) { target = sunrise; label = "距離日出還有 "; }
+        else if (now < sunset) { target = sunset; label = "距離日落還有 "; }
+        else { target = tomorrowSunrise; label = "距離明日日出還有 "; }
+
+        let diff = target - now;
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        document.getElementById('sunCountdown').innerText = label + `${h}時${m}分${s}秒`;
     }
 
     function updateFortune() {
         const constellation = document.getElementById('constellationSelect').value;
         const resultDiv = document.getElementById('fortuneResult');
         if (!constellation) { resultDiv.style.display = 'none'; return; }
-        const fortunes = ["⭐ 運勢大吉！適合嘗試新事物。", "⭐⭐ 穩定發揮，注意與人溝通。", "⭐⭐⭐ 財運不錯，可能有驚喜。", "⭐⭐ 今日適合低調行事。"];
+        const fortunes = ["⭐ 運勢大吉！", "⭐⭐ 穩定發揮。", "⭐⭐⭐ 財運不錯。", "⭐⭐ 低調行事。"];
         resultDiv.innerHTML = `<strong>${constellation}</strong>：${fortunes[Math.floor(Math.random() * fortunes.length)]}`;
         resultDiv.style.display = 'block';
     }
 
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID"); }); }
+    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已複製 ID"); }); }
 
     setInterval(updateData, 1000);
     updateData();
