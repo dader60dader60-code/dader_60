@@ -60,13 +60,13 @@
             <option value="彰化市">彰化市</option><option value="員林市">員林市</option>
             <option value="和美鎮">和美鎮</option><option value="鹿港鎮">鹿港鎮</option>
             <option value="溪湖鎮">溪湖鎮</option><option value="二林鎮">二林鎮</option>
-            <option value="田中鎮" selected>田中鎮</option><option value="北斗鎮">北斗鎮</option>
+            <option value="田中鎮" selected>田中鎮</option><option value="芳苑王功">芳苑王功</option>
+            <option value="大城西港">大城西港</option><option value="北斗鎮">北斗鎮</option>
             <option value="花壇鄉">花壇鄉</option><option value="芬園鄉">芬園鄉</option>
             <option value="大村鄉">大村鄉</option><option value="永靖鄉">永靖鄉</option>
             <option value="伸港鄉">伸港鄉</option><option value="線西鄉">線西鄉</option>
             <option value="福興鄉">福興鄉</option><option value="秀水鄉">秀水鄉</option>
             <option value="埔鹽鄉">埔鹽鄉</option><option value="埔心鄉">埔心鄉</option>
-            <option value="大城鄉">大城鄉</option><option value="芳苑鄉">芳苑鄉</option>
             <option value="竹塘鄉">竹塘鄉</option><option value="埤頭鄉">埤頭鄉</option>
             <option value="溪州鄉">溪州鄉</option><option value="田尾鄉">田尾鄉</option>
             <option value="二水鄉">二水鄉</option><option value="社頭鄉">社頭鄉</option>
@@ -80,7 +80,7 @@
             <div class="weather-item">🌪️ 風速: <span id="windSpeed">2.5 m/s</span></div>
             <div class="weather-item sun-info">
                 🌅 日出 <span id="sunriseTime">06:35</span> | 🌇 日落 <span id="sunsetTime">18:02</span><br>
-                <small id="sunCountdown">倒數計算中...</small>
+                <small id="sunCountdown">載入倒數中...</small>
             </div>
         </div>
         <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--:--</span> | 來源：中央氣象署</div>
@@ -146,7 +146,6 @@
 <script>
     function updateData() {
         const now = new Date();
-        // 開學/畢業倒數
         const schoolDate = new Date(2026, 1, 23);
         const sDiff = Math.ceil((schoolDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('school-days').innerText = sDiff > 0 ? sDiff + " 天" : "已開學";
@@ -154,7 +153,6 @@
         const gDiff = Math.ceil((gradDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('grad-days').innerText = gDiff > 0 ? gDiff + " 天" : "畢業快樂";
 
-        // 更新時間 (包含秒)
         document.getElementById('updateTime').innerText = 
             now.getHours().toString().padStart(2, '0') + ":" + 
             now.getMinutes().toString().padStart(2, '0') + ":" + 
@@ -200,7 +198,7 @@
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID"); }); }
 
-    setInterval(updateData, 1000); // 每一秒刷新一次數據
+    setInterval(updateData, 1000);
     updateData();
     updateWeather();
 </script>
