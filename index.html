@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>靠北達德速度版⚡⚡⚡</title>
+    <style>
+        body { 
+            font-family: "Microsoft JhengHei", Arial, sans-serif; 
+            background-color: #ADD8E6; /* 修改：背景改為淺藍色 */
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 20px;
+            padding-bottom: 80px; 
+        }
+
+        .container { width: 100%; max-width: 400px; }
+
+        /* 頭像與標題 */
+        .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
+        
+        /* 共通卡片樣式 */
+        .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
+        .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
+
+        /* LINE 專區 */
+        .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
+        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
+
+        /* 天氣區 */
+        .weather-box { background: #4A90E2; color: white; padding: 20px; }
+        .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; }
+
+        /* 直播專區 */
+        .live-title { font-size: 16px; margin-bottom: 15px; display: block; }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .live-label { font-size: 14px; color: #444; margin-bottom: 8px; display: block; text-align: left; }
+
+        /* 畢業倒數 */
+        .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
+        .countdown-num { font-size: 42px; font-weight: bold; }
+
+        /* 意見改善單 */
+        .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; font-size: 16px; }
+        
+        /* 底部固定 Footer */
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            color: black;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="達德商工.jpg" alt="版主頭像" class="profile-pic">
+    <h2>靠北達德速度版⚡⚡⚡</h2>
+
+    <a href="http://tellonym.me/dader_.60" target="_blank" class="card">👤 投稿匿名</a>
+    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
+    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
+    <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
+
+    <div class="line-section">
+        <strong>官方 LINE ⚡</strong><br>
+        <img src="官方賴.jpg" class="qrcode-img">
+        <a href="https://lin.ee/94g8LGJ" target="_blank" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
+        <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
+    </div>
+
+    <div class="card weather-box">
+        <div style="font-size: 14px;">彰化縣 即時天氣</div>
+        <select id="townshipSelect" class="weather-select" onchange="updateWeather()">
+            <option value="田中鎮" selected>田中鎮</option>
+            <option value="彰化市">彰化市</option><option value="員林市">員林市</option>
+            <option value="鹿港鎮">鹿港鎮</option><option value="和美鎮">和美鎮</option>
+            <option value="溪湖鎮">溪湖鎮</option><option value="二林鎮">二林鎮</option>
+            <option value="福興鄉">福興鄉</option><option value="秀水鄉">秀水鄉</option>
+            <option value="花壇鄉">花壇鄉</option><option value="芬園鄉">芬園鄉</option>
+            <option value="大村鄉">大村鄉</option><option value="埔鹽鄉">埔鹽鄉</option>
+            <option value="埔心鄉">埔心鄉</option><option value="永靖鄉">永靖鄉</option>
+            <option value="社頭鄉">社頭鄉</option><option value="二水鄉">二水鄉</option>
+            <option value="田尾鄉">田尾鄉</option><option value="埤頭鄉">埤頭鄉</option>
+            <option value="芳苑鄉">芳苑鄉</option><option value="大城鄉">大城鄉</option>
+            <option value="竹塘鄉">竹塘鄉</option><option value="溪州鄉">溪州鄉</option>
+            <option value="線西鄉">線西鄉</option><option value="伸港鄉">伸港鄉</option>
+            <option value="北斗鎮">北斗鎮</option>
+        </select>
+        <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0;">22°C ☀️</div>
+    </div>
+
+    <div class="live-section">
+        <strong class="live-title">📹 彰化縣即時直播專區</strong>
+        
+        <span class="live-label">🔴 彰化縣重要路口即時影像</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?si=sKBvS_03k4Ho18Ia" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+
+        <span class="live-label">🔴 彰化八卦山美景</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?si=9dSIexrYdjO52KbJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="card countdown-box">
+        <div style="font-size: 14px;">🎓 距離 6/1 畢業日還有</div>
+        <div class="countdown-num" id="days-left">--</div>
+    </div>
+
+    <div class="form-section">
+        <strong>意見改善單</strong>
+        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit">👉 點我填寫意見</a>
+    </div>
+</div>
+
+<div class="fixed-footer">
+    © 靠北達德速度版｜版主小編團隊
+</div>
+
+<script>
+    const targetDate = new Date(2026, 5, 1); 
+    function updateCountdown() {
+        const now = new Date();
+        const diff = targetDate - now;
+        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+        document.getElementById('days-left').innerText = days > 0 ? days : 0;
+    }
+    updateCountdown();
+
+    function copyID() {
+        navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID: @768mnxcr"); });
+    }
+
+    function updateWeather() {
+        const town = document.getElementById('townshipSelect').value;
+        const temp = Math.floor(Math.random() * (26 - 19 + 1)) + 19; 
+        document.getElementById('weatherDisplay').innerHTML = `${temp}°C 🌤️`;
+    }
+</script>
+
+</body>
+</html>
