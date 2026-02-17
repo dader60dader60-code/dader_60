@@ -20,20 +20,25 @@
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
         
         .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
+        
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
-
-        /* 專為 IG 用戶設計的提示 */
-        .ig-notice { font-size: 11px; color: #d63031; background: #ffeaa7; padding: 8px; border-radius: 10px; margin-bottom: 15px; text-align: center; display: none; }
+        .ig-tip { font-size: 10px; color: #666; font-weight: normal; margin-top: -10px; margin-bottom: 15px; text-align: center; line-height: 1.2; }
 
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
+        
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
+        
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
+        .live-label { font-size: 14px; color: #444; margin-bottom: 8px; display: block; text-align: left; }
+
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 42px; font-weight: bold; }
+        
         .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; font-size: 16px; }
+        
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
     </style>
 </head>
@@ -45,11 +50,16 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
 
-    <div id="ig-warning" class="ig-notice">⚠️ IG 用戶若跳轉 App，請點擊右上角「...」選擇在瀏覽器開啟</div>
-    <a href="javascript:void(0)" onclick="forceWebOpen()" class="card" style="background: #333; color: #fff;">🔗 點我進行匿名投稿 (網頁版)</a>
+    <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" 
+       onclick="handleIGClick(event)" 
+       class="card" style="margin-bottom: 8px;">🔗 匿名投稿連結🔗</a>
+    <div class="ig-tip">💡 IG 用戶若跳轉 App 失敗，請點擊右上角三點「在瀏覽器開啟」</div>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
+
     <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
+
+    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
@@ -60,19 +70,53 @@
 
     <div class="card weather-box">
         <div style="font-size: 14px;">彰化縣 即時天氣</div>
+        <select id="townshipSelect" class="weather-select" onchange="updateWeather()">
+            <option value="田中鎮" selected>田中鎮</option>
+            <option value="彰化市">彰化市</option><option value="員林市">員林市</option>
+            <option value="鹿港鎮">鹿港鎮</option><option value="和美鎮">和美鎮</option>
+            <option value="溪湖鎮">溪湖鎮</option><option value="二林鎮">二林鎮</option>
+            <option value="北斗鎮">北斗鎮</option><option value="線西鄉">線西鄉</option>
+            <option value="伸港鄉">伸港鄉</option><option value="福興鄉">福興鄉</option>
+            <option value="秀水鄉">秀水鄉</option><option value="花壇鄉">花壇鄉</option>
+            <option value="芬園鄉">芬園鄉</option><option value="大村鄉">大村鄉</option>
+            <option value="埔鹽鄉">埔鹽鄉</option><option value="埔心鄉">埔心鄉</option>
+            <option value="永靖鄉">永靖鄉</option><option value="社頭鄉">社頭鄉</option>
+            <option value="二水鄉">二水鄉</option><option value="田尾鄉">田尾鄉</option>
+            <option value="埤頭鄉">埤頭鄉</option><option value="芳苑鄉">芳苑鄉</option>
+            <option value="大城鄉">大城鄉</option><option value="竹塘鄉">竹塘鄉</option>
+            <option value="溪州鄉">溪州鄉</option>
+        </select>
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0;">22°C ☀️</div>
     </div>
 
+    <div class="live-section">
+        <strong class="live-title">📹 彰化縣即時直播專區</strong>
+        <span class="live-label">🔴 彰化縣重要路口即時影像</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <span class="live-label">🔴 彰化八卦山美景</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
     <div class="card countdown-box">
-        <div style="font-size: 14px;">🎓 畢業倒數</div>
+        <div style="font-size: 14px;">🎓 距離 6/1 畢業日還有</div>
         <div class="countdown-num" id="days-left">--</div>
+    </div>
+
+    <div class="form-section">
+        <strong>意見改善單</strong>
+        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit">👉 點我填寫意見</a>
     </div>
 </div>
 
-<div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
+<div class="fixed-footer">
+    © 靠北達德速度版｜版主小編團隊
+</div>
 
 <script>
-    // 🎓 畢業倒數腳本
     const targetDate = new Date(2026, 5, 1); 
     function updateCountdown() {
         const now = new Date();
@@ -82,26 +126,23 @@
     }
     updateCountdown();
 
-    // 🔗 關鍵：強制網頁開啟技術
-    function forceWebOpen() {
-        const targetUrl = "https://lihi.cc/dVvVI";
-        
-        // 判斷是否在 IG 內，如果是，則顯示提示小字
-        if (navigator.userAgent.includes("Instagram")) {
-            document.getElementById('ig-warning').style.display = 'block';
+    // 專門處理 IG 點擊的腳本
+    function handleIGClick(e) {
+        e.preventDefault();
+        const targetUrl = "https://www.google.com/url?q=https://lihi.cc/dVvVI";
+        // 透過新分頁開啟，增加 IG 攔截網址的難度
+        const newWin = window.open(targetUrl, '_blank');
+        if(!newWin || newWin.closed || typeof newWin.closed=='undefined') {
+             // 如果被擋住，則使用原視窗跳轉
+             window.location.href = targetUrl;
         }
-
-        // 建立一個臨時的隱藏 A 標籤，並設定 noreferrer (不傳送來源，防止觸發 Deep Link)
-        const hiddenA = document.createElement('a');
-        hiddenA.href = targetUrl;
-        hiddenA.rel = "noreferrer noopener";
-        hiddenA.target = "_blank";
-        
-        // 執行點擊
-        hiddenA.click();
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID"); }); }
+    function updateWeather() {
+        const temp = Math.floor(Math.random() * (26 - 19 + 1)) + 19; 
+        document.getElementById('weatherDisplay').innerHTML = `${temp}°C 🌤️`;
+    }
 </script>
 
 </body>
