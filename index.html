@@ -22,6 +22,7 @@
         .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
+        .ig-tip { font-size: 10px; color: #666; font-weight: normal; margin-top: -10px; margin-bottom: 15px; text-align: center; line-height: 1.2; }
 
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
@@ -49,7 +50,10 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
 
-    <a href="https://lihi.cc/dVvVI" target="_blank" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
+    <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" 
+       onclick="handleIGClick(event)" 
+       class="card" style="margin-bottom: 8px;">🔗 匿名投稿連結🔗</a>
+    <div class="ig-tip">💡 IG 用戶若跳轉 App 失敗，請點擊右上角三點「在瀏覽器開啟」</div>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
 
@@ -121,6 +125,19 @@
         document.getElementById('days-left').innerText = days > 0 ? days : 0;
     }
     updateCountdown();
+
+    // 專門處理 IG 點擊的腳本
+    function handleIGClick(e) {
+        e.preventDefault();
+        const targetUrl = "https://www.google.com/url?q=https://lihi.cc/dVvVI";
+        // 透過新分頁開啟，增加 IG 攔截網址的難度
+        const newWin = window.open(targetUrl, '_blank');
+        if(!newWin || newWin.closed || typeof newWin.closed=='undefined') {
+             // 如果被擋住，則使用原視窗跳轉
+             window.location.href = targetUrl;
+        }
+    }
+
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID"); }); }
     function updateWeather() {
         const temp = Math.floor(Math.random() * (26 - 19 + 1)) + 19; 
