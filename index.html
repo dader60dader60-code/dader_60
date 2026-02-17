@@ -20,9 +20,12 @@
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
 
+        /* 地震清單專用樣式 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-title { color: #e74c3c; font-size: 16px; margin-bottom: 10px; display: flex; align-items: center; }
-        .eq-content { font-size: 14px; color: #444; line-height: 1.8; }
+        .eq-item { border-bottom: 1px dotted #ccc; padding: 10px 0; font-size: 13px; color: #444; }
+        .eq-item:last-child { border-bottom: none; }
+        .eq-tag { background: #e74c3c; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-right: 5px; font-weight: bold; }
+        .eq-time { color: #888; font-size: 11px; display: block; margin-top: 3px; }
         
         .fortune-box { background: #6c5ce7; color: white; padding: 20px; }
         .fortune-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; background: white; color: #6c5ce7; }
@@ -82,19 +85,27 @@
             <div class="weather-item">🌪️ 風速: <span id="windSpeed">2.5 m/s</span></div>
             <div class="weather-item sun-info">
                 🌅 日出 <span id="sunriseTime">06:35</span> | 🌇 日落 <span id="sunsetTime">18:02</span><br>
-                <small id="sunCountdown">倒數計算中...</small>
+                <small id="sunCountdown">載入倒數中...</small>
             </div>
         </div>
         <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--:--</span></div>
     </div>
 
     <div class="card earthquake-box">
-        <div class="eq-title">📢 近期地震快報</div>
-        <div class="eq-content">
-            <b>📍 地點：</b> 臺灣東部海域<br>
-            <b>⏰ 時間：</b> 2026/02/18 00:15:20<br>
-            <b>📉 規模：</b> ML 4.5 | <b>深度：</b> 12.0 km<br>
-            <b>⚠️ 最大震度：</b> 花蓮縣 3 級
+        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 5px;">📢 近 7 天有感地震快報 (CWA)</div>
+        <div id="earthquakeList">
+            <div class="eq-item">
+                <span class="eq-tag">M 4.5</span><strong>臺灣東部海域</strong>
+                <span class="eq-time">2026/02/18 00:15 | 深度: 12km | 震度: 3級</span>
+            </div>
+            <div class="eq-item">
+                <span class="eq-tag" style="background:#f39c12">M 3.8</span><strong>花蓮縣近海</strong>
+                <span class="eq-time">2026/02/16 14:22 | 深度: 5.5km | 震度: 2級</span>
+            </div>
+            <div class="eq-item">
+                <span class="eq-tag">M 4.1</span><strong>臺東縣成功鎮</strong>
+                <span class="eq-time">2026/02/14 09:10 | 深度: 18km | 震度: 3級</span>
+            </div>
         </div>
     </div>
 
@@ -120,7 +131,7 @@
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 彰化縣即時直播專區</strong>
-        <span class="live-label">🔴 彰化縣重要路口即時影像</span>
+        <span class="live-label">🔴 彰化路口即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
         <span class="live-label">🔴 彰化八卦山美景</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
