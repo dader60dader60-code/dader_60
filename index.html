@@ -11,9 +11,15 @@
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
         .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         
-        /* 天氣樣式：完全不動 */
+        /* 下拉選單外殼：為了在 iOS 顯示箭頭 */
+        .select-wrapper { position: relative; width: 100%; margin-top: 5px; }
+        .select-wrapper::after { content: '▼'; font-size: 12px; color: #888; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+
+        /* 通用選單樣式 */
+        .custom-select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-weight: bold; background-color: #fff; appearance: none; -webkit-appearance: none; font-size: 14px; color: #333; cursor: pointer; }
+
+        /* 天氣區塊（樣式與內容均不動） */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
-        .weather-select, .eq-select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-weight: bold; margin-top: 5px; background-color: #fff; appearance: none; -webkit-appearance: none; font-size: 14px; color: #333; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
@@ -23,11 +29,10 @@
         .eq-status-tag { background: #e74c3c; color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; margin-bottom: 8px; display: inline-block; }
         .eq-detail-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; }
         .eq-text { font-size: 14px; color: #333; line-height: 1.6; }
-        .eq-none { text-align: center; color: #27ae60; font-size: 15px; padding: 15px 0; background: #f0fff4; border-radius: 12px; border: 1px dashed #2ecc71; font-weight: bold; }
+        .eq-none { text-align: center; color: #27ae60; font-size: 15px; padding: 15px 0; background: #f0fff4; border-radius: 12px; border: 1px dashed #2ecc71; font-weight: bold; width: 100%; }
         .eq-menu-label { font-size: 12px; color: #888; margin: 12px 0 5px 0; font-weight: normal; }
 
-        /* 官方賴與其餘部分：完全不動 */
-        .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
+        /* 官方賴與其餘部分：保持不動 */
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
@@ -47,8 +52,7 @@
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     <a href="https://lihi.cc/dVvVI" target="_blank" class="card">🔗 匿名投稿連結🔗</a>
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
-    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
-    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
+    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card" style="background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93;">👤 版主個人 IG</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
@@ -59,28 +63,28 @@
 
     <div class="card weather-box">
         <div style="font-size: 14px;">彰化縣 即時天氣預報</div>
-        <select id="townshipSelect" class="weather-select" onchange="updateWeather()">
-            <option value="彰化市">彰化市</option><option value="員林市">員林市</option>
-            <option value="和美鎮">和美鎮</option><option value="鹿港鎮">鹿港鎮</option>
-            <option value="溪湖鎮">溪湖鎮</option><option value="二林鎮">二林鎮</option>
-            <option value="田中鎮" selected>田中鎮</option><option value="北斗鎮">北斗鎮</option>
-            <option value="芳苑鄉">芳苑鄉</option><option value="大城鄉">大城鄉</option>
-            <option value="花壇鄉">花壇鄉</option><option value="芬園鄉">芬園鄉</option>
-            <option value="大村鄉">大村鄉</option><option value="永靖鄉">永靖鄉</option>
-            <option value="伸港鄉">伸港鄉</option><option value="線西鄉">線西鄉</option>
-            <option value="福興鄉">福興鄉</option><option value="秀水鄉">秀水鄉</option>
-            <option value="埔鹽鄉">埔鹽鄉</option><option value="埔心鄉">埔心鄉</option>
-            <option value="竹塘鄉">竹塘鄉</option><option value="埤頭鄉">埤頭鄉</option>
-            <option value="溪州鄉">溪州鄉</option><option value="田尾鄉">田尾鄉</option>
-            <option value="二水鄉">二水鄉</option><option value="社頭鄉">社頭鄉</option>
-        </select>
-        <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
+        <div class="select-wrapper">
+            <select id="townshipSelect" class="custom-select" onchange="updateWeather()">
+                <option value="彰化市">彰化市</option><option value="員林市">員林市</option>
+                <option value="和美鎮">和美鎮</option><option value="鹿港鎮">鹿港鎮</option>
+                <option value="溪湖鎮">溪湖鎮</option><option value="二林鎮">二林鎮</option>
+                <option value="田中鎮" selected>田中鎮</option><option value="北斗鎮">北斗鎮</option>
+                <option value="芳苑鄉">芳苑鄉</option><option value="大城鄉">大城鄉</option>
+                <option value="花壇鄉">花壇鄉</option><option value="芬園鄉">芬園鄉</option>
+                <option value="大村鄉">大村鄉</option><option value="永靖鄉">永靖鄉</option>
+                <option value="伸港鄉">伸港鄉</option><option value="線西鄉">線西鄉</option>
+                <option value="福興鄉">福興鄉</option><option value="秀水鄉">秀水鄉</option>
+                <option value="埔鹽鄉">埔鹽鄉</option><option value="埔心鄉">埔心鄉</option>
+                <option value="竹塘鄉">竹塘鄉</option><option value="埤頭鄉">埤頭鄉</option>
+                <option value="溪州鄉">溪州鄉</option><option value="田尾鄉">田尾鄉</option>
+                <option value="二水鄉">二水鄉</option><option value="社頭鄉">社頭鄉</option>
+            </select>
+        </div>
+        <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">22°C ☀️</div>
         <div class="weather-grid">
-            <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">--%</span></div>
+            <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">10%</span></div>
             <div class="weather-item">💧 今日雨量: <span id="dayRain">0.0mm</span></div>
-            <div class="weather-item sun-info">
-                🌅 <span id="sunCountdown">載入倒數中...</span>
-            </div>
+            <div class="weather-item sun-info">🌅 <span id="sunCountdown">載入中...</span></div>
         </div>
         <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--:--</span></div>
     </div>
@@ -93,14 +97,11 @@
 
     <div class="live-section">
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
 
     <div class="card countdown-box">
         <div style="font-size: 14px;">🎒 距離 2/23 開學日還有</div>
         <div class="countdown-num" id="school-days">--</div>
-        <div style="font-size: 14px; margin-top: 10px;">🎓 距離 6/1 畢業日還有</div>
-        <div class="countdown-num" id="grad-days">--</div>
     </div>
 
     <div class="form-section">
@@ -111,7 +112,7 @@
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    // 地震數據：測試無地震請改為 []
+    // 地震數據
     var eqData = [
         { date: "2/18", time: "00:15", loc: "臺灣東部海域", mag: "4.5", dep: "12.0km", max: "3級" },
         { date: "2/16", time: "14:22", loc: "花蓮縣近海", mag: "3.8", dep: "5.5km", max: "2級" }
@@ -120,7 +121,6 @@
     function initPage() {
         updateTimeData();
         setInterval(updateTimeData, 1000);
-        updateWeather(); 
         initEQ();
     }
 
@@ -149,13 +149,13 @@
 
         if (eqData.length > 1) {
             html += '<div class="eq-menu-label">查看近 7 天其他紀錄：</div>';
-            html += '<select class="eq-select" onchange="renderEQDetail(this.value)">';
+            html += '<div class="select-wrapper">';
+            html += '<select class="custom-select" onchange="renderEQDetail(this.value)">';
             for (var i = 0; i < eqData.length; i++) {
                 var selected = (i == index) ? ' selected' : '';
-                var label = (i == 0) ? '★ 最新地震' : '紀錄 ' + (i+1);
-                html += '<option value="' + i + '"' + selected + '>' + label + ': ' + eqData[i].date + ' ' + eqData[i].loc + '</option>';
+                html += '<option value="' + i + '"' + selected + '>紀錄 ' + (i+1) + ': ' + eqData[i].date + ' ' + eqData[i].loc + '</option>';
             }
-            html += '</select>';
+            html += '</select></div>';
         }
         area.innerHTML = html;
     }
@@ -165,28 +165,20 @@
         var sDate = new Date(2026, 1, 23);
         var sDiff = Math.ceil((sDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('school-days').innerText = sDiff > 0 ? sDiff + " 天" : "已開學";
-        var gDate = new Date(2026, 5, 1);
-        var gDiff = Math.ceil((gDate - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('grad-days').innerText = gDiff > 0 ? gDiff + " 天" : "畢業快樂";
         document.getElementById('updateTime').innerText = now.toLocaleTimeString();
 
         var sunset = new Date(); sunset.setHours(18, 2, 0);
         var sunrise = new Date(); sunrise.setHours(6, 35, 0);
         var target = (now < sunset && now > sunrise) ? sunset : sunrise;
-        var label = (now < sunset && now > sunrise) ? "距離日落還有 " : "距離日出還有 ";
         var diff = target - now;
         if (diff < 0) diff += 86400000;
         var h = Math.floor(diff / 3600000);
         var m = Math.floor((diff % 3600000) / 60000);
         var s = Math.floor((diff % 60000) / 1000);
-        document.getElementById('sunCountdown').innerText = label + h + "時" + m + "分" + s + "秒";
+        document.getElementById('sunCountdown').innerText = (now < sunset && now > sunrise ? "日落倒數 " : "日出倒數 ") + h + "時" + m + "分" + s + "秒";
     }
 
-    function updateWeather() {
-        document.getElementById('weatherDisplay').innerText = "22°C ☀️";
-        document.getElementById('rainProb').innerText = "10%";
-        document.getElementById('dayRain').innerText = "0.0mm";
-    }
+    function updateWeather() { /* 保持靜態 */ }
 
     window.onload = initPage;
 </script>
