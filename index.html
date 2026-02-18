@@ -48,7 +48,15 @@
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-    <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
+
+    <a href="https://tellonym.me/dader_.60"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="card"
+       style="background:#ff4757;color:white;font-size:18px;">
+       🚀 點我匿名投稿
+    </a>
+
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
@@ -93,10 +101,7 @@
 
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 近 7 天有感地震快報 (CWA)</div>
-        
-        <div id="eqDisplayArea" class="eq-display-card">
-            </div>
-
+        <div id="eqDisplayArea" class="eq-display-card"></div>
         <div id="eqHistoryArea"></div>
     </div>
 
@@ -152,16 +157,11 @@
     function initEarthquake() {
         const displayArea = document.getElementById('eqDisplayArea');
         const historyArea = document.getElementById('eqHistoryArea');
-
         if (eqData.length === 0) {
             displayArea.innerHTML = `<div style="text-align:center; color:#666;">✅ 近 7 天無有感地震紀錄</div>`;
             return;
         }
-
-        // 1. 固定顯示最新的地震
         renderEQ(0);
-
-        // 2. 如果有多起，顯示下拉選單
         if (eqData.length > 1) {
             let html = `<div class="eq-history-label">查看近 7 天其他有感地震：</div>`;
             html += `<select class="eq-select" onchange="renderEQ(this.value)">`;
@@ -178,7 +178,6 @@
         const eq = eqData[index];
         const displayArea = document.getElementById('eqDisplayArea');
         const badge = index == 0 ? `<span class="eq-latest-badge">最新有感地震</span>` : `<span class="eq-latest-badge" style="background:#666">歷史紀錄回顧</span>`;
-        
         displayArea.innerHTML = `
             ${badge}
             <div class="eq-info-line">
@@ -198,12 +197,10 @@
         const gradDate = new Date(2026, 5, 1);
         const gDiff = Math.ceil((gradDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('grad-days').innerText = gDiff > 0 ? gDiff + " 天" : "畢業快樂";
-
         document.getElementById('updateTime').innerText = 
             now.getHours().toString().padStart(2, '0') + ":" + 
             now.getMinutes().toString().padStart(2, '0') + ":" + 
             now.getSeconds().toString().padStart(2, '0');
-        
         updateSunLogic();
     }
 
