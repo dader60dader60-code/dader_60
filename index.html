@@ -11,7 +11,7 @@
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
         .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         
-        /* 天氣樣式 */
+        /* 天氣樣式：完全不動 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select, .eq-select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-weight: bold; margin-top: 5px; background-color: #fff; appearance: none; -webkit-appearance: none; font-size: 14px; color: #333; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -26,7 +26,9 @@
         .eq-none { text-align: center; color: #27ae60; font-size: 15px; padding: 15px 0; background: #f0fff4; border-radius: 12px; border: 1px dashed #2ecc71; font-weight: bold; }
         .eq-menu-label { font-size: 12px; color: #888; margin: 12px 0 5px 0; font-weight: normal; }
 
-        /* LINE & 其他 */
+        /* 官方賴與其餘部分：完全不動 */
+        .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
+        .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
@@ -45,11 +47,13 @@
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     <a href="https://lihi.cc/dVvVI" target="_blank" class="card">🔗 匿名投稿連結🔗</a>
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
-    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card" style="background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93;">👤 版主個人 IG</a>
+    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
+    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
         <img src="line-qr.jpg" class="qrcode-img">
+        <a href="https://lin.ee/94g8LGJ" target="_blank" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
         <div class="line-id" onclick="alert('ID: @768mnxcr')">複製 ID: @768mnxcr</div>
     </div>
 
@@ -107,7 +111,7 @@
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    // 地震數據：測試時若陣列為空 [] 則會顯示「近期無地震」
+    // 地震數據：測試無地震請改為 []
     var eqData = [
         { date: "2/18", time: "00:15", loc: "臺灣東部海域", mag: "4.5", dep: "12.0km", max: "3級" },
         { date: "2/16", time: "14:22", loc: "花蓮縣近海", mag: "3.8", dep: "5.5km", max: "2級" }
@@ -144,11 +148,11 @@
                 '</div></div>';
 
         if (eqData.length > 1) {
-            html += '<div class="eq-menu-label">還有其他 ' + (eqData.length - 1) + ' 起地震：</div>';
+            html += '<div class="eq-menu-label">查看近 7 天其他紀錄：</div>';
             html += '<select class="eq-select" onchange="renderEQDetail(this.value)">';
             for (var i = 0; i < eqData.length; i++) {
                 var selected = (i == index) ? ' selected' : '';
-                var label = (i == 0) ? '★ 最新地震' : '地震紀錄 ' + (i+1);
+                var label = (i == 0) ? '★ 最新地震' : '紀錄 ' + (i+1);
                 html += '<option value="' + i + '"' + selected + '>' + label + ': ' + eqData[i].date + ' ' + eqData[i].loc + '</option>';
             }
             html += '</select>';
@@ -164,7 +168,6 @@
         var gDate = new Date(2026, 5, 1);
         var gDiff = Math.ceil((gDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('grad-days').innerText = gDiff > 0 ? gDiff + " 天" : "畢業快樂";
-        
         document.getElementById('updateTime').innerText = now.toLocaleTimeString();
 
         var sunset = new Date(); sunset.setHours(18, 2, 0);
@@ -180,10 +183,9 @@
     }
 
     function updateWeather() {
-        // 保持隨機數據模擬效果
-        document.getElementById('weatherDisplay').innerText = (Math.floor(Math.random()*5)+18) + "°C ☀️";
-        document.getElementById('rainProb').innerText = Math.floor(Math.random()*20) + "%";
-        document.getElementById('dayRain').innerText = (Math.random()*1).toFixed(1) + "mm";
+        document.getElementById('weatherDisplay').innerText = "22°C ☀️";
+        document.getElementById('rainProb').innerText = "10%";
+        document.getElementById('dayRain').innerText = "0.0mm";
     }
 
     window.onload = initPage;
