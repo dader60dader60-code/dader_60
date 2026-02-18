@@ -21,7 +21,7 @@
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
 
-        /* 地震區塊樣式：固定顯示 + 選單 */
+        /* 地震區塊樣式 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-latest-badge { background: #e74c3c; color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; margin-bottom: 8px; display: inline-block; }
         .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; }
@@ -33,7 +33,6 @@
         
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
-        .live-label { font-size: 14px; color: #444; margin-bottom: 8px; display: block; text-align: left; }
         
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
@@ -49,9 +48,8 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
 
-    <a href="https://reurl.cc/NNVeQp"
-       target="_blank"
-       rel="noopener noreferrer"
+    <a href="javascript:void(0);" 
+       onclick="setTimeout(function(){ window.location.href='https://reurl.cc/NNVeQp'; }, 100);"
        class="card"
        style="background:#ff4757;color:white;font-size:18px;">
        🚀 點我匿名投稿
@@ -109,26 +107,14 @@
         <div style="font-size: 14px; margin-bottom: 5px;">🔮 今日星座運勢</div>
         <select id="constellationSelect" class="fortune-select" onchange="updateFortune()">
             <option value="">請選擇你的星座</option>
-            <option value="白羊座">白羊座 (3/21-4/19)</option>
-            <option value="金牛座">金牛座 (4/20-5/20)</option>
-            <option value="雙子座">雙子座 (5/21-6/21)</option>
-            <option value="巨蟹座">巨蟹座 (6/22-7/22)</option>
-            <option value="獅子座">獅子座 (7/23-8/22)</option>
-            <option value="處女座">處女座 (8/23-9/22)</option>
-            <option value="天秤座">天秤座 (9/23-10/23)</option>
-            <option value="天蠍座">天蠍座 (10/24-11/22)</option>
-            <option value="射手座">射手座 (11/23-12/21)</option>
-            <option value="摩羯座">摩羯座 (12/22-1/19)</option>
-            <option value="水瓶座">水瓶座 (1/20-2/18)</option>
-            <option value="雙魚座">雙魚座 (2/19-3/20)</option>
+            <option value="白羊座">白羊座</option><option value="金牛座">金牛座</option>
+            <option value="雙子座">雙子座</option><option value="巨蟹座">巨蟹座</option>
+            <option value="獅子座">獅子座</option><option value="處女座">處女座</option>
+            <option value="天秤座">天秤座</option><option value="天蠍座">天蠍座</option>
+            <option value="射手座">射手座</option><option value="摩羯座">摩羯座</option>
+            <option value="水瓶座">水瓶座</option><option value="雙魚座">雙魚座</option>
         </select>
         <div id="fortuneResult" class="fortune-result"></div>
-    </div>
-
-    <div class="live-section">
-        <strong style="display: block; margin-bottom: 10px;">📹 彰化縣即時直播專區</strong>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
 
     <div class="card countdown-box">
@@ -232,7 +218,7 @@
         const resultDiv = document.getElementById('fortuneResult');
         if (!constellation) { resultDiv.style.display = 'none'; return; }
         const fortunes = ["⭐ 運勢大吉！", "⭐⭐ 穩定發揮。", "⭐⭐⭐ 財運不錯。", "⭐⭐ 今日建議低調。"];
-        resultDiv.innerHTML = `<strong>${constellation.split(' ')[0]}</strong>：${fortunes[Math.floor(Math.random() * fortunes.length)]}`;
+        resultDiv.innerHTML = `<strong>${constellation}</strong>：${fortunes[Math.floor(Math.random() * fortunes.length)]}`;
         resultDiv.style.display = 'block';
     }
 
