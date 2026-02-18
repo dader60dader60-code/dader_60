@@ -5,15 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>靠北達德速度版⚡⚡⚡</title>
     <style>
-        /* 完全還原你原本的所有 CSS 樣式，不做任何優化或改動 */
-        body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 80px; }
+        body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 80px; -webkit-font-smoothing: antialiased; }
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
         .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         
+        /* 選單箭頭優化 (iOS) */
+        .weather-select, .eq-select { 
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-weight: bold; margin-top: 5px; background-color: #fff; font-size: 14px;
+            appearance: auto !important; -webkit-appearance: menulist !important; /* 強制顯示原生箭頭 */
+        }
+
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
-        .weather-select, .eq-select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-weight: bold; margin-top: 5px; background-color: #fff; font-size: 14px; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
@@ -22,7 +26,7 @@
         .eq-status-tag { background: #e74c3c; color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; margin-bottom: 8px; display: inline-block; }
         .eq-detail-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; }
         .eq-text { font-size: 14px; color: #333; line-height: 1.6; }
-        .eq-none { text-align: center; color: #27ae60; font-size: 15px; padding: 10px 0; font-weight: bold; }
+        .eq-none { text-align: center; color: #27ae60; font-size: 15px; padding: 15px 0; background: #f0fff4; border-radius: 12px; border: 1px dashed #2ecc71; font-weight: bold; }
 
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
@@ -41,15 +45,15 @@
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-    
     <a href="https://lihi.cc/dVvVI" target="_blank" rel="noopener noreferrer" class="card">🔗 匿名投稿連結🔗</a>
-    
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card" style="background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93;">👤 版主個人 IG</a>
+    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
         <img src="line-qr.jpg" class="qrcode-img">
+        <a href="https://lin.ee/94g8LGJ" target="_blank" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
         <div class="line-id" onclick="alert('ID: @768mnxcr')">複製 ID: @768mnxcr</div>
     </div>
 
@@ -57,30 +61,14 @@
         <div style="font-size: 14px;">彰化縣 即時天氣預報</div>
         <select id="townshipSelect" class="weather-select" onchange="updateWeather()">
             <option value="田中鎮" selected>田中鎮</option>
-            <option value="彰化市">彰化市</option>
-            <option value="員林市">員林市</option>
-            <option value="和美鎮">和美鎮</option>
-            <option value="鹿港鎮">鹿港鎮</option>
-            <option value="溪湖鎮">溪湖鎮</option>
-            <option value="二林鎮">二林鎮</option>
-            <option value="北斗鎮">北斗鎮</option>
-            <option value="芳苑鄉">芳苑鄉</option>
-            <option value="大城鄉">大城鄉</option>
-            <option value="花壇鄉">花壇鄉</option>
-            <option value="芬園鄉">芬園鄉</option>
-            <option value="大村鄉">大村鄉</option>
-            <option value="永靖鄉">永靖鄉</option>
-            <option value="伸港鄉">伸港鄉</option>
-            <option value="線西鄉">線西鄉</option>
-            <option value="福興鄉">福興鄉</option>
-            <option value="秀水鄉">秀水鄉</option>
-            <option value="埔鹽鄉">埔鹽鄉</option>
-            <option value="埔心鄉">埔心鄉</option>
-            <option value="竹塘鄉">竹塘鄉</option>
-            <option value="埤頭鄉">埤頭鄉</option>
-            <option value="溪州鄉">溪州鄉</option>
-            <option value="田尾鄉">田尾鄉</option>
-            <option value="二水鄉">二水鄉</option>
+            <option value="彰化市">彰化市</option><option value="員林市">員林市</option><option value="和美鎮">和美鎮</option>
+            <option value="鹿港鎮">鹿港鎮</option><option value="溪湖鎮">溪湖鎮</option><option value="二林鎮">二林鎮</option>
+            <option value="北斗鎮">北斗鎮</option><option value="芳苑鄉">芳苑鄉</option><option value="大城鄉">大城鄉</option>
+            <option value="花壇鄉">花壇鄉</option><option value="芬園鄉">芬園鄉</option><option value="大村鄉">大村鄉</option>
+            <option value="永靖鄉">永靖鄉</option><option value="伸港鄉">伸港鄉</option><option value="線西鄉">線西鄉</option>
+            <option value="福興鄉">福興鄉</option><option value="秀水鄉">秀水鄉</option><option value="埔鹽鄉">埔鹽鄉</option>
+            <option value="埔心鄉">埔心鄉</option><option value="竹塘鄉">竹塘鄉</option><option value="埤頭鄉">埤頭鄉</option>
+            <option value="溪州鄉">溪州鄉</option><option value="田尾鄉">田尾鄉</option><option value="二水鄉">二水鄉</option>
             <option value="社頭鄉">社頭鄉</option>
         </select>
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">22°C ☀️</div>
@@ -94,8 +82,7 @@
 
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 近 7 天有感地震快報 (CWA)</div>
-        <div id="eqArea">
-            </div>
+        <div id="eqContentArea"></div>
     </div>
 
     <div class="live-section">
@@ -114,34 +101,22 @@
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    // 地震資料：若想測試「無地震」狀態，只需將陣列清空為 var eqData = [];
-    var eqData = [
-        { date: "2/18", time: "00:15", loc: "臺灣東部海域", mag: "4.5", dep: "12.0km", max: "3級" }
-    ];
+    var eqData = [{ date: "2/18", time: "00:15", loc: "臺灣東部海域", mag: "4.5", dep: "12.0km", max: "3級" }];
 
     function initPage() {
         updateTimeData();
         setInterval(updateTimeData, 1000);
-        showEarthquake();
+        showEQ();
     }
 
-    function showEarthquake() {
-        var area = document.getElementById('eqArea');
+    function showEQ() {
+        var area = document.getElementById('eqContentArea');
         if (eqData.length === 0) {
             area.innerHTML = '<div class="eq-none">✅ 近期無有感地震紀錄</div>';
             return;
         }
         var eq = eqData[0];
-        area.innerHTML = `
-            <span class="eq-status-tag">最新消息</span>
-            <div class="eq-detail-card">
-                <div class="eq-text">
-                    <b>📅 時間：</b>${eq.date} ${eq.time}<br>
-                    <b>📍 地點：</b>${eq.loc}<br>
-                    <b>📉 規模：</b>M ${eq.mag} | <b>深度：</b>${eq.dep}<br>
-                    <b>⚠️ 最大震度：</b><span style="color:red;">${eq.max}</span>
-                </div>
-            </div>`;
+        area.innerHTML = '<span class="eq-status-tag">最新地震</span><div class="eq-detail-card"><div class="eq-text"><b>📅 時間：</b>' + eq.date + ' ' + eq.time + '<br><b>📍 地點：</b>' + eq.loc + '<br><b>📉 規模：</b>M ' + eq.mag + ' | <b>深度：</b>' + eq.dep + '<br><b>⚠️ 最大震度：</b><span style="color:red;">' + eq.max + '</span></div></div>';
     }
 
     function updateTimeData() {
@@ -150,21 +125,14 @@
         var sDate = new Date(2026, 1, 23);
         var sDiff = Math.ceil((sDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('school-days').innerText = sDiff > 0 ? "開學倒數 " + sDiff + " 天" : "已開學";
-        
         var sunset = new Date(); sunset.setHours(18, 2, 0);
-        var target = sunset;
-        var diff = target - now;
-        if (diff < 0) diff += 86400000;
-        var h = Math.floor(diff / 3600000);
-        var m = Math.floor((diff % 3600000) / 60000);
-        var s = Math.floor((diff % 60000) / 1000);
+        var diff = sunset - now; if (diff < 0) diff += 86400000;
+        var h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
         document.getElementById('sunCountdown').innerText = "日落倒數 " + h + "時" + m + "分" + s + "秒";
     }
 
     function updateWeather() {}
-
     window.onload = initPage;
 </script>
-
 </body>
 </html>
