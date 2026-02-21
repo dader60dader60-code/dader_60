@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>靠北達德速度版⚡⚡⚡</title>
     <style>
-        body { font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 100px; }
+        body { font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 110px; }
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
@@ -40,8 +40,8 @@
         .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; font-size: 16px; }
         
         /* 底部固定欄位 */
-        .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 10px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; line-height: 1.5; }
-        .view-counter { color: #E67E22; font-size: 12px; }
+        .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 12px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; line-height: 1.6; }
+        .view-counter { color: #E67E22; font-size: 12px; font-weight: normal; }
     </style>
 </head>
 <body>
@@ -50,28 +50,28 @@
     <img src="avatar.jpg" alt="版主頭像" class="profile-pic">
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
-    <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-    <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
-    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
-    <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
-    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
+    <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card count-click">📄 版規及簡歷冊</a>
+    <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" rel="noreferrer" class="card count-click">🔗 匿名投稿連結🔗</a>
+    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card count-click">🔥 靠北達德專區 (IG 頻道)</a>
+    <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig count-click">👤 版主個人 IG</a>
+    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card count-click">📸 版主專區 (IG 頻道)</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
         <img src="line-qr.jpg" class="qrcode-img">
-        <a href="https://lin.ee/94g8LGJ" target="_blank" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
-        <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
+        <a href="https://lin.ee/94g8LGJ" target="_blank" class="count-click" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
+        <div class="line-id count-click" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
 
     <div class="card weather-box">
         <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
         <div style="display: flex; justify-content: center;">
-            <select id="citySelect" class="weather-select" onchange="initTownshipSelect()">
+            <select id="citySelect" class="weather-select count-click" onchange="initTownshipSelect()">
                 <option value="彰化縣">彰化縣</option>
                 <option value="台中市">台中市</option>
                 <option value="南投縣">南投縣</option>
             </select>
-            <select id="townSelect" class="weather-select" onchange="updateWeatherDisplay()">
+            <select id="townSelect" class="weather-select count-click" onchange="updateWeatherDisplay()">
             </select>
         </div>
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
@@ -95,7 +95,7 @@
 
     <div class="card fortune-box">
         <div style="font-size: 14px; margin-bottom: 5px;">🔮 今日星座運勢</div>
-        <select id="constellationSelect" class="fortune-select" onchange="updateFortune()">
+        <select id="constellationSelect" class="fortune-select count-click" onchange="updateFortune()">
             <option value="">請選擇你的星座</option>
             <option value="白羊座">白羊座</option><option value="金牛座">金牛座</option><option value="雙子座">雙子座</option><option value="巨蟹座">巨蟹座</option><option value="獅子座">獅子座</option><option value="處女座">處女座</option><option value="天秤座">天秤座</option><option value="天蠍座">天蠍座</option><option value="射手座">射手座</option><option value="摩羯座">摩羯座</option><option value="水瓶座">水瓶座</option><option value="雙魚座">雙魚座</option>
         </select>
@@ -117,25 +117,32 @@
     </div>
 
     <div class="form-section">
-        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit">👉 點我填寫意見改善單</a>
+        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit count-click">👉 點我填寫意見改善單</a>
     </div>
 </div>
 
 <div class="fixed-footer">
-    © 靠北達德速度版｜版主小編團隊<br>
-    <span class="view-counter">🔥 本頁面點閱次數：<span id="page-views">0</span> 次</span>
+    © 𝓭𝓪𝓭𝓮𝓻 靠北達德速度版⚡️⚡️⚡️｜版主小編團隊<br>
+    <span class="view-counter">🔥 本頁面累計點閱：<span id="page-views">0</span> 次</span>
 </div>
 
 <script>
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     
-    // 點閱計數邏輯
-    function updateCounter() {
+    // 點閱計數邏輯 (LocalStorage)
+    function addCount() {
         let views = localStorage.getItem('page_views');
-        if (views === null) { views = 1; } else { views = parseInt(views) + 1; }
+        views = (views === null) ? 1 : parseInt(views) + 1;
         localStorage.setItem('page_views', views);
         document.getElementById('page-views').innerText = views.toLocaleString();
     }
+
+    // 監聽所有點擊計數
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.count-click')) {
+            addCount();
+        }
+    });
 
     const areaData = {
         "彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
@@ -177,19 +184,15 @@
             const list = data.records.Earthquake.filter(eq => 
                 ["彰化", "台中", "臺中", "南投", "雲林", "苗栗"].some(loc => eq.EarthquakeInfo.EarthquakeLocation.includes(loc))
             );
-            if (list.length === 0) {
-                document.getElementById('eqDisplayArea').innerHTML = "✅ 中部近期無顯著地震紀錄";
-                return;
+            if (list.length > 0) {
+                window.eqData = list;
+                showEQ(0);
+                let html = `<select class="eq-select count-click" onchange="showEQ(this.value)">`;
+                list.forEach((e, i) => html += `<option value="${i}">${i==0?'⚡最新':'紀錄'}: ${e.EarthquakeInfo.OriginTime.substring(5,16)}</option>`);
+                html += `</select>`;
+                document.getElementById('eqHistoryArea').innerHTML = html;
             }
-            window.eqData = list;
-            showEQ(0);
-            let html = `<select class="eq-select" onchange="showEQ(this.value)">`;
-            list.forEach((e, i) => html += `<option value="${i}">${i==0?'⚡最新':'紀錄'}: ${e.EarthquakeInfo.OriginTime.substring(5,16)}</option>`);
-            html += `</select>`;
-            document.getElementById('eqHistoryArea').innerHTML = html;
-        } catch (err) {
-            document.getElementById('eqDisplayArea').innerHTML = "<span style='color:red;'>⚠️ 地震連線失敗</span>";
-        }
+        } catch (err) {}
     }
 
     function showEQ(i) {
@@ -198,12 +201,10 @@
         document.getElementById('eqDisplayArea').innerHTML = `
             <span class="eq-latest-badge">${i==0?'最新中部地震':'中部地震回顧'}</span>
             <div class="eq-info-line">
-                <b>📅 時間：</b>${info.OriginTime}<br>
-                <b>📍 地點：</b>${info.EarthquakeLocation}<br>
-                <b>📉 規模：</b>M ${info.EarthquakeMagnitude.MagnitudeValue} | <b>深度：</b>${info.EarthquakeDepth.Value}km<br>
-                <b>⚠️ 最大震度：</b><span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span>
+                📍 ${info.EarthquakeLocation}<br>
+                📉 規模：M ${info.EarthquakeMagnitude.MagnitudeValue} | 深度：${info.EarthquakeDepth.Value}km<br>
+                ⚠️ 最大震度：<span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span>
             </div>
-            <a href="${e.Web}" target="_blank" style="font-size:12px; color:#4A90E2;">🔍 查看氣象署報告</a>
         `;
     }
 
@@ -220,15 +221,14 @@
     }
 
     function updateTime() {
-        const now = new Date();
         document.getElementById('school-days').innerText = formatCountdownText('2026-02-23');
         document.getElementById('grad-days').innerText = formatCountdownText('2026-06-01');
-        const sunrise = new Date(); sunrise.setHours(6, 35);
+        const now = new Date();
         const sunset = new Date(); sunset.setHours(18, 10);
-        let target = (now < sunrise) ? sunrise : (now < sunset ? sunset : new Date(now.getTime() + 86400000));
+        let target = (now < sunset) ? sunset : new Date(now.getTime() + 86400000);
         let diff = Math.floor((target - now) / 1000);
         let h = Math.floor(diff/3600), m = Math.floor((diff%3600)/60), s = diff%60;
-        document.getElementById('sunCountdown').innerText = `距離${now < sunset && now > sunrise ? '日落' : '日出'}還有 ${h}時${m}分${s}秒`;
+        document.getElementById('sunCountdown').innerText = `距離日落還有 ${h}時${m}分${s}秒`;
     }
 
     function updateFortune() {
@@ -243,7 +243,7 @@
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
     setInterval(updateTime, 1000);
-    updateCounter(); // 啟動點閱計數
+    addCount(); // 進入頁面自動計數
     initTownshipSelect();
     fetchEarthquake();
     updateTime();
