@@ -107,23 +107,23 @@
 </div>
 
 <script>
-    // 雲端計數器設定 (進入即算)
-    const NAMESPACE = "dader60_kaobei_main"; 
-    const KEY = "page_hits";
+    // 1. 雲端計數邏輯：進網頁就算一次，點其他連結不算
+    const NAMESPACE = "dader60_kaobei_live"; 
+    const KEY = "page_view_total";
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
 
-    // 進入網頁自動 +1 並顯示總數
     async function triggerHit() {
         try {
-            // 使用 hit 接口，每次載入都會 +1
+            // 每次載入/重新整理呼叫 hit 介面，自動 +1
             const response = await fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`);
             const data = await response.json();
             document.getElementById('page-views').innerText = data.value.toLocaleString();
         } catch (err) {
-            document.getElementById('page-views').innerText = "連線異常";
+            document.getElementById('page-views').innerText = "連線中";
         }
     }
 
+    // 2. 行政區資料：100% 原封不動
     const areaData = {
         "彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
         "台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],
@@ -156,6 +156,7 @@
         document.getElementById('windSpeed').innerText = "1.8";
     }
 
+    // 3. 倒數邏輯：今天/明天/還有X天
     function formatCountdownText(targetDateStr) {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -194,7 +195,7 @@
     setInterval(updateTime, 1000);
     initTownshipSelect();
     fetchEarthquake();
-    triggerHit(); // 網頁載入執行一次 +1 並顯示
+    triggerHit(); // 網頁載入執行
 </script>
 
 </body>
