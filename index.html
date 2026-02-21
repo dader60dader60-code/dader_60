@@ -19,12 +19,12 @@
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
-        .weather-meta { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center; line-height: 1.5; }
+        .weather-meta { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center; }
 
-        /* 地震區強化樣式 */
+        /* 地震區維持原始紅邊樣式 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; min-height: 80px; }
-        .eq-select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; cursor: pointer; }
+        .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.6; }
+        .eq-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
 
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
@@ -76,18 +76,13 @@
                 <small id="sunCountdown" style="font-weight: bold; color: #FFFFAA;">倒數中...</small>
             </div>
         </div>
-        <div class="weather-meta">
-            資料來源：交通部中央氣象署 (CWA)<br>
-            最後更新：<span id="updateTime">--/-- --:--</span>
-        </div>
+        <div class="weather-meta">最後更新：<span id="updateTime">--/-- --:--</span></div>
     </div>
 
     <div class="card earthquake-box">
-        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 5px;">📢 中部地區地震監測</div>
-        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
-            <option value="">正在載入地震列表...</option>
-        </select>
-        <div id="eqDisplayArea" class="eq-display-card">載入地震資料中...</div>
+        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部地區地震快報</div>
+        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()"></select>
+        <div id="eqDisplayArea" class="eq-display-card">正在連線氣象署...</div>
     </div>
 
     <div class="live-section">
@@ -112,21 +107,23 @@
 
 <script>
     let eqDataList = [];
+    const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
 
     // --- 計數器 ---
     async function updateCounter() {
         const viewEl = document.getElementById('page-views');
-        let localBase = parseInt(localStorage.getItem('dader_final_hits_v100') || "0");
-        localBase++;
-        localStorage.setItem('dader_final_hits_v100', localBase);
-        viewEl.innerText = localBase.toLocaleString();
+        let local = parseInt(localStorage.getItem('hits_v26') || "0");
+        local++;
+        localStorage.setItem('hits_v26', local);
+        viewEl.innerText = local.toLocaleString();
         try {
-            const res = await fetch('https://api.countapi.xyz/hit/dader_official_2026/visits');
-            if (res.ok) { const data = await res.json(); viewEl.innerText = data.value.toLocaleString(); }
+            const res = await fetch(`https://api.counterapi.dev/v1/dader_kaobei_speed/hits/increment`);
+            const data = await res.json();
+            viewEl.innerText = data.count.toLocaleString();
         } catch (e) { }
     }
 
-    // --- 倒數日 (明天/今天) ---
+    // --- 倒數日 (判斷明天/今天) ---
     function formatCountdownText(dateStr) {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -138,40 +135,36 @@
         return `還有 ${diff} 天`;
     }
 
-    // --- 地震強化功能 (最新 + 歷史選擇) ---
+    // --- 地震：抓取最新 + 歷史 ---
     async function fetchEarthquake() {
         try {
-            const res = await fetch('https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=CWA-E16D81B4-7836-43CA-95E5-51D9A434B120&format=JSON');
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
             const data = await res.json();
-            eqDataList = data.records.Earthquake; // 獲取所有地震列表
-            
+            eqDataList = data.records.Earthquake;
             const selectEl = document.getElementById('eqSelect');
             selectEl.innerHTML = "";
-            
-            eqDataList.slice(0, 5).forEach((e, index) => {
+            eqDataList.slice(0, 5).forEach((e, i) => {
                 let opt = document.createElement('option');
-                opt.value = index;
-                opt.innerHTML = (index === 0 ? "【最新】" : `前 ${index} 筆：`) + e.EarthquakeInfo.OriginTime.split(' ')[1] + " " + e.EarthquakeInfo.EarthquakeLocation;
+                opt.value = i;
+                opt.innerHTML = (i === 0 ? "【最新】" : `歷史筆數 ${i}：`) + e.EarthquakeInfo.OriginTime.substring(5, 16);
                 selectEl.appendChild(opt);
             });
-            displaySelectedEq(); // 預設顯示第一筆
-        } catch (e) { document.getElementById('eqDisplayArea').innerText = "地震資料暫時無法載入"; }
+            displaySelectedEq();
+        } catch (e) { document.getElementById('eqDisplayArea').innerText = "地震資料載入失敗"; }
     }
 
     function displaySelectedEq() {
-        const index = document.getElementById('eqSelect').value;
-        const e = eqDataList[index];
-        const info = e.EarthquakeInfo;
-        const intensity = e.Intensity.MaxIntensity[0];
+        const idx = document.getElementById('eqSelect').value;
+        const e = eqDataList[idx].EarthquakeInfo;
+        const inten = eqDataList[idx].Intensity.MaxIntensity[0];
         document.getElementById('eqDisplayArea').innerHTML = `
-            📍 <b>地點：</b>${info.EarthquakeLocation}<br>
-            ⚠️ <b>最大震度：</b><span style="color:red; font-size:18px;">${intensity.IntensityValue}級</span> (${intensity.CountyName})<br>
-            📏 <b>規模：</b>ML ${info.EarthquakeMagnitude.MagnitudeValue} / 深度 ${info.EarthquakeDepth.Value}km<br>
-            🕒 <b>時間：</b>${info.OriginTime}
+            📅 <b>日期時間：</b>${e.OriginTime}<br>
+            📍 <b>震源位置：</b>${e.EarthquakeLocation}<br>
+            ⚠️ <b>最大強度：</b><span style="color:red; font-size:16px;">${inten.IntensityValue}級</span> (${inten.CountyName})
         `;
     }
 
-    // --- 天氣功能 ---
+    // --- 原始天氣與行政區功能 ---
     function updateWeatherDisplay() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
@@ -179,10 +172,10 @@
         const now = new Date();
         document.getElementById('updateTime').innerText = `${(now.getMonth()+1)}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
         document.getElementById('weatherDisplay').innerHTML = `22°C ⛅`;
-        document.getElementById('rainProb').innerText = "10%";
+        document.getElementById('rainProb').innerText = "5%";
         document.getElementById('humidity').innerText = "60%";
         document.getElementById('windDir').innerText = "北風";
-        document.getElementById('windSpeed').innerText = "1.8";
+        document.getElementById('windSpeed').innerText = "1.5";
     }
 
     const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
