@@ -107,10 +107,10 @@
     </div>
 
     <div class="card countdown-box">
-        <div style="font-size: 14px;">🎒 距離 2/23 開學日還有</div>
+        <div style="font-size: 14px;">🎒 距離 2/23 開學日</div>
         <div class="countdown-num" id="school-days">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🎓 距離 6/1 畢業日還有</div>
+        <div style="font-size: 14px;">🎓 距離 6/1 畢業日</div>
         <div class="countdown-num" id="grad-days">--</div>
     </div>
 
@@ -124,14 +124,12 @@
 <script>
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     
-    // 鄉鎮數據資料庫
     const areaData = {
         "彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
         "台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],
         "南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]
     };
 
-    // 初始化鄉鎮選單
     function initTownshipSelect() {
         const city = document.getElementById('citySelect').value;
         const townSelect = document.getElementById('townSelect');
@@ -140,7 +138,7 @@
             let opt = document.createElement('option');
             opt.value = town;
             opt.innerHTML = town;
-            if(town === "田中鎮") opt.selected = true; // 預設田中
+            if(town === "田中鎮") opt.selected = true;
             townSelect.appendChild(opt);
         });
         updateWeatherDisplay();
@@ -150,8 +148,6 @@
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
-        
-        // 隨機天氣數據 (模擬更新)
         const icons = ["☀️", "🌤️", "☁️", "🌦️"];
         const temp = Math.floor(Math.random() * 5) + 20;
         document.getElementById('weatherDisplay').innerHTML = `${temp}°C ${icons[Math.floor(Math.random()*4)]}`;
@@ -161,7 +157,6 @@
         document.getElementById('windSpeed').innerText = (Math.random() * 4 + 1).toFixed(1) + " m/s";
     }
 
-    // 地震 API 連線
     async function fetchEarthquake() {
         try {
             const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
@@ -169,15 +164,12 @@
             const list = data.records.Earthquake.filter(eq => 
                 ["彰化", "台中", "臺中", "南投", "雲林", "苗栗"].some(loc => eq.EarthquakeInfo.EarthquakeLocation.includes(loc))
             );
-
             if (list.length === 0) {
                 document.getElementById('eqDisplayArea').innerHTML = "✅ 中部近期無顯著地震紀錄";
                 return;
             }
-
             window.eqData = list;
             showEQ(0);
-            
             let html = `<select class="eq-select" onchange="showEQ(this.value)">`;
             list.forEach((e, i) => html += `<option value="${i}">${i==0?'⚡最新':'紀錄'}: ${e.EarthquakeInfo.OriginTime.substring(5,16)}</option>`);
             html += `</select>`;
@@ -202,13 +194,32 @@
         `;
     }
 
+    // 格式化倒數文字
+    function formatCountdownText(targetDate) {
+        const now = new Date();
+        const target = new Date(targetDate);
+        
+        // 消除時分秒影響，只比日期
+        const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const targetDateOnly = new Date(target.getFullYear(), target.getMonth(), target.getDate());
+        
+        const diffTime = targetDateOnly - nowDate;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return "今天！";
+        if (diffDays === 1) return "明天！";
+        if (diffDays < 0) return "已結束";
+        return `還有 ${diffDays} 天`;
+    }
+
     function updateTime() {
         const now = new Date();
-        const sD = Math.ceil((new Date(2026, 1, 23) - now) / 86400000);
-        document.getElementById('school-days').innerText = sD > 0 ? sD + " 天" : "已開學";
-        const gD = Math.ceil((new Date(2026, 5, 1) - now) / 86400000);
-        document.getElementById('grad-days').innerText = gD > 0 ? gD + " 天" : "畢業快樂";
+        
+        // 更新開學日與畢業日文字
+        document.getElementById('school-days').innerText = formatCountdownText('2026-02-23');
+        document.getElementById('grad-days').innerText = formatCountdownText('2026-06-01');
 
+        // 太陽與倒數 (日出日落)
         const sunrise = new Date(); sunrise.setHours(6, 35);
         const sunset = new Date(); sunset.setHours(18, 10);
         let target = (now < sunrise) ? sunrise : (now < sunset ? sunset : new Date(now.getTime() + 86400000));
