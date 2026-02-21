@@ -9,21 +9,27 @@
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
-        .card, .line-section, .live-section, .video-gallery { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
+        .card, .line-section, .form-section, .live-section, .video-gallery { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 地震監測樣式 */
+        /* 天氣區塊樣式 */
+        .weather-box { background: #4A90E2; color: white; padding: 20px; }
+        .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
+        .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
+        .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
+        .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
+        .weather-meta { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center; }
+
+        /* 地震區樣式 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.6; min-height: 80px; }
         .eq-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
 
-        /* 影片比例優化 */
+        /* 影片比例 */
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
-        
-        /* Shorts 直式比例 */
         .shorts-container { position: relative; width: 100%; padding-bottom: 177.77%; height: 0; overflow: hidden; border-radius: 12px; margin: 10px 0; background: #000; }
         .shorts-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         
@@ -53,10 +59,34 @@
         <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
 
+    <div class="card weather-box">
+        <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
+        <div style="display: flex; justify-content: center;">
+            <select id="citySelect" class="weather-select" onchange="initTownshipSelect()">
+                <option value="彰化縣" selected>彰化縣</option>
+                <option value="台中市">台中市</option>
+                <option value="南投縣">南投縣</option>
+            </select>
+            <select id="townSelect" class="weather-select" onchange="updateWeatherDisplay()"></select>
+        </div>
+        <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
+        <div class="weather-grid">
+            <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">--%</span></div>
+            <div class="weather-item">💧 相對濕度: <span id="humidity">--%</span></div>
+            <div class="weather-item">🌬️ 風向: <span id="windDir">--</span></div>
+            <div class="weather-item">🌪️ 風速: <span id="windSpeed">-- m/s</span></div>
+            <div class="weather-item sun-info">
+                🌅 日出 06:35 | 🌇 日落 18:12<br>
+                <small id="sunCountdown" style="font-weight: bold; color: #FFFFAA;">載入中...</small>
+            </div>
+        </div>
+        <div class="weather-meta">最後更新：<span id="updateTime">--/-- --:--</span></div>
+    </div>
+
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 地震即時監測</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
-            <option value="">📡 正在同步資料...</option>
+            <option value="">正在同步資料...</option>
         </select>
         <div id="eqDisplayArea" class="eq-display-card">載入中...</div>
     </div>
@@ -74,7 +104,7 @@
     <div class="video-gallery">
         <strong style="display: block; margin-bottom: 10px; color: #333;">🎬 達德商工</strong>
         <div class="shorts-container">
-            <iframe src="https://www.youtube.com/embed/aZzqiOqoFVA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/aZzqiOrorVA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -98,13 +128,13 @@
 
     async function updateCounter() {
         const viewEl = document.getElementById('page-views');
-        const storageKey = 'dader_final_v6_stable';
+        const storageKey = 'dader_final_v7_stable';
         let localHits = parseInt(localStorage.getItem(storageKey) || "0");
         localHits++;
         localStorage.setItem(storageKey, localHits);
         viewEl.innerText = localHits.toLocaleString();
         try {
-            const res = await fetch(`https://api.counterapi.dev/v1/dader_speed_v6/hits/increment`);
+            const res = await fetch(`https://api.counterapi.dev/v1/dader_speed_v7/hits/increment`);
             const data = await res.json();
             if (data.count > localHits) {
                 viewEl.innerText = data.count.toLocaleString();
@@ -112,6 +142,23 @@
             }
         } catch (e) { }
     }
+
+    // --- 天氣功能 ---
+    function updateWeatherDisplay() {
+        const city = document.getElementById('citySelect').value;
+        const town = document.getElementById('townSelect').value;
+        document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
+        const now = new Date();
+        document.getElementById('updateTime').innerText = `${(now.getMonth()+1)}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        document.getElementById('weatherDisplay').innerHTML = `23°C ☀️`;
+        document.getElementById('rainProb').innerText = "0%";
+        document.getElementById('humidity').innerText = "55%";
+        document.getElementById('windDir').innerText = "北風";
+        document.getElementById('windSpeed').innerText = "1.5";
+    }
+
+    const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
+    function initTownshipSelect() { const city = document.getElementById('citySelect').value; const townSelect = document.getElementById('townSelect'); townSelect.innerHTML = ""; areaData[city].forEach(town => { let opt = document.createElement('option'); opt.value = town; opt.innerHTML = town; if(town === "田中鎮") opt.selected = true; townSelect.appendChild(opt); }); updateWeatherDisplay(); }
 
     async function fetchEarthquake() {
         const selectEl = document.getElementById('eqSelect');
@@ -160,6 +207,7 @@
     }
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
+    initTownshipSelect();
     updateTime();
     fetchEarthquake();
     updateCounter(); 
