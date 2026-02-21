@@ -14,14 +14,12 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select, .fortune-select, .eq-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
 
-        /* 地震區塊 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-latest-badge { background: #e74c3c; color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; margin-bottom: 8px; display: inline-block; }
         .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; }
@@ -64,44 +62,16 @@
         <select id="townshipSelect" class="weather-select" onchange="updateWeather()">
             <optgroup label="彰化縣">
                 <option value="彰化市">彰化市</option><option value="員林市">員林市</option>
-                <option value="和美鎮">和美鎮</option><option value="鹿港鎮">鹿港鎮</option>
-                <option value="溪湖鎮">溪湖鎮</option><option value="二林鎮">二林鎮</option>
-                <option value="田中鎮" selected>田中鎮</option><option value="北斗鎮">北斗鎮</option>
-                <option value="花壇鄉">花壇鄉</option><option value="芬園鄉">芬園鄉</option>
-                <option value="大村鄉">大村鄉</option><option value="永靖鄉">永靖鄉</option>
-                <option value="伸港鄉">伸港鄉</option><option value="線西鄉">線西鄉</option>
-                <option value="福興鄉">福興鄉</option><option value="秀水鄉">秀水鄉</option>
-                <option value="埔鹽鄉">埔鹽鄉</option><option value="埔心鄉">埔心鄉</option>
-                <option value="竹塘鄉">竹塘鄉</option><option value="埤頭鄉">埤頭鄉</option>
-                <option value="溪州鄉">溪州鄉</option><option value="田尾鄉">田尾鄉</option>
-                <option value="二水鄉">二水鄉</option><option value="社頭鄉">社頭鄉</option>
-                <option value="芳苑鄉">芳苑鄉</option><option value="大城鄉">大城鄉</option>
+                <option value="田中鎮" selected>田中鎮</option><option value="二水鄉">二水鄉</option>
+                <option value="社頭鄉">社頭鄉</option><option value="鹿港鎮">鹿港鎮</option>
             </optgroup>
             <optgroup label="台中市">
-                <option value="中區">中區</option><option value="東區">東區</option>
-                <option value="南區">南區</option><option value="西區">西區</option>
-                <option value="北區">北區</option><option value="西屯區">西屯區</option>
-                <option value="南屯區">南屯區</option><option value="北屯區">北屯區</option>
-                <option value="豐原區">豐原區</option><option value="大里區">大里區</option>
-                <option value="太平區">太平區</option><option value="清水區">清水區</option>
-                <option value="沙鹿區">沙鹿區</option><option value="大甲區">大甲區</option>
-                <option value="東勢區">東勢區</option><option value="梧棲區">梧棲區</option>
-                <option value="烏日區">烏日區</option><option value="神岡區">神岡區</option>
-                <option value="大雅區">大雅區</option><option value="后里區">后里區</option>
-                <option value="霧峰區">霧峰區</option><option value="潭子區">潭子區</option>
-                <option value="大肚區">大肚區</option><option value="龍井區">龍井區</option>
-                <option value="外埔區">外埔區</option><option value="和平區">和平區</option>
-                <option value="石岡區">石岡區</option><option value="大安區">大安區</option>
-                <option value="新社區">新社區</option>
+                <option value="西屯區">西屯區</option><option value="北屯區">北屯區</option>
+                <option value="大里區">大里區</option>
             </optgroup>
             <optgroup label="南投縣">
-                <option value="南投市">南投市</option><option value="埔里鎮">埔里鎮</option>
-                <option value="草屯鎮">草屯鎮</option><option value="竹山鎮">竹山鎮</option>
-                <option value="集集鎮">集集鎮</option><option value="名間鄉">名間鄉</option>
-                <option value="鹿谷鄉">鹿谷鄉</option><option value="中寮鄉">中寮鄉</option>
-                <option value="魚池鄉">魚池鄉</option><option value="國姓鄉">國姓鄉</option>
-                <option value="水里鄉">水里鄉</option><option value="信義鄉">信義鄉</option>
-                <option value="仁愛鄉">仁愛鄉</option>
+                <option value="南投市">南投市</option><option value="草屯鎮">草屯鎮</option>
+                <option value="埔里鎮">埔里鎮</option>
             </optgroup>
         </select>
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
@@ -115,14 +85,12 @@
                 <small id="sunCountdown">載入倒數中...</small>
             </div>
         </div>
-        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--:--</span></div>
+        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">最後更新：<span id="updateTime">--:--:--</span></div>
     </div>
 
     <div class="card earthquake-box">
-        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部地區地震快報 (氣象署連線)</div>
-        <div id="eqDisplayArea" class="eq-display-card">
-            <div style="text-align:center; color:#666;">🔄 正在獲取最新地震資訊...</div>
-        </div>
+        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部地區地震快報</div>
+        <div id="eqDisplayArea" class="eq-display-card">正在連線氣象署...</div>
         <div id="eqHistoryArea"></div>
     </div>
 
@@ -141,7 +109,7 @@
     </div>
 
     <div class="live-section">
-        <strong style="display: block; margin-bottom: 10px;">📹 中部即時影像直播</strong>
+        <strong style="display: block; margin-bottom: 10px;">📹 即時直播專區</strong>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
@@ -163,65 +131,55 @@
 
 <script>
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
-    const MID_TAIWAN = ["彰化", "台中", "臺中", "南投", "雲林", "苗栗"];
+    const MID_REGIONS = ["彰化", "台中", "臺中", "南投", "雲林", "苗栗"];
 
-    // 獲取中部地震資料
+    // 取得地震資料
     async function fetchEarthquakeData() {
+        const displayArea = document.getElementById('eqDisplayArea');
         try {
-            const response = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
+            // 使用氣象署顯著有感地震 API
+            const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`;
+            const response = await fetch(url);
+            
+            if (!response.ok) throw new Error('網路回應不正確');
+            
             const data = await response.json();
-            const allEvents = data.records.Earthquake;
+            const earthquakes = data.records.Earthquake;
 
             // 過濾中部地震
-            let filtered = allEvents.filter(eq => {
+            const filtered = earthquakes.filter(eq => {
                 const loc = eq.EarthquakeInfo.EarthquakeLocation;
-                return MID_TAIWAN.some(region => loc.includes(region));
+                return MID_REGIONS.some(r => loc.includes(r));
             });
 
             if (filtered.length === 0) {
-                document.getElementById('eqDisplayArea').innerHTML = `<div style="text-align:center; color:#666;">✅ 中部近一個月無感地震</div>`;
+                displayArea.innerHTML = "✅ 中部近一個月無顯著有感地震紀錄";
                 return;
             }
 
-            // 格式化資料
-            window.currentEQData = filtered.map(eq => {
-                const info = eq.EarthquakeInfo;
-                const time = new Date(info.OriginTime);
-                return {
-                    date: (time.getMonth() + 1) + "/" + time.getDate(),
-                    time: time.getHours().toString().padStart(2, '0') + ":" + time.getMinutes().toString().padStart(2, '0'),
-                    loc: info.EarthquakeLocation,
-                    mag: info.EarthquakeMagnitude.MagnitudeValue,
-                    dep: info.EarthquakeDepth.Value + "km",
-                    max: eq.Intensity.MaxIntensity[0].IntensityValue + "級",
-                    url: eq.Web
-                };
-            });
+            window.currentEQData = filtered.map(eq => ({
+                date: eq.EarthquakeInfo.OriginTime.split(' ')[0].substring(5).replace('-', '/'),
+                time: eq.EarthquakeInfo.OriginTime.split(' ')[1].substring(0, 5),
+                loc: eq.EarthquakeInfo.EarthquakeLocation,
+                mag: eq.EarthquakeInfo.EarthquakeMagnitude.MagnitudeValue,
+                dep: eq.EarthquakeInfo.EarthquakeDepth.Value + "km",
+                max: eq.Intensity.MaxIntensity[0].IntensityValue + "級",
+                url: eq.Web
+            }));
 
-            renderEQ(0); // 顯示最新的一個
+            renderEQ(0);
+            updateEQSelect();
 
-            // 顯示歷史選單
-            if (window.currentEQData.length > 1) {
-                let html = `<div class="eq-history-label">中部歷史地震回顧：</div>`;
-                html += `<select class="eq-select" onchange="renderEQ(this.value)">`;
-                window.currentEQData.forEach((eq, index) => {
-                    const label = index === 0 ? "⚡ 最新地震" : `地震回顧 ${index + 1}`;
-                    html += `<option value="${index}">${label}: ${eq.date} ${eq.loc}</option>`;
-                });
-                html += `</select>`;
-                document.getElementById('eqHistoryArea').innerHTML = html;
-            }
         } catch (error) {
-            document.getElementById('eqDisplayArea').innerHTML = `<div style="text-align:center; color:red;">❌ 地震資料連線失敗</div>`;
+            console.error(error);
+            displayArea.innerHTML = "<span style='color:red;'>⚠️ 無法連線氣象署 API (請檢查 API Key 或網路)</span>";
         }
     }
 
     function renderEQ(index) {
         const eq = window.currentEQData[index];
-        const displayArea = document.getElementById('eqDisplayArea');
-        const badge = index == 0 ? `<span class="eq-latest-badge">最新中部地震</span>` : `<span class="eq-latest-badge" style="background:#666">中部歷史紀錄</span>`;
-        
-        displayArea.innerHTML = `
+        const badge = index == 0 ? `<span class="eq-latest-badge">最新中部地震</span>` : `<span class="eq-latest-badge" style="background:#666">中部地震紀錄</span>`;
+        document.getElementById('eqDisplayArea').innerHTML = `
             ${badge}
             <div class="eq-info-line">
                 <b>📅 時間：</b>${eq.date} ${eq.time}<br>
@@ -229,74 +187,71 @@
                 <b>📉 規模：</b>M ${eq.mag} | <b>深度：</b>${eq.dep}<br>
                 <b>⚠️ 最大震度：</b><span style="color:red; font-weight:bold;">${eq.max}</span>
             </div>
-            <a href="${eq.url}" target="_blank" style="font-size:12px; color:#4A90E2; text-decoration:none; display:block; margin-top:5px;">🔍 查看詳細報告</a>
+            <a href="${eq.url}" target="_blank" style="font-size:12px; color:#4A90E2; text-decoration:none;">🔍 查看報告</a>
         `;
     }
 
-    // 倒數與時間邏輯
-    function updateData() {
-        const now = new Date();
-        const schoolDate = new Date(2026, 1, 23);
-        const sDiff = Math.ceil((schoolDate - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('school-days').innerText = sDiff > 0 ? sDiff + " 天" : "已開學";
-        const gradDate = new Date(2026, 5, 1);
-        const gDiff = Math.ceil((gradDate - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('grad-days').innerText = gDiff > 0 ? gDiff + " 天" : "畢業快樂";
-
-        document.getElementById('updateTime').innerText = 
-            now.getHours().toString().padStart(2, '0') + ":" + 
-            now.getMinutes().toString().padStart(2, '0') + ":" + 
-            now.getSeconds().toString().padStart(2, '0');
-        
-        updateSunLogic();
+    function updateEQSelect() {
+        if (window.currentEQData.length <= 1) return;
+        let html = `<div class="eq-history-label">中部歷史紀錄：</div><select class="eq-select" onchange="renderEQ(this.value)">`;
+        window.currentEQData.forEach((eq, i) => {
+            html += `<option value="${i}">${i==0?'⚡ 最新':'紀錄'}：${eq.date} ${eq.loc}</option>`;
+        });
+        html += `</select>`;
+        document.getElementById('eqHistoryArea').innerHTML = html;
     }
 
+    // 天氣更新
     function updateWeather() {
         const select = document.getElementById('townshipSelect');
-        const groupLabel = select.options[select.selectedIndex].parentNode.label;
-        document.getElementById('regionDisplay').innerText = groupLabel + " 即時天氣預報";
+        const town = select.value;
+        const city = select.options[select.selectedIndex].parentNode.label;
+        document.getElementById('regionDisplay').innerText = `${city} ${town} 即時預報`;
         
-        const icons = ["☀️", "🌤️", "☁️", "🌦️"];
-        const temp = Math.floor(Math.random() * 7) + 18; 
-        document.getElementById('weatherDisplay').innerHTML = `${temp}°C ${icons[Math.floor(Math.random()*4)]}`;
-        document.getElementById('rainProb').innerText = Math.floor(Math.random() * 30) + "%";
-        document.getElementById('dayRain').innerText = (Math.random() * 2).toFixed(1) + "mm";
-        document.getElementById('windDir').innerText = ["北風", "東北風", "西北風"][Math.floor(Math.random()*3)];
-        document.getElementById('windSpeed').innerText = (Math.random() * 3 + 1).toFixed(1) + " m/s";
+        // 模擬數據更新
+        const icons = ["☀️", "🌤️", "☁️", "🌦️", "🌧️"];
+        const temp = Math.floor(Math.random() * 5) + 20; 
+        document.getElementById('weatherDisplay').innerHTML = `${temp}°C ${icons[Math.floor(Math.random()*icons.length)]}`;
+        document.getElementById('rainProb').innerText = Math.floor(Math.random() * 40) + "%";
+        document.getElementById('dayRain').innerText = (Math.random() * 1).toFixed(1) + "mm";
+        document.getElementById('windDir').innerText = ["北風", "東北風", "東風"][Math.floor(Math.random()*3)];
+        document.getElementById('windSpeed').innerText = (Math.random() * 4 + 1).toFixed(1) + " m/s";
     }
 
-    function updateSunLogic() {
+    function updateTimeUI() {
         const now = new Date();
-        const sunrise = new Date(); sunrise.setHours(6, 35, 0);
-        const sunset = new Date(); sunset.setHours(18, 2, 0);
-        let target, label;
-        if (now < sunrise) { target = sunrise; label = "距離日出還有 "; }
-        else if (now < sunset) { target = sunset; label = "距離日落還有 "; }
-        else { 
-            target = new Date(); target.setDate(now.getDate() + 1); target.setHours(6, 35, 0);
-            label = "距離明日日出還有 "; 
-        }
-        let diff = target - now;
-        const h = Math.floor(diff / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
-        document.getElementById('sunCountdown').innerText = label + `${h}時${m}分${s}秒`;
+        document.getElementById('updateTime').innerText = now.toLocaleTimeString();
+        
+        // 倒數計時
+        const sDiff = Math.ceil((new Date(2026, 1, 23) - now) / 86400000);
+        document.getElementById('school-days').innerText = sDiff > 0 ? sDiff + " 天" : "已開學";
+        const gDiff = Math.ceil((new Date(2026, 5, 1) - now) / 86400000);
+        document.getElementById('grad-days').innerText = gDiff > 0 ? gDiff + " 天" : "畢業快樂";
+
+        // 太陽
+        const sunrise = new Date(); sunrise.setHours(6, 30);
+        const sunset = new Date(); sunset.setHours(18, 10);
+        let target = (now < sunrise) ? sunrise : (now < sunset ? sunset : new Date(now.getTime() + 86400000));
+        if (target.getHours() === 6) target.setHours(6,30);
+        let diff = Math.floor((target - now) / 1000);
+        let h = Math.floor(diff/3600), m = Math.floor((diff%3600)/60), s = diff%60;
+        document.getElementById('sunCountdown').innerText = `距離${now < sunset && now > sunrise ? '日落':'日出'}還有 ${h}時${m}分${s}秒`;
     }
 
     function updateFortune() {
-        const constellation = document.getElementById('constellationSelect').value;
-        const resultDiv = document.getElementById('fortuneResult');
-        if (!constellation) { resultDiv.style.display = 'none'; return; }
-        const fortunes = ["⭐ 運勢大吉！", "⭐⭐ 穩定發揮。", "⭐⭐⭐ 財運不錯。", "⭐⭐ 今日建議低調。"];
-        resultDiv.innerHTML = `<strong>${constellation}</strong>：${fortunes[Math.floor(Math.random() * fortunes.length)]}`;
-        resultDiv.style.display = 'block';
+        const val = document.getElementById('constellationSelect').value;
+        const res = document.getElementById('fortuneResult');
+        if (!val) { res.style.display = 'none'; return; }
+        const list = ["大吉！今天適合告白或買彩券", "中吉，工作學習效率極高", "小吉，平穩度過的一天", "末吉，注意交通安全"];
+        res.innerHTML = `<b>${val}</b>：${list[Math.floor(Math.random()*list.length)]}`;
+        res.style.display = 'block';
     }
 
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID"); }); }
+    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 ID")); }
 
-    setInterval(updateData, 1000);
-    setInterval(fetchEarthquakeData, 300000); // 每 5 分鐘重抓一次地震
-    updateData();
+    setInterval(updateTimeUI, 1000);
+    setInterval(fetchEarthquakeData, 600000);
+    updateTimeUI();
     updateWeather();
     fetchEarthquakeData();
 </script>
