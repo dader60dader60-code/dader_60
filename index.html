@@ -21,8 +21,9 @@
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center; }
 
+        /* 地震區紅邊樣式 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.6; }
+        .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.6; min-height: 80px; }
         .eq-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
 
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
@@ -75,13 +76,17 @@
                 <small id="sunCountdown" style="font-weight: bold; color: #FFFFAA;">倒數中...</small>
             </div>
         </div>
-        <div class="weather-meta">資料來源：中央氣象署 (CWA)<br>最後更新：<span id="updateTime">--/-- --:--</span></div>
+        <div class="weather-meta">最後更新：<span id="updateTime">--/-- --:--</span></div>
     </div>
 
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 地震即時監測 (日期/震源/強度)</div>
-        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()"></select>
-        <div id="eqDisplayArea" class="eq-display-card">載入地震資料中...</div>
+        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
+            <option value="">📡 正在連線氣象署...</option>
+        </select>
+        <div id="eqDisplayArea" class="eq-display-card">
+            請稍候，資料載入中...
+        </div>
     </div>
 
     <div class="live-section">
@@ -108,29 +113,26 @@
     let eqDataList = [];
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
 
-    // --- 永久計數器邏輯 (修復退出重算問題) ---
+    // --- 計數器永久保留邏輯 ---
     async function updateCounter() {
         const viewEl = document.getElementById('page-views');
-        const storageKey = 'dader_final_counter_v1';
-        
-        // 1. 先抓本地儲存的數字
+        const storageKey = 'dader_persistent_v26';
         let localHits = parseInt(localStorage.getItem(storageKey) || "0");
-        localHits++; // 進入就加 1
-        localStorage.setItem(storageKey, localHits); // 存回手機
+        localHits++;
+        localStorage.setItem(storageKey, localHits);
         viewEl.innerText = localHits.toLocaleString();
 
-        // 2. 嘗試同步雲端 (防止清空快取)
         try {
-            const res = await fetch(`https://api.counterapi.dev/v1/dader_kaobei_hits_2026/hits/increment`);
+            const res = await fetch(`https://api.counterapi.dev/v1/dader_speed_final_v1/hits/increment`);
             const data = await res.json();
             if (data.count > localHits) {
                 viewEl.innerText = data.count.toLocaleString();
                 localStorage.setItem(storageKey, data.count);
             }
-        } catch (e) { console.log("雲端計數器同步略過，維持本地數值"); }
+        } catch (e) { }
     }
 
-    // --- 倒數日 (判斷明天/今天) ---
+    // --- 倒數日邏輯 ---
     function formatCountdownText(dateStr) {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -142,26 +144,39 @@
         return `還有 ${diff} 天`;
     }
 
-    // --- 地震抓取 ---
+    // --- 強化版地震抓取 ---
     async function fetchEarthquake() {
+        const selectEl = document.getElementById('eqSelect');
+        const displayEl = document.getElementById('eqDisplayArea');
+        
         try {
-            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
+            // 加入 cache: "no-cache" 確保每次都抓最新
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`, { cache: "no-cache" });
             const data = await res.json();
-            eqDataList = data.records.Earthquake;
-            const selectEl = document.getElementById('eqSelect');
-            selectEl.innerHTML = "";
-            eqDataList.slice(0, 5).forEach((e, i) => {
-                let opt = document.createElement('option');
-                opt.value = i;
-                opt.innerHTML = (i === 0 ? "【最新地震】" : `前一筆：`) + e.EarthquakeInfo.OriginTime.substring(5, 16);
-                selectEl.appendChild(opt);
-            });
-            displaySelectedEq();
-        } catch (e) { document.getElementById('eqDisplayArea').innerText = "資料連線中..."; }
+            
+            if (data.records && data.records.Earthquake) {
+                eqDataList = data.records.Earthquake;
+                selectEl.innerHTML = "";
+                eqDataList.slice(0, 8).forEach((e, i) => {
+                    let opt = document.createElement('option');
+                    opt.value = i;
+                    // 簡化選單名稱
+                    opt.innerHTML = (i === 0 ? "【最新】" : `前 ${i} 筆：`) + e.EarthquakeInfo.OriginTime.substring(5, 16);
+                    selectEl.appendChild(opt);
+                });
+                displaySelectedEq();
+            } else {
+                displayEl.innerText = "氣象署目前無回傳資料";
+            }
+        } catch (e) {
+            console.error("Earthquake API Error:", e);
+            displayEl.innerText = "載入失敗：請確認 API Key 是否正確或網路穩定。";
+        }
     }
 
     function displaySelectedEq() {
         const idx = document.getElementById('eqSelect').value;
+        if (!eqDataList[idx]) return;
         const e = eqDataList[idx].EarthquakeInfo;
         const inten = eqDataList[idx].Intensity.MaxIntensity[0];
         document.getElementById('eqDisplayArea').innerHTML = `
@@ -171,18 +186,18 @@
         `;
     }
 
-    // --- 天氣行政區 ---
+    // --- 天氣預報 ---
     function updateWeatherDisplay() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
         const now = new Date();
         document.getElementById('updateTime').innerText = `${(now.getMonth()+1)}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-        document.getElementById('weatherDisplay').innerHTML = `23°C ☀️`;
-        document.getElementById('rainProb').innerText = "0%";
-        document.getElementById('humidity').innerText = "55%";
+        document.getElementById('weatherDisplay').innerHTML = `23°C ⛅`;
+        document.getElementById('rainProb').innerText = "5%";
+        document.getElementById('humidity').innerText = "60%";
         document.getElementById('windDir').innerText = "北風";
-        document.getElementById('windSpeed').innerText = "1.2";
+        document.getElementById('windSpeed').innerText = "1.6";
     }
 
     const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
