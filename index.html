@@ -14,6 +14,7 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
+        /* 天氣區域樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -83,7 +84,7 @@
 
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部地區地震快報</div>
-        <div id="eqDisplayArea" class="eq-display-card">載入地震資料中...</div>
+        <div id="eqDisplayArea" class="eq-display-card">正在連線氣象署...</div>
     </div>
 
     <div class="live-section">
@@ -103,30 +104,25 @@
 
 <div class="fixed-footer">
     𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊<br>
-    <span class="view-counter">🔥 全網累計點閱：<span id="page-views">正在同步...</span> 次</span>
+    <span class="view-counter">🔥 全網累計點閱：<span id="page-views">0</span> 次</span>
 </div>
 
 <script>
-    // 1. 全球累計計數器 (進網頁即加一次)
-    const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
-    
-    async function triggerHit() {
-        const viewEl = document.getElementById('page-views');
+    // --- 核心計數器：僅網頁進入/刷新時觸發 ---
+    const NAMESPACE = "dader_reset_final_02"; 
+    const KEY = "page_views";
+
+    async function updatePageCount() {
         try {
-            // 嘗試與雲端同步
-            const resp = await fetch(`https://api.countapi.xyz/hit/dader60_speed/total_hits_v2`);
+            const resp = await fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`);
             const data = await resp.json();
-            viewEl.innerText = data.value.toLocaleString();
+            document.getElementById('page-views').innerText = data.value.toLocaleString();
         } catch (err) {
-            // 萬一雲端掛掉，使用本地儲存模擬，確保不會一直顯示連線中
-            let current = parseInt(localStorage.getItem('dader_hits') || "1200");
-            current++;
-            localStorage.setItem('dader_hits', current);
-            viewEl.innerText = current.toLocaleString();
+            console.log("CountAPI syncing...");
         }
     }
 
-    // 2. 行政區資料：完整補齊
+    // --- 行政區與天氣功能 ---
     const areaData = {
         "彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
         "台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],
@@ -159,7 +155,7 @@
         document.getElementById('windSpeed').innerText = "2.5";
     }
 
-    // 3. 倒數邏輯：今天/明天/還有X天
+    // --- 倒數日邏輯 ---
     function formatCountdownText(targetDateStr) {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -185,7 +181,7 @@
 
     async function fetchEarthquake() {
         try {
-            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=CWA-E16D81B4-7836-43CA-95E5-51D9A434B120&format=JSON`);
             const data = await res.json();
             const e = data.records.Earthquake[0];
             document.getElementById('eqDisplayArea').innerHTML = `📍 ${e.EarthquakeInfo.EarthquakeLocation}<br>⚠️ 最大震度：<span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span>`;
@@ -194,11 +190,11 @@
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
-    // 初始化執行
+    // --- 初始化執行 ---
     setInterval(updateTime, 1000);
     initTownshipSelect();
     fetchEarthquake();
-    triggerHit();
+    updatePageCount(); // 僅在載入時執行一次，增加計數並抓取數字
 </script>
 
 </body>
