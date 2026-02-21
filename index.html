@@ -21,8 +21,10 @@
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center; line-height: 1.5; }
 
+        /* 地震區強化樣式 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; }
+        .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; min-height: 80px; }
+        .eq-select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; cursor: pointer; }
 
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
@@ -81,7 +83,10 @@
     </div>
 
     <div class="card earthquake-box">
-        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部地區地震快報</div>
+        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 5px;">📢 中部地區地震監測</div>
+        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
+            <option value="">正在載入地震列表...</option>
+        </select>
         <div id="eqDisplayArea" class="eq-display-card">載入地震資料中...</div>
     </div>
 
@@ -106,34 +111,64 @@
 </div>
 
 <script>
-    // --- 全網計數邏輯 ---
+    let eqDataList = [];
+
+    // --- 計數器 ---
     async function updateCounter() {
         const viewEl = document.getElementById('page-views');
-        let localBase = parseInt(localStorage.getItem('dader_v26_final_hits') || "0");
+        let localBase = parseInt(localStorage.getItem('dader_final_hits_v100') || "0");
         localBase++;
-        localStorage.setItem('dader_v26_final_hits', localBase);
+        localStorage.setItem('dader_final_hits_v100', localBase);
         viewEl.innerText = localBase.toLocaleString();
-
         try {
-            const res = await fetch('https://api.countapi.xyz/hit/dader_speed_v2026_final/visits');
-            if (res.ok) {
-                const data = await res.json();
-                viewEl.innerText = data.value.toLocaleString();
-            }
+            const res = await fetch('https://api.countapi.xyz/hit/dader_official_2026/visits');
+            if (res.ok) { const data = await res.json(); viewEl.innerText = data.value.toLocaleString(); }
         } catch (e) { }
     }
 
-    // --- 倒數日 (判斷明天、今天) ---
+    // --- 倒數日 (明天/今天) ---
     function formatCountdownText(dateStr) {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const target = new Date(dateStr);
         const diff = Math.round((target - today) / 86400000);
-        
         if (diff === 0) return "就是今天！";
         if (diff === 1) return "就是明天！";
         if (diff < 0) return "已過期";
         return `還有 ${diff} 天`;
+    }
+
+    // --- 地震強化功能 (最新 + 歷史選擇) ---
+    async function fetchEarthquake() {
+        try {
+            const res = await fetch('https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=CWA-E16D81B4-7836-43CA-95E5-51D9A434B120&format=JSON');
+            const data = await res.json();
+            eqDataList = data.records.Earthquake; // 獲取所有地震列表
+            
+            const selectEl = document.getElementById('eqSelect');
+            selectEl.innerHTML = "";
+            
+            eqDataList.slice(0, 5).forEach((e, index) => {
+                let opt = document.createElement('option');
+                opt.value = index;
+                opt.innerHTML = (index === 0 ? "【最新】" : `前 ${index} 筆：`) + e.EarthquakeInfo.OriginTime.split(' ')[1] + " " + e.EarthquakeInfo.EarthquakeLocation;
+                selectEl.appendChild(opt);
+            });
+            displaySelectedEq(); // 預設顯示第一筆
+        } catch (e) { document.getElementById('eqDisplayArea').innerText = "地震資料暫時無法載入"; }
+    }
+
+    function displaySelectedEq() {
+        const index = document.getElementById('eqSelect').value;
+        const e = eqDataList[index];
+        const info = e.EarthquakeInfo;
+        const intensity = e.Intensity.MaxIntensity[0];
+        document.getElementById('eqDisplayArea').innerHTML = `
+            📍 <b>地點：</b>${info.EarthquakeLocation}<br>
+            ⚠️ <b>最大震度：</b><span style="color:red; font-size:18px;">${intensity.IntensityValue}級</span> (${intensity.CountyName})<br>
+            📏 <b>規模：</b>ML ${info.EarthquakeMagnitude.MagnitudeValue} / 深度 ${info.EarthquakeDepth.Value}km<br>
+            🕒 <b>時間：</b>${info.OriginTime}
+        `;
     }
 
     // --- 天氣功能 ---
@@ -141,28 +176,13 @@
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
-        
         const now = new Date();
-        const timeStr = `${(now.getMonth()+1)}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-        document.getElementById('updateTime').innerText = timeStr;
-        
+        document.getElementById('updateTime').innerText = `${(now.getMonth()+1)}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
         document.getElementById('weatherDisplay').innerHTML = `22°C ⛅`;
         document.getElementById('rainProb').innerText = "10%";
-        document.getElementById('humidity').innerText = "65%";
+        document.getElementById('humidity').innerText = "60%";
         document.getElementById('windDir').innerText = "北風";
-        document.getElementById('windSpeed').innerText = "2.0";
-    }
-
-    // --- 地震 API (已加入你的 API Key) ---
-    async function fetchEarthquake() {
-        try {
-            const res = await fetch('https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=CWA-E16D81B4-7836-43CA-95E5-51D9A434B120&format=JSON');
-            const data = await res.json();
-            const e = data.records.Earthquake[0];
-            document.getElementById('eqDisplayArea').innerHTML = `📍 ${e.EarthquakeInfo.EarthquakeLocation}<br>⚠️ 最大震度：<span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span><br><small>發生時間：${e.EarthquakeInfo.OriginTime}</small>`;
-        } catch (e) {
-            document.getElementById('eqDisplayArea').innerText = "暫無最新地震資料";
-        }
+        document.getElementById('windSpeed').innerText = "1.8";
     }
 
     const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
