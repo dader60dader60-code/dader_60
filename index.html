@@ -14,7 +14,6 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -22,15 +21,16 @@
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center; }
 
-        /* 地震區 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.6; min-height: 80px; }
         .eq-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
 
-        /* 影片比例優化 */
+        /* 影片播放器外框 */
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
-        .shorts-container { position: relative; width: 100%; padding-bottom: 177.77%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
+        
+        /* Shorts 專用直式比例 */
+        .shorts-container { position: relative; width: 100%; padding-bottom: 177.77%; height: 0; overflow: hidden; border-radius: 12px; margin: 10px 0; background: #000; }
         .shorts-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
@@ -59,54 +59,28 @@
         <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
 
-    <div class="card weather-box">
-        <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
-        <div style="display: flex; justify-content: center;">
-            <select id="citySelect" class="weather-select" onchange="initTownshipSelect()">
-                <option value="彰化縣" selected>彰化縣</option>
-                <option value="台中市">台中市</option>
-                <option value="南投縣">南投縣</option>
-            </select>
-            <select id="townSelect" class="weather-select" onchange="updateWeatherDisplay()"></select>
-        </div>
-        <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">23°C ☀️</div>
-        <div class="weather-grid">
-            <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">0%</span></div>
-            <div class="weather-item">💧 相對濕度: <span id="humidity">55%</span></div>
-            <div class="weather-item">🌬️ 風向: <span id="windDir">北風</span></div>
-            <div class="weather-item">🌪️ 風速: <span id="windSpeed">1.5 m/s</span></div>
-            <div class="weather-item sun-info">
-                🌅 日出 06:35 | 🌇 日落 18:12<br>
-                <small id="sunCountdown" style="font-weight: bold; color: #FFFFAA;">載入中...</small>
-            </div>
-        </div>
-        <div class="weather-meta">最後更新：<span id="updateTime">--/-- --:--</span></div>
-    </div>
-
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 地震即時監測</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
-            <option value="">載入資料中...</option>
+            <option value="">正在同步最新地震...</option>
         </select>
-        <div id="eqDisplayArea" class="eq-display-card">
-            📡 正在同步氣象署最新數據...
-        </div>
+        <div id="eqDisplayArea" class="eq-display-card">載入資料中...</div>
     </div>
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 中部即時直播專區</strong>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/S_I_643TzI0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/S_I_643TzI0?autoplay=0&mute=0&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/6_i9F_uSndc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/6_i9F_uSndc?autoplay=0&mute=0&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </div>
 
     <div class="video-gallery">
         <strong style="display: block; margin-bottom: 10px; color: #333;">🎬 達德影片專區</strong>
         <div class="shorts-container">
-            <iframe src="https://www.youtube.com/embed/aZzqiOqoFVA" frameborder="0" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/aZzqiOqoFVA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div style="font-size: 12px; color: #666; font-weight: normal;">📹 達德商工校園剪輯</div>
     </div>
@@ -129,16 +103,15 @@
     let eqDataList = [];
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
 
-    // --- 永久計數器 ---
     async function updateCounter() {
         const viewEl = document.getElementById('page-views');
-        const storageKey = 'dader_persistent_v2026_v4';
+        const storageKey = 'dader_final_v5_stable';
         let localHits = parseInt(localStorage.getItem(storageKey) || "0");
         localHits++;
         localStorage.setItem(storageKey, localHits);
         viewEl.innerText = localHits.toLocaleString();
         try {
-            const res = await fetch(`https://api.counterapi.dev/v1/dader_kaobei_speed_v4/hits/increment`);
+            const res = await fetch(`https://api.counterapi.dev/v1/dader_speed_v5/hits/increment`);
             const data = await res.json();
             if (data.count > localHits) {
                 viewEl.innerText = data.count.toLocaleString();
@@ -147,7 +120,37 @@
         } catch (e) { }
     }
 
-    // --- 倒數日 ---
+    async function fetchEarthquake() {
+        const selectEl = document.getElementById('eqSelect');
+        try {
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
+            const data = await res.json();
+            if (data.records && data.records.Earthquake) {
+                eqDataList = data.records.Earthquake;
+                selectEl.innerHTML = "";
+                eqDataList.slice(0, 5).forEach((e, i) => {
+                    let opt = document.createElement('option');
+                    opt.value = i;
+                    opt.innerHTML = (i === 0 ? "【最新地震】" : `前一筆：`) + e.EarthquakeInfo.OriginTime.substring(5, 16);
+                    selectEl.appendChild(opt);
+                });
+                displaySelectedEq();
+            }
+        } catch (e) { document.getElementById('eqDisplayArea').innerText = "📅 正在抓取官方數據中..."; }
+    }
+
+    function displaySelectedEq() {
+        if (!eqDataList.length) return;
+        const idx = document.getElementById('eqSelect').value || 0;
+        const e = eqDataList[idx].EarthquakeInfo;
+        const inten = eqDataList[idx].Intensity.MaxIntensity[0];
+        document.getElementById('eqDisplayArea').innerHTML = `
+            📅 <b>日期時間：</b>${e.OriginTime}<br>
+            📍 <b>震源位置：</b>${e.EarthquakeLocation}<br>
+            ⚠️ <b>最大強度：</b><span style="color:red; font-size:16px;">${inten.IntensityValue}級</span> (${inten.CountyName})
+        `;
+    }
+
     function formatCountdownText(dateStr) {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -159,63 +162,13 @@
         return `還有 ${diff} 天`;
     }
 
-    // --- 地震抓取修復版 ---
-    async function fetchEarthquake() {
-        const selectEl = document.getElementById('eqSelect');
-        const displayEl = document.getElementById('eqDisplayArea');
-        try {
-            const response = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
-            const data = await response.json();
-            if (data.records && data.records.Earthquake) {
-                eqDataList = data.records.Earthquake;
-                selectEl.innerHTML = "";
-                eqDataList.slice(0, 5).forEach((e, i) => {
-                    let opt = document.createElement('option');
-                    opt.value = i;
-                    opt.innerHTML = (i === 0 ? "【最新】" : `地震筆數：`) + e.EarthquakeInfo.OriginTime.substring(5, 16);
-                    selectEl.appendChild(opt);
-                });
-                displaySelectedEq();
-            }
-        } catch (e) { 
-            displayEl.innerText = "📅 2026/02/22 00:15 \n📍 中部海域地震 \n⚠️ 最大震度：2級"; 
-        }
-    }
-
-    function displaySelectedEq() {
-        if (eqDataList.length === 0) return;
-        const idx = document.getElementById('eqSelect').value || 0;
-        const e = eqDataList[idx].EarthquakeInfo;
-        const inten = eqDataList[idx].Intensity.MaxIntensity[0];
-        document.getElementById('eqDisplayArea').innerHTML = `
-            📅 <b>日期時間：</b>${e.OriginTime}<br>
-            📍 <b>震源位置：</b>${e.EarthquakeLocation}<br>
-            ⚠️ <b>最大強度：</b><span style="color:red; font-size:16px;">${inten.IntensityValue}級</span> (${inten.CountyName})
-        `;
-    }
-
-    // --- 天氣行政區功能 ---
-    function updateWeatherDisplay() {
-        const city = document.getElementById('citySelect').value;
-        const town = document.getElementById('townSelect').value;
-        document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
-        const now = new Date();
-        document.getElementById('updateTime').innerText = `${(now.getMonth()+1)}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-    }
-
-    const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
-    function initTownshipSelect() { const city = document.getElementById('citySelect').value; const townSelect = document.getElementById('townSelect'); townSelect.innerHTML = ""; areaData[city].forEach(town => { let opt = document.createElement('option'); opt.value = town; opt.innerHTML = town; if(town === "田中鎮") opt.selected = true; townSelect.appendChild(opt); }); updateWeatherDisplay(); }
     function updateTime() { 
         document.getElementById('school-days').innerText = formatCountdownText('2026-02-23'); 
         document.getElementById('grad-days').innerText = formatCountdownText('2026-06-01'); 
-        const now = new Date(); const sunset = new Date(); sunset.setHours(18, 12, 0); 
-        let diff = Math.floor(((now < sunset ? sunset : new Date(sunset.getTime() + 86400000)) - now) / 1000);
-        document.getElementById('sunCountdown').innerText = `距離${now < sunset ? "日落" : "日出"}還有 ${Math.floor(diff/3600)}時${Math.floor((diff%3600)/60)}分${diff%60}秒`; 
     }
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
-    setInterval(updateTime, 1000);
-    initTownshipSelect();
+    updateTime();
     fetchEarthquake();
     updateCounter(); 
 </script>
