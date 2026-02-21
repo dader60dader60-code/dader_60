@@ -51,9 +51,9 @@
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card count-click">📄 版規及簡歷冊</a>
-    <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" rel="noreferrer" class="card count-click">🔗 匿名投稿連結🔗</a>
+    <a href="https://lihi.cc/dVvVI" rel="noreferrer" class="card count-click">🔗 匿名投稿連結🔗</a>
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card count-click">🔥 靠北達德專區 (IG 頻道)</a>
-    <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig count-click">👤 版主個人 IG</a>
+    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig count-click">👤 版主個人 IG</a>
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card count-click">📸 版主專區 (IG 頻道)</a>
 
     <div class="line-section">
@@ -105,7 +105,6 @@
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 中部即時直播專區</strong>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
 
     <div class="card countdown-box">
@@ -122,14 +121,13 @@
 </div>
 
 <div class="fixed-footer">
-    © 𝓭𝓪𝓭𝓮𝓻 靠北達德速度版⚡️⚡️⚡️｜版主小編團隊<br>
+    𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊<br>
     <span class="view-counter">🔥 本頁面累計點閱：<span id="page-views">0</span> 次</span>
 </div>
 
 <script>
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     
-    // 點閱計數邏輯 (LocalStorage)
     function addCount() {
         let views = localStorage.getItem('page_views');
         views = (views === null) ? 1 : parseInt(views) + 1;
@@ -137,7 +135,6 @@
         document.getElementById('page-views').innerText = views.toLocaleString();
     }
 
-    // 監聽所有點擊計數
     document.addEventListener('click', function(e) {
         if (e.target.closest('.count-click')) {
             addCount();
@@ -156,8 +153,7 @@
         townSelect.innerHTML = "";
         areaData[city].forEach(town => {
             let opt = document.createElement('option');
-            opt.value = town;
-            opt.innerHTML = town;
+            opt.value = town; opt.innerHTML = town;
             if(town === "田中鎮") opt.selected = true;
             townSelect.appendChild(opt);
         });
@@ -168,43 +164,28 @@
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
-        const icons = ["☀️", "🌤️", "☁️", "🌦️"];
         const temp = Math.floor(Math.random() * 5) + 20;
-        document.getElementById('weatherDisplay').innerHTML = `${temp}°C ${icons[Math.floor(Math.random()*4)]}`;
+        document.getElementById('weatherDisplay').innerHTML = `${temp}°C ☀️`;
         document.getElementById('rainProb').innerText = Math.floor(Math.random() * 40) + "%";
-        document.getElementById('dayRain').innerText = (Math.random() * 2).toFixed(1) + "mm";
-        document.getElementById('windDir').innerText = ["北風", "東南風", "西北風"][Math.floor(Math.random()*3)];
-        document.getElementById('windSpeed').innerText = (Math.random() * 4 + 1).toFixed(1) + " m/s";
     }
 
     async function fetchEarthquake() {
         try {
             const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
             const data = await res.json();
-            const list = data.records.Earthquake.filter(eq => 
-                ["彰化", "台中", "臺中", "南投", "雲林", "苗栗"].some(loc => eq.EarthquakeInfo.EarthquakeLocation.includes(loc))
-            );
+            const list = data.records.Earthquake.filter(eq => ["彰化", "台中", "南投"].some(l => eq.EarthquakeInfo.EarthquakeLocation.includes(l)));
             if (list.length > 0) {
                 window.eqData = list;
                 showEQ(0);
-                let html = `<select class="eq-select count-click" onchange="showEQ(this.value)">`;
-                list.forEach((e, i) => html += `<option value="${i}">${i==0?'⚡最新':'紀錄'}: ${e.EarthquakeInfo.OriginTime.substring(5,16)}</option>`);
-                html += `</select>`;
-                document.getElementById('eqHistoryArea').innerHTML = html;
             }
         } catch (err) {}
     }
 
     function showEQ(i) {
         const e = window.eqData[i];
-        const info = e.EarthquakeInfo;
         document.getElementById('eqDisplayArea').innerHTML = `
-            <span class="eq-latest-badge">${i==0?'最新中部地震':'中部地震回顧'}</span>
-            <div class="eq-info-line">
-                📍 ${info.EarthquakeLocation}<br>
-                📉 規模：M ${info.EarthquakeMagnitude.MagnitudeValue} | 深度：${info.EarthquakeDepth.Value}km<br>
-                ⚠️ 最大震度：<span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span>
-            </div>
+            <span class="eq-latest-badge">最新中部地震</span>
+            <div class="eq-info-line">📍 ${e.EarthquakeInfo.EarthquakeLocation}<br>⚠️ 最大震度：<span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span></div>
         `;
     }
 
@@ -213,11 +194,10 @@
         const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const target = new Date(targetDate);
         const targetDateOnly = new Date(target.getFullYear(), target.getMonth(), target.getDate());
-        const diffDays = Math.ceil((targetDateOnly - nowDate) / (1000 * 60 * 60 * 24));
+        const diffDays = Math.ceil((targetDateOnly - nowDate) / 86400000);
         if (diffDays === 0) return "今天！";
         if (diffDays === 1) return "明天！";
-        if (diffDays < 0) return "已結束";
-        return `還有 ${diffDays} 天`;
+        return diffDays < 0 ? "已過" : `還有 ${diffDays} 天`;
     }
 
     function updateTime() {
@@ -235,15 +215,14 @@
         const v = document.getElementById('constellationSelect').value;
         const r = document.getElementById('fortuneResult');
         if(!v) return r.style.display = 'none';
-        const f = ["大吉！今天諸事順遂", "中吉，工作有效率", "小吉，注意開銷", "末吉，低調行事"];
-        r.innerHTML = `<b>${v}</b>：${f[Math.floor(Math.random()*4)]}`;
+        r.innerHTML = `<b>${v}</b>：${["大吉！今天諸事順遂", "中吉，工作有效率", "小吉，注意開銷"][Math.floor(Math.random()*3)]}`;
         r.style.display = 'block';
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
     setInterval(updateTime, 1000);
-    addCount(); // 進入頁面自動計數
+    addCount();
     initTownshipSelect();
     fetchEarthquake();
     updateTime();
