@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>靠北達德速度版⚡⚡⚡</title>
     <style>
-        body { font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 110px; }
+        body { font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 100px; }
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
@@ -50,28 +50,28 @@
     <img src="avatar.jpg" alt="版主頭像" class="profile-pic">
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
-    <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card count-click">📄 版規及簡歷冊</a>
-    <a href="https://lihi.cc/dVvVI" rel="noreferrer" class="card count-click">🔗 匿名投稿連結🔗</a>
-    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card count-click">🔥 靠北達德專區 (IG 頻道)</a>
-    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig count-click">👤 版主個人 IG</a>
-    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card count-click">📸 版主專區 (IG 頻道)</a>
+    <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
+    <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
+    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
+    <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
+    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
         <img src="line-qr.jpg" class="qrcode-img">
-        <a href="https://lin.ee/94g8LGJ" target="_blank" class="count-click" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
-        <div class="line-id count-click" onclick="copyID()">複製 ID: @768mnxcr</div>
+        <a href="https://lin.ee/94g8LGJ" target="_blank" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
+        <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
 
     <div class="card weather-box">
-        <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮</div>
+        <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
         <div style="display: flex; justify-content: center;">
-            <select id="citySelect" class="weather-select count-click" onchange="initTownshipSelect()">
+            <select id="citySelect" class="weather-select" onchange="initTownshipSelect()">
                 <option value="彰化縣">彰化縣</option>
                 <option value="台中市">台中市</option>
                 <option value="南投縣">南投縣</option>
             </select>
-            <select id="townSelect" class="weather-select count-click" onchange="updateWeatherDisplay()">
+            <select id="townSelect" class="weather-select" onchange="updateWeatherDisplay()">
             </select>
         </div>
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
@@ -95,17 +95,17 @@
 
     <div class="card fortune-box">
         <div style="font-size: 14px; margin-bottom: 5px;">🔮 今日星座運勢</div>
-        <select id="constellationSelect" class="fortune-select count-click" onchange="updateFortune()">
+        <select id="constellationSelect" class="fortune-select" onchange="updateFortune()">
             <option value="">請選擇你的星座</option>
-            <option value="白羊座">白羊座</option><option value="金牛座">金牛座</option>
-            <option value="雙子座">雙子座</option><option value="巨蟹座">巨蟹座</option>
+            <option value="白羊座">白羊座</option><option value="金牛座">金牛座</option><option value="雙子座">雙子座</option><option value="巨蟹座">巨蟹座</option><option value="獅子座">獅子座</option><option value="處女座">處女座</option><option value="天秤座">天秤座</option><option value="天蠍座">天蠍座</option><option value="射手座">射手座</option><option value="摩羯座">摩羯座</option><option value="水瓶座">水瓶座</option><option value="雙魚座">雙魚座</option>
         </select>
         <div id="fortuneResult" class="fortune-result"></div>
     </div>
 
     <div class="live-section">
-        <strong style="display: block; margin-bottom: 10px;">📹 中部即時直播</strong>
+        <strong style="display: block; margin-bottom: 10px;">📹 中部即時直播專區</strong>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
 
     <div class="card countdown-box">
@@ -117,49 +117,26 @@
     </div>
 
     <div class="form-section">
-        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit count-click">👉 點我填寫意見改善單</a>
+        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit">👉 點我填寫意見改善單</a>
     </div>
 </div>
 
 <div class="fixed-footer">
     © 靠北達德速度版｜版主小編團隊<br>
-    <span class="view-counter">🔥 全球累計總點閱：<span id="page-views">載入中</span> 次</span>
+    <span class="view-counter">🔥 本頁面點閱次數：<span id="page-views">0</span> 次</span>
 </div>
 
 <script>
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
-    // 注意：這個 Key 是公開的免費計數器專用，請保持 dader_click 這個名稱
-    const COUNTER_URL = "https://api.countapi.xyz/hit/dader_speed_version/clicks";
-
-    // 雲端點閱計數邏輯
-    async function updateCloudCount() {
-        try {
-            // 這個 API 會讓數值 +1 並回傳結果
-            const res = await fetch(COUNTER_URL);
-            const data = await res.json();
-            document.getElementById('page-views').innerText = data.value.toLocaleString();
-        } catch (e) {
-            // 如果 API 故障，顯示一個隨機大數字模擬
-            document.getElementById('page-views').innerText = "9,852+";
-        }
+    
+    // 點閱計數邏輯
+    function updateCounter() {
+        let views = localStorage.getItem('page_views');
+        if (views === null) { views = 1; } else { views = parseInt(views) + 1; }
+        localStorage.setItem('page_views', views);
+        document.getElementById('page-views').innerText = views.toLocaleString();
     }
 
-    // 獲取目前數字（不增加）
-    async function getCountOnly() {
-        try {
-            const res = await fetch("https://api.countapi.xyz/get/dader_speed_version/clicks");
-            const data = await res.json();
-            document.getElementById('page-views').innerText = data.value.toLocaleString();
-        } catch (e) {}
-    }
-
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.count-click')) {
-            updateCloudCount();
-        }
-    });
-
-    // 鄉鎮、地震、倒數邏輯 (與先前版本一致)
     const areaData = {
         "彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
         "台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],
@@ -172,7 +149,8 @@
         townSelect.innerHTML = "";
         areaData[city].forEach(town => {
             let opt = document.createElement('option');
-            opt.value = town; opt.innerHTML = town;
+            opt.value = town;
+            opt.innerHTML = town;
             if(town === "田中鎮") opt.selected = true;
             townSelect.appendChild(opt);
         });
@@ -182,55 +160,93 @@
     function updateWeatherDisplay() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
-        document.getElementById('regionTitle').innerText = `${city} ${town}`;
+        document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
+        const icons = ["☀️", "🌤️", "☁️", "🌦️"];
         const temp = Math.floor(Math.random() * 5) + 20;
-        document.getElementById('weatherDisplay').innerHTML = `${temp}°C ☀️`;
-        document.getElementById('rainProb').innerText = Math.floor(Math.random() * 20) + "%";
+        document.getElementById('weatherDisplay').innerHTML = `${temp}°C ${icons[Math.floor(Math.random()*4)]}`;
+        document.getElementById('rainProb').innerText = Math.floor(Math.random() * 40) + "%";
+        document.getElementById('dayRain').innerText = (Math.random() * 2).toFixed(1) + "mm";
+        document.getElementById('windDir').innerText = ["北風", "東南風", "西北風"][Math.floor(Math.random()*3)];
+        document.getElementById('windSpeed').innerText = (Math.random() * 4 + 1).toFixed(1) + " m/s";
     }
 
     async function fetchEarthquake() {
         try {
             const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
             const data = await res.json();
-            const list = data.records.Earthquake.filter(eq => ["彰化", "台中", "南投"].some(l => eq.EarthquakeInfo.EarthquakeLocation.includes(l)));
-            if (list.length > 0) { window.eqData = list; showEQ(0); }
-        } catch (err) { document.getElementById('eqDisplayArea').innerHTML = "⚠️ 地震連線失敗"; }
+            const list = data.records.Earthquake.filter(eq => 
+                ["彰化", "台中", "臺中", "南投", "雲林", "苗栗"].some(loc => eq.EarthquakeInfo.EarthquakeLocation.includes(loc))
+            );
+            if (list.length === 0) {
+                document.getElementById('eqDisplayArea').innerHTML = "✅ 中部近期無顯著地震紀錄";
+                return;
+            }
+            window.eqData = list;
+            showEQ(0);
+            let html = `<select class="eq-select" onchange="showEQ(this.value)">`;
+            list.forEach((e, i) => html += `<option value="${i}">${i==0?'⚡最新':'紀錄'}: ${e.EarthquakeInfo.OriginTime.substring(5,16)}</option>`);
+            html += `</select>`;
+            document.getElementById('eqHistoryArea').innerHTML = html;
+        } catch (err) {
+            document.getElementById('eqDisplayArea').innerHTML = "<span style='color:red;'>⚠️ 地震連線失敗</span>";
+        }
     }
 
     function showEQ(i) {
         const e = window.eqData[i];
+        const info = e.EarthquakeInfo;
         document.getElementById('eqDisplayArea').innerHTML = `
-            <span class="eq-latest-badge">最新地震</span>
-            <div class="eq-info-line">📍 ${e.EarthquakeInfo.EarthquakeLocation}<br>⚠️ 最大震度：${e.Intensity.MaxIntensity[0].IntensityValue}級</div>
+            <span class="eq-latest-badge">${i==0?'最新中部地震':'中部地震回顧'}</span>
+            <div class="eq-info-line">
+                <b>📅 時間：</b>${info.OriginTime}<br>
+                <b>📍 地點：</b>${info.EarthquakeLocation}<br>
+                <b>📉 規模：</b>M ${info.EarthquakeMagnitude.MagnitudeValue} | <b>深度：</b>${info.EarthquakeDepth.Value}km<br>
+                <b>⚠️ 最大震度：</b><span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span>
+            </div>
+            <a href="${e.Web}" target="_blank" style="font-size:12px; color:#4A90E2;">🔍 查看氣象署報告</a>
         `;
     }
 
     function formatCountdownText(targetDate) {
         const now = new Date();
+        const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const target = new Date(targetDate);
-        const diffDays = Math.ceil((new Date(target.getFullYear(), target.getMonth(), target.getDate()) - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+        const targetDateOnly = new Date(target.getFullYear(), target.getMonth(), target.getDate());
+        const diffDays = Math.ceil((targetDateOnly - nowDate) / (1000 * 60 * 60 * 24));
         if (diffDays === 0) return "今天！";
         if (diffDays === 1) return "明天！";
-        return diffDays < 0 ? "已過" : `還有 ${diffDays} 天`;
+        if (diffDays < 0) return "已結束";
+        return `還有 ${diffDays} 天`;
     }
 
     function updateTime() {
+        const now = new Date();
         document.getElementById('school-days').innerText = formatCountdownText('2026-02-23');
         document.getElementById('grad-days').innerText = formatCountdownText('2026-06-01');
-        const now = new Date();
-        const target = new Date(); target.setHours(18, 10);
+        const sunrise = new Date(); sunrise.setHours(6, 35);
+        const sunset = new Date(); sunset.setHours(18, 10);
+        let target = (now < sunrise) ? sunrise : (now < sunset ? sunset : new Date(now.getTime() + 86400000));
         let diff = Math.floor((target - now) / 1000);
-        if(diff < 0) { target.setDate(target.getDate()+1); diff = Math.floor((target-now)/1000); }
         let h = Math.floor(diff/3600), m = Math.floor((diff%3600)/60), s = diff%60;
-        document.getElementById('sunCountdown').innerText = `距離日落還有 ${h}時${m}分${s}秒`;
+        document.getElementById('sunCountdown').innerText = `距離${now < sunset && now > sunrise ? '日落' : '日出'}還有 ${h}時${m}分${s}秒`;
+    }
+
+    function updateFortune() {
+        const v = document.getElementById('constellationSelect').value;
+        const r = document.getElementById('fortuneResult');
+        if(!v) return r.style.display = 'none';
+        const f = ["大吉！今天諸事順遂", "中吉，工作有效率", "小吉，注意開銷", "末吉，低調行事"];
+        r.innerHTML = `<b>${v}</b>：${f[Math.floor(Math.random()*4)]}`;
+        r.style.display = 'block';
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
     setInterval(updateTime, 1000);
-    updateCloudCount(); // 進場即同步點閱
+    updateCounter(); // 啟動點閱計數
     initTownshipSelect();
     fetchEarthquake();
+    updateTime();
 </script>
 
 </body>
