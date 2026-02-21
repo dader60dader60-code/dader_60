@@ -10,11 +10,8 @@
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
         .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
-        .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
-        .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
-        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣樣式：維持原本樣式，僅微調格點以容納新資訊 */
+        /* 天氣樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -45,13 +42,7 @@
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
     <a href="https://lihi.cc/dVvVI" rel="noreferrer" class="card count-click">🔗 匿名投稿連結🔗</a>
-    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig count-click">👤 版主個人 IG</a>
-
-    <div class="line-section">
-        <strong>官方 LINE ⚡</strong><br>
-        <img src="line-qr.jpg" class="qrcode-img">
-        <div class="line-id count-click" onclick="copyID()">複製 ID: @768mnxcr</div>
-    </div>
+    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card count-click" style="background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93;">👤 版主個人 IG</a>
 
     <div class="card weather-box">
         <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
@@ -109,7 +100,6 @@
 <script>
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     
-    // 計數邏輯
     function addCount() {
         let views = localStorage.getItem('page_views') || 0;
         views = parseInt(views) + 1;
@@ -140,20 +130,18 @@
     function updateWeatherDisplay() {
         const now = new Date();
         document.getElementById('updateTime').innerText = `${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-        const temp = Math.floor(Math.random() * 4) + 21;
-        document.getElementById('weatherDisplay').innerHTML = `${temp}°C 🌤️`;
-        document.getElementById('rainProb').innerText = Math.floor(Math.random() * 20) + "%";
-        document.getElementById('humidity').innerText = (Math.floor(Math.random() * 10) + 70) + "%";
-        document.getElementById('windDir').innerText = ["北風", "東北風", "西北風"][Math.floor(Math.random()*3)];
-        document.getElementById('windSpeed').innerText = (Math.random() * 3 + 1).toFixed(1);
+        document.getElementById('weatherDisplay').innerHTML = `23°C 🌤️`;
+        document.getElementById('rainProb').innerText = "10%";
+        document.getElementById('humidity').innerText = "75%";
+        document.getElementById('windDir').innerText = "北風";
+        document.getElementById('windSpeed').innerText = "2.1";
     }
 
     function updateTime() {
-        // 開學與畢業倒數
+        // 修正倒數邏輯：排除小時影響
         document.getElementById('school-days').innerText = formatCountdownText('2026-02-23');
         document.getElementById('grad-days').innerText = formatCountdownText('2026-06-01');
 
-        // 日落倒數
         const now = new Date();
         const sunset = new Date(); sunset.setHours(18, 12, 0);
         let target = (now < sunset) ? sunset : new Date(sunset.getTime() + 86400000);
@@ -163,14 +151,21 @@
         document.getElementById('sunCountdown').innerText = `距離${label}還有 ${h}時${m}分${s}秒`;
     }
 
-    function formatCountdownText(targetDate) {
+    // 精確天數計算函數
+    function formatCountdownText(targetDateStr) {
         const now = new Date();
-        const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const target = new Date(targetDate);
-        const diffDays = Math.ceil((target - nowDate) / 86400000);
+        // 將現在時間與目標時間都歸零到 00:00:00 來比較
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const targetDate = new Date(targetDateStr);
+        const target = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+        
+        const diffTime = target - today;
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
         if (diffDays === 0) return "今天！";
         if (diffDays === 1) return "明天！";
-        return diffDays < 0 ? "已過" : `還有 ${diffDays} 天`;
+        if (diffDays < 0) return "已結束";
+        return `還有 ${diffDays} 天`;
     }
 
     async function fetchEarthquake() {
@@ -181,8 +176,6 @@
             document.getElementById('eqDisplayArea').innerHTML = `<div class="eq-info-line">📍 ${e.EarthquakeInfo.EarthquakeLocation}<br>⚠️ 最大震度：<span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span></div>`;
         } catch (e) {}
     }
-
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
     setInterval(updateTime, 1000);
     addCount();
