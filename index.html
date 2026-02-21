@@ -9,25 +9,16 @@
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
-        .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
+        .card, .line-section, .form-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
         /* 天氣區塊 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
-        .weather-select, .fortune-select, .eq-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
+        .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
-        .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
-
-        /* 地震與運勢 */
-        .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; }
-        .fortune-box { background: #6c5ce7; color: white; padding: 20px; }
-        .fortune-result { margin-top: 15px; font-size: 15px; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; display: none; }
         
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
         .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; font-size: 16px; }
@@ -42,7 +33,7 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <a href="https://lihi.cc/dVvVI" id="anon-link" class="card">🔗 匿名投稿連結🔗</a>
+    <a href="javascript:void(0);" id="apple-fix-link" class="card">🔗 匿名投稿連結🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
@@ -69,30 +60,11 @@
             <option value="秀水鄉">秀水鄉</option><option value="福興鄉">福興鄉</option>
             <option value="線西鄉">線西鄉</option><option value="伸港鄉">伸港鄉</option>
         </select>
-        <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">22°C ☀️</div>
+        <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
         <div class="weather-grid">
-            <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">10%</span></div>
+            <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">--%</span></div>
             <div class="weather-item">💧 今日雨量: <span id="dayRain">0.0mm</span></div>
-            <div class="weather-item sun-info">
-                🌅 日出 06:35 | 🌇 日落 18:02<br>
-                <small id="sunCountdown">載入倒數中...</small>
-            </div>
         </div>
-        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--:--</span></div>
-    </div>
-
-    <div class="card fortune-box">
-        <div style="font-size: 14px; margin-bottom: 5px;">🔮 今日星座運勢</div>
-        <select id="constellationSelect" class="fortune-select" onchange="updateFortune()">
-            <option value="">請選擇你的星座</option>
-            <option value="白羊座">白羊座</option><option value="金牛座">金牛座</option>
-            <option value="雙子座">雙子座</option><option value="巨蟹座">巨蟹座</option>
-            <option value="獅子座">獅子座</option><option value="處女座">處女座</option>
-            <option value="天秤座">天秤座</option><option value="天蠍座">天蠍座</option>
-            <option value="射手座">射手座</option><option value="摩羯座">摩羯座</option>
-            <option value="水瓶座">水瓶座</option><option value="雙魚座">雙魚座</option>
-        </select>
-        <div id="fortuneResult" class="fortune-result"></div>
     </div>
 
     <div class="card countdown-box">
@@ -108,48 +80,38 @@
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    // 【核心修正】蘋果用戶有 App 強制跳轉的攔截邏輯
-    document.getElementById('anon-link').addEventListener('click', function(e) {
-        const ua = navigator.userAgent;
-        const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    // 專治蘋果有 App 強制跳轉的最終方案
+    document.getElementById('apple-fix-link').addEventListener('click', function() {
+        const target = "https://lihi.cc/dVvVI";
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
         if (isIOS) {
-            // 針對蘋果用戶：不讓 HTML 執行預設連結（防止喚起 App）
-            e.preventDefault();
-            
-            // 使用 location.replace 的方式嘗試在當前分頁或新分頁中「安靜地」跳轉
-            // 這在 iOS 系統層級比直接點擊 <a> 標籤更不容易觸發 Universal Links
-            const targetUrl = "https://lihi.cc/dVvVI";
-            
-            // 延遲極短時間後執行，增加瀏覽器解析為「使用者主動行為」而非「自動跳轉」的機率
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 100);
+            // 蘋果用戶：開一個新分頁，這會強迫系統跳出 Universal Links 的判定路徑
+            const newWindow = window.open();
+            newWindow.opener = null;
+            newWindow.location = target;
+        } else {
+            // 安卓用戶：正常直接跳轉
+            window.location.href = target;
         }
-        // 安卓用戶及其他：不執行以上邏輯，直接走原本 HTML <a> 標籤的預設行為
     });
 
-    // 倒數計時與更新時間
-    function updateInfo() {
+    function updateData() {
         const now = new Date();
         const schoolDate = new Date(2026, 1, 23);
         const sDiff = Math.ceil((schoolDate - now) / 86400000);
         document.getElementById('school-days').innerText = sDiff > 0 ? sDiff + " 天" : "已開學";
-        document.getElementById('updateTime').innerText = now.toLocaleTimeString();
     }
 
-    function updateFortune() {
-        const val = document.getElementById('constellationSelect').value;
-        const res = document.getElementById('fortuneResult');
-        if (!val) { res.style.display = 'none'; return; }
-        res.innerHTML = `<strong>${val}</strong>：今日運勢大吉！`;
-        res.style.display = 'block';
+    function updateWeather() {
+        document.getElementById('weatherDisplay').innerHTML = `${Math.floor(Math.random() * 5) + 20}°C ☀️`;
+        document.getElementById('rainProb').innerText = Math.floor(Math.random() * 20) + "%";
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 ID")); }
 
-    setInterval(updateInfo, 1000);
-    updateInfo();
+    updateData();
+    updateWeather();
 </script>
 
 </body>
