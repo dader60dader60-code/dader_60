@@ -14,7 +14,6 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣區域樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -84,7 +83,7 @@
 
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部地區地震快報</div>
-        <div id="eqDisplayArea" class="eq-display-card">正在連線氣象署...</div>
+        <div id="eqDisplayArea" class="eq-display-card">正在載入最新觀測...</div>
     </div>
 
     <div class="live-section">
@@ -104,25 +103,27 @@
 
 <div class="fixed-footer">
     𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊<br>
-    <span class="view-counter">🔥 全網累計點閱：<span id="page-views">0</span> 次</span>
+    <span class="view-counter">🔥 全網累計點閱：<span id="page-views">正在連線</span> 次</span>
 </div>
 
 <script>
-    // --- 核心計數器：僅網頁進入/刷新時觸發 ---
-    const NAMESPACE = "dader_reset_final_02"; 
-    const KEY = "page_views";
+    // --- 雲端計數邏輯 (更換新 Key 確保重新從 0 累積) ---
+    const NAMESPACE = "dader_final_accumulate_03"; // 換了名字，這會讓計數重新開始
+    const KEY = "global_hits";
 
-    async function updatePageCount() {
+    async function processHit() {
         try {
-            const resp = await fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`);
-            const data = await resp.json();
+            // 執行 hit 動作，這會讓雲端數字 +1 並回傳最新總數
+            const response = await fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`);
+            const data = await response.json();
             document.getElementById('page-views').innerText = data.value.toLocaleString();
         } catch (err) {
-            console.log("CountAPI syncing...");
+            // 萬一 CountAPI 伺服器掛掉的保險顯示
+            document.getElementById('page-views').innerText = "連線中";
         }
     }
 
-    // --- 行政區與天氣功能 ---
+    // --- 行政區與天氣 ---
     const areaData = {
         "彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
         "台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],
@@ -155,7 +156,7 @@
         document.getElementById('windSpeed').innerText = "2.5";
     }
 
-    // --- 倒數日邏輯 ---
+    // --- 倒數計時 ---
     function formatCountdownText(targetDateStr) {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -179,6 +180,7 @@
         document.getElementById('sunCountdown').innerText = `距離${now < sunset ? "日落" : "日出"}還有 ${h}時${m}分${s}秒`;
     }
 
+    // --- 地震 API ---
     async function fetchEarthquake() {
         try {
             const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=CWA-E16D81B4-7836-43CA-95E5-51D9A434B120&format=JSON`);
@@ -190,11 +192,11 @@
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
-    // --- 初始化執行 ---
+    // --- 初始化 ---
     setInterval(updateTime, 1000);
     initTownshipSelect();
     fetchEarthquake();
-    updatePageCount(); // 僅在載入時執行一次，增加計數並抓取數字
+    processHit(); // 只有在這裡觸發一次，所以只有進入/刷新網頁會加 1
 </script>
 
 </body>
