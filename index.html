@@ -9,32 +9,32 @@
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
-        .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; cursor: pointer; }
+        .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
         /* 天氣樣式 */
-        .weather-box { background: #4A90E2; color: white; padding: 20px; cursor: default; }
+        .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select, .fortune-select, .eq-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
 
         /* 地震區塊樣式 */
-        .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; cursor: default; }
+        .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-latest-badge { background: #e74c3c; color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; margin-bottom: 8px; display: inline-block; }
         .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; }
         .eq-info-line { font-size: 14px; color: #333; line-height: 1.6; }
         .eq-history-label { font-size: 12px; color: #666; margin-top: 10px; margin-bottom: 5px; font-weight: normal; border-top: 1px solid #eee; padding-top: 10px; }
         
-        .fortune-box { background: #6c5ce7; color: white; padding: 20px; cursor: default; }
+        .fortune-box { background: #6c5ce7; color: white; padding: 20px; }
         .fortune-result { margin-top: 15px; font-size: 15px; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; display: none; }
         
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         
-        .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; cursor: default; }
+        .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
         .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; font-size: 16px; }
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
@@ -48,7 +48,7 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <div onclick="openTellonym()" class="card">🔗 匿名投稿連結🔗</div>
+    <a href="https://lihi.cc/dVvVI" id="anon-link" class="card">🔗 匿名投稿連結🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
@@ -64,20 +64,19 @@
     <div class="card weather-box">
         <div style="font-size: 14px;">彰化縣 即時天氣預報</div>
         <select id="townshipSelect" class="weather-select" onchange="updateWeather()">
-            <option value="田中鎮" selected>田中鎮</option>
             <option value="彰化市">彰化市</option><option value="員林市">員林市</option>
             <option value="和美鎮">和美鎮</option><option value="鹿港鎮">鹿港鎮</option>
             <option value="溪湖鎮">溪湖鎮</option><option value="二林鎮">二林鎮</option>
-            <option value="北斗鎮">北斗鎮</option><option value="芳苑鄉">芳苑鄉</option>
-            <option value="大城鄉">大城鄉</option><option value="花壇鄉">花壇鄉</option>
-            <option value="芬園鄉">芬園鄉</option><option value="大村鄉">大村鄉</option>
-            <option value="永靖鄉">永靖鄉</option><option value="伸港鄉">伸港鄉</option>
-            <option value="線西鄉">線西鄉</option><option value="福興鄉">福興鄉</option>
-            <option value="秀水鄉">秀水鄉</option><option value="埔鹽鄉">埔鹽鄉</option>
-            <option value="埔心鄉">埔心鄉</option><option value="竹塘鄉">竹塘鄉</option>
-            <option value="埤頭鄉">埤頭鄉</option><option value="溪州鄉">溪州鄉</option>
-            <option value="田尾鄉">田尾鄉</option><option value="二水鄉">二水鄉</option>
-            <option value="社頭鄉">社頭鄉</option>
+            <option value="田中鎮" selected>田中鎮</option><option value="北斗鎮">北斗鎮</option>
+            <option value="芳苑鄉">芳苑鄉</option><option value="大城鄉">大城鄉</option>
+            <option value="竹塘鄉">竹塘鄉</option><option value="埤頭鄉">埤頭鄉</option>
+            <option value="溪州鄉">溪州鄉</option><option value="二水鄉">二水鄉</option>
+            <option value="田尾鄉">田尾鄉</option><option value="社頭鄉">社頭鄉</option>
+            <option value="永靖鄉">永靖鄉</option><option value="埔心鄉">埔心鄉</option>
+            <option value="埔鹽鄉">埔鹽鄉</option><option value="大村鄉">大村鄉</option>
+            <option value="花壇鄉">花壇鄉</option><option value="芬園鄉">芬園鄉</option>
+            <option value="秀水鄉">秀水鄉</option><option value="福興鄉">福興鄉</option>
+            <option value="線西鄉">線西鄉</option><option value="伸港鄉">伸港鄉</option>
         </select>
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
         <div class="weather-grid">
@@ -135,15 +134,16 @@
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    // --- 新增的匿名投稿跳轉邏輯 ---
-    function openTellonym() {
-        // 使用隨機參數 ?_t= 來防止 iOS App 直接攔截
-        // 同時確保目標連結是正確的匿名個人檔案
-        const targetUrl = "https://tellonym.me/dader_60?_t=" + new Date().getTime();
-        window.location.href = targetUrl;
-    }
+    // 匿名投稿 iOS 修復邏輯：強迫開新分頁以繞過 App 喚醒
+    document.getElementById('anon-link').addEventListener('click', function(e) {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+            e.preventDefault();
+            // 在 iOS 上，使用 window.open(url, '_blank') 能更穩定地停留在瀏覽器
+            window.open(this.href, '_blank');
+        }
+    });
 
-    // --- 原有的其餘功能腳本 (地震、天氣、複製等) ---
     const eqData = [
         { date: "2/18", time: "00:15", loc: "臺灣東部海域", mag: "4.5", dep: "12.0km", max: "3級" },
         { date: "2/16", time: "14:22", loc: "花蓮縣近海", mag: "3.8", dep: "5.5km", max: "2級" },
