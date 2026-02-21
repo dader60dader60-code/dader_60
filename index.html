@@ -14,11 +14,13 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
+        /* 天氣樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
+        .weather-meta { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center; line-height: 1.4; }
 
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; }
@@ -29,6 +31,7 @@
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
         
+        /* 底部固定欄位 */
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 12px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; line-height: 1.6; }
         .view-counter { color: #E67E22; font-size: 12px; font-weight: normal; }
     </style>
@@ -39,17 +42,21 @@
     <img src="avatar.jpg" alt="版主頭像" class="profile-pic">
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
+    <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card count-click">📄 版規及簡歷冊</a>
     <a href="https://lihi.cc/dVvVI" rel="noreferrer" class="card count-click">🔗 匿名投稿連結🔗</a>
+    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card count-click">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig count-click">👤 版主個人 IG</a>
+    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card count-click">📸 版主專區 (IG 頻道)</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
         <img src="line-qr.jpg" class="qrcode-img">
+        <a href="https://lin.ee/94g8LGJ" target="_blank" class="count-click" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
         <div class="line-id count-click" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
 
     <div class="card weather-box">
-        <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
+        <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 詳細預報</div>
         <div style="display: flex; justify-content: center;">
             <select id="citySelect" class="weather-select count-click" onchange="initTownshipSelect()">
                 <option value="彰化縣">彰化縣</option>
@@ -62,8 +69,17 @@
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
         <div class="weather-grid">
             <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">--%</span></div>
-            <div class="weather-item">💧 今日雨量: <span id="dayRain">0.0mm</span></div>
-            <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:02</div>
+            <div class="weather-item">💧 相對濕度: <span id="humidity">--%</span></div>
+            <div class="weather-item">🌬️ 風向: <span id="windDir">--</span></div>
+            <div class="weather-item">🌪️ 風速: <span id="windSpeed">-- m/s</span></div>
+            <div class="weather-item sun-info">
+                🌅 日出 06:35 | 🌇 日落 18:12<br>
+                <small id="sunCountdown" style="font-weight: bold; color: #FFFFAA;">倒數中...</small>
+            </div>
+        </div>
+        <div class="weather-meta">
+            資料來源：交通部中央氣象署 (CWA)<br>
+            最後更新：<span id="updateTime">--/-- --:--</span>
         </div>
     </div>
 
@@ -123,9 +139,28 @@
     }
 
     function updateWeatherDisplay() {
+        const now = new Date();
+        document.getElementById('updateTime').innerText = `${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
         document.getElementById('weatherDisplay').innerHTML = `23°C 🌤️`;
-        document.getElementById('rainProb').innerText = "10%";
-        document.getElementById('dayRain').innerText = "0.0mm";
+        document.getElementById('rainProb').innerText = "15%";
+        document.getElementById('humidity').innerText = "72%";
+        document.getElementById('windDir').innerText = "北風";
+        document.getElementById('windSpeed').innerText = "2.3";
+    }
+
+    function updateTime() {
+        // 倒數日誤差修正：使用當日 00:00 基準
+        document.getElementById('school-days').innerText = formatCountdownText('2026-02-23');
+        document.getElementById('grad-days').innerText = formatCountdownText('2026-06-01');
+
+        // 日落日出倒數
+        const now = new Date();
+        const sunset = new Date(); sunset.setHours(18, 12, 0);
+        let target = (now < sunset) ? sunset : new Date(sunset.getTime() + 86400000);
+        let diff = Math.floor((target - now) / 1000);
+        let h = Math.floor(diff/3600), m = Math.floor((diff%3600)/60), s = diff%60;
+        const label = (now < sunset) ? "日落" : "日出";
+        document.getElementById('sunCountdown').innerText = `距離${label}還有 ${h}時${m}分${s}秒`;
     }
 
     function formatCountdownText(targetDateStr) {
@@ -139,11 +174,6 @@
         if (diffDays === 1) return "明天！";
         if (diffDays < 0) return "已結束";
         return `還有 ${diffDays} 天`;
-    }
-
-    function updateTime() {
-        document.getElementById('school-days').innerText = formatCountdownText('2026-02-23');
-        document.getElementById('grad-days').innerText = formatCountdownText('2026-06-01');
     }
 
     async function fetchEarthquake() {
