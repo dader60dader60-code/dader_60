@@ -13,27 +13,20 @@
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
-        
-        /* 天氣樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select, .fortune-select, .eq-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
-
-        /* 地震區塊樣式 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-latest-badge { background: #e74c3c; color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; margin-bottom: 8px; display: inline-block; }
         .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; }
         .eq-info-line { font-size: 14px; color: #333; line-height: 1.6; }
         .eq-history-label { font-size: 12px; color: #666; margin-top: 10px; margin-bottom: 5px; font-weight: normal; border-top: 1px solid #eee; padding-top: 10px; }
-        
         .fortune-box { background: #6c5ce7; color: white; padding: 20px; }
         .fortune-result { margin-top: 15px; font-size: 15px; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; display: none; }
-        
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
-        
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
         .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; font-size: 16px; }
@@ -134,16 +127,20 @@
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    // 匿名投稿 iOS 修復邏輯：強迫開新分頁以繞過 App 喚醒
+    // 專屬 iOS 修復邏輯：判斷蘋果用戶並強制開新分頁
     document.getElementById('anon-link').addEventListener('click', function(e) {
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+
         if (isIOS) {
+            // 如果是蘋果用戶，攔截原始跳轉並改用新分頁開啟
             e.preventDefault();
-            // 在 iOS 上，使用 window.open(url, '_blank') 能更穩定地停留在瀏覽器
             window.open(this.href, '_blank');
         }
+        // 安卓用戶不執行以上代碼，走原本的預設跳轉路徑
     });
 
+    // 基礎功能
     const eqData = [
         { date: "2/18", time: "00:15", loc: "臺灣東部海域", mag: "4.5", dep: "12.0km", max: "3級" },
         { date: "2/16", time: "14:22", loc: "花蓮縣近海", mag: "3.8", dep: "5.5km", max: "2級" },
@@ -153,18 +150,11 @@
     function initEarthquake() {
         const displayArea = document.getElementById('eqDisplayArea');
         const historyArea = document.getElementById('eqHistoryArea');
-        if (eqData.length === 0) {
-            displayArea.innerHTML = `<div style="text-align:center; color:#666;">✅ 近 7 天無有感地震紀錄</div>`;
-            return;
-        }
+        if (eqData.length === 0) { displayArea.innerHTML = `✅ 近 7 天無地震`; return; }
         renderEQ(0);
         if (eqData.length > 1) {
-            let html = `<div class="eq-history-label">查看近 7 天其他有感地震：</div>`;
-            html += `<select class="eq-select" onchange="renderEQ(this.value)">`;
-            eqData.forEach((eq, index) => {
-                const label = index === 0 ? "最新地震" : `地震紀錄 ${index + 1}`;
-                html += `<option value="${index}">${label}: ${eq.date} ${eq.loc} (M${eq.mag})</option>`;
-            });
+            let html = `<select class="eq-select" onchange="renderEQ(this.value)">`;
+            eqData.forEach((eq, i) => html += `<option value="${i}">地震紀錄 ${i+1}</option>`);
             html += `</select>`;
             historyArea.innerHTML = html;
         }
@@ -172,57 +162,31 @@
 
     function renderEQ(index) {
         const eq = eqData[index];
-        const displayArea = document.getElementById('eqDisplayArea');
-        const badge = index == 0 ? `<span class="eq-latest-badge">最新有感地震</span>` : `<span class="eq-latest-badge" style="background:#666">歷史紀錄回顧</span>`;
-        displayArea.innerHTML = `${badge}<div class="eq-info-line"><b>📅 時間：</b>${eq.date} ${eq.time}<br><b>📍 地點：</b>${eq.loc}<br><b>📉 規模：</b>M ${eq.mag} | <b>深度：</b>${eq.dep}<br><b>⚠️ 最大震度：</b><span style="color:red; font-weight:bold;">${eq.max}</span></div>`;
+        document.getElementById('eqDisplayArea').innerHTML = `<div class="eq-info-line"><b>📅 時間：</b>${eq.date} ${eq.time}<br><b>📍 地點：</b>${eq.loc}<br><b>📉 規模：</b>M ${eq.mag}<br><b>⚠️ 最大震度：</b>${eq.max}</div>`;
     }
 
     function updateData() {
         const now = new Date();
-        const schoolDate = new Date(2026, 1, 23);
-        const sDiff = Math.ceil((schoolDate - now) / (1000 * 60 * 60 * 24));
+        const school = new Date(2026, 1, 23);
+        const sDiff = Math.ceil((school - now) / 86400000);
         document.getElementById('school-days').innerText = sDiff > 0 ? sDiff + " 天" : "已開學";
-        const gradDate = new Date(2026, 5, 1);
-        const gDiff = Math.ceil((gradDate - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('grad-days').innerText = gDiff > 0 ? gDiff + " 天" : "畢業快樂";
-        document.getElementById('updateTime').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0') + ":" + now.getSeconds().toString().padStart(2, '0');
-        updateSunLogic();
+        document.getElementById('updateTime').innerText = now.toLocaleTimeString();
     }
 
     function updateWeather() {
-        const icons = ["☀️", "🌤️", "☁️", "🌦️"];
-        const temp = Math.floor(Math.random() * 7) + 18; 
-        document.getElementById('weatherDisplay').innerHTML = `${temp}°C ${icons[Math.floor(Math.random()*4)]}`;
-        document.getElementById('rainProb').innerText = Math.floor(Math.random() * 30) + "%";
-        document.getElementById('dayRain').innerText = (Math.random() * 2).toFixed(1) + "mm";
-    }
-
-    function updateSunLogic() {
-        const now = new Date();
-        const sunrise = new Date(); sunrise.setHours(6, 35, 0);
-        const sunset = new Date(); sunset.setHours(18, 2, 0);
-        const tomorrowSunrise = new Date(); tomorrowSunrise.setDate(now.getDate() + 1); tomorrowSunrise.setHours(6, 35, 0);
-        let target, label;
-        if (now < sunrise) { target = sunrise; label = "距離日出還有 "; }
-        else if (now < sunset) { target = sunset; label = "距離日落還有 "; }
-        else { target = tomorrowSunrise; label = "距離明日日出還有 "; }
-        let diff = target - now;
-        const h = Math.floor(diff / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
-        document.getElementById('sunCountdown').innerText = label + `${h}時${m}分${s}秒`;
+        document.getElementById('weatherDisplay').innerHTML = `${Math.floor(Math.random() * 5) + 20}°C ☀️`;
+        document.getElementById('rainProb').innerText = "10%";
     }
 
     function updateFortune() {
-        const constellation = document.getElementById('constellationSelect').value;
-        const resultDiv = document.getElementById('fortuneResult');
-        if (!constellation) { resultDiv.style.display = 'none'; return; }
-        const fortunes = ["⭐ 運勢大吉！", "⭐⭐ 穩定發揮。", "⭐⭐⭐ 財運不錯。", "⭐⭐ 今日建議低調。"];
-        resultDiv.innerHTML = `<strong>${constellation}</strong>：${fortunes[Math.floor(Math.random() * fortunes.length)]}`;
-        resultDiv.style.display = 'block';
+        const c = document.getElementById('constellationSelect').value;
+        const res = document.getElementById('fortuneResult');
+        if (!c) { res.style.display = 'none'; return; }
+        res.innerHTML = `運勢：⭐⭐⭐⭐`;
+        res.style.display = 'block';
     }
 
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("✅ 已成功複製 ID"); }); }
+    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 ID")); }
 
     setInterval(updateData, 1000);
     updateData();
