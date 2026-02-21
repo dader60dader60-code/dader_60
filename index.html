@@ -14,7 +14,6 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -41,28 +40,28 @@
     <img src="avatar.jpg" alt="版主頭像" class="profile-pic">
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
-    <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card count-click">📄 版規及簡歷冊</a>
-    <a href="https://lihi.cc/dVvVI" rel="noreferrer" class="card count-click">🔗 匿名投稿連結🔗</a>
-    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card count-click">🔥 靠北達德專區 (IG 頻道)</a>
-    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig count-click">👤 版主個人 IG</a>
-    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card count-click">📸 版主專區 (IG 頻道)</a>
+    <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
+    <a href="https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
+    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
+    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
+    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
         <img src="line-qr.jpg" class="qrcode-img">
-        <a href="https://lin.ee/94g8LGJ" target="_blank" class="count-click" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
-        <div class="line-id count-click" onclick="copyID()">複製 ID: @768mnxcr</div>
+        <a href="https://lin.ee/94g8LGJ" target="_blank" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
+        <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
 
     <div class="card weather-box">
         <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
         <div style="display: flex; justify-content: center;">
-            <select id="citySelect" class="weather-select count-click" onchange="initTownshipSelect()">
+            <select id="citySelect" class="weather-select" onchange="initTownshipSelect()">
                 <option value="彰化縣" selected>彰化縣</option>
                 <option value="台中市">台中市</option>
                 <option value="南投縣">南投縣</option>
             </select>
-            <select id="townSelect" class="weather-select count-click" onchange="updateWeatherDisplay()">
+            <select id="townSelect" class="weather-select" onchange="updateWeatherDisplay()">
             </select>
         </div>
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
@@ -104,26 +103,32 @@
 
 <div class="fixed-footer">
     𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊<br>
-    <span class="view-counter">🔥 本頁面累計點閱：<span id="page-views">0</span> 次</span>
+    <span class="view-counter">🔥 全網累計點閱：<span id="page-views">載入中...</span> 次</span>
 </div>
 
 <script>
+    // 雲端計數器設定 (進入即算)
+    const NAMESPACE = "dader60_kaobei_main"; 
+    const KEY = "page_hits";
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
-    
+
+    // 進入網頁自動 +1 並顯示總數
+    async function triggerHit() {
+        try {
+            // 使用 hit 接口，每次載入都會 +1
+            const response = await fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`);
+            const data = await response.json();
+            document.getElementById('page-views').innerText = data.value.toLocaleString();
+        } catch (err) {
+            document.getElementById('page-views').innerText = "連線異常";
+        }
+    }
+
     const areaData = {
         "彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
         "台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],
         "南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]
     };
-
-    function addCount() {
-        let views = localStorage.getItem('page_views') || 0;
-        views = parseInt(views) + 1;
-        localStorage.setItem('page_views', views);
-        document.getElementById('page-views').innerText = views.toLocaleString();
-    }
-
-    document.addEventListener('click', (e) => { if (e.target.closest('.count-click')) addCount(); });
 
     function initTownshipSelect() {
         const city = document.getElementById('citySelect').value;
@@ -151,14 +156,12 @@
         document.getElementById('windSpeed').innerText = "1.8";
     }
 
-    // 倒數日邏輯優化
     function formatCountdownText(targetDateStr) {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const targetDate = new Date(targetDateStr);
         const target = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
         const diffDays = Math.round((target - today) / (1000 * 60 * 60 * 24));
-
         if (diffDays === 0) return "就是今天！";
         if (diffDays === 1) return "就是明天！";
         if (diffDays < 0) return "已開學/畢業";
@@ -168,14 +171,12 @@
     function updateTime() {
         document.getElementById('school-days').innerText = formatCountdownText('2026-02-23');
         document.getElementById('grad-days').innerText = formatCountdownText('2026-06-01');
-
         const now = new Date();
         const sunset = new Date(); sunset.setHours(18, 12, 0);
         let target = (now < sunset) ? sunset : new Date(sunset.getTime() + 86400000);
         let diff = Math.floor((target - now) / 1000);
         let h = Math.floor(diff/3600), m = Math.floor((diff%3600)/60), s = diff%60;
-        const label = (now < sunset) ? "日落" : "日出";
-        document.getElementById('sunCountdown').innerText = `距離${label}還有 ${h}時${m}分${s}秒`;
+        document.getElementById('sunCountdown').innerText = `距離${now < sunset ? "日落" : "日出"}還有 ${h}時${m}分${s}秒`;
     }
 
     async function fetchEarthquake() {
@@ -183,16 +184,17 @@
             const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
             const data = await res.json();
             const e = data.records.Earthquake[0];
-            document.getElementById('eqDisplayArea').innerHTML = `<div class="eq-info-line">📍 ${e.EarthquakeInfo.EarthquakeLocation}<br>⚠️ 最大震度：<span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span></div>`;
+            document.getElementById('eqDisplayArea').innerHTML = `📍 ${e.EarthquakeInfo.EarthquakeLocation}<br>⚠️ 最大震度：<span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span>`;
         } catch (e) {}
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
+    // 初始化
     setInterval(updateTime, 1000);
-    addCount();
     initTownshipSelect();
     fetchEarthquake();
+    triggerHit(); // 網頁載入執行一次 +1 並顯示
 </script>
 
 </body>
