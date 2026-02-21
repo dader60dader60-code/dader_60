@@ -32,6 +32,7 @@
         .fortune-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; }
         .fortune-result { margin-top: 15px; font-size: 15px; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; display: none; }
         
+        /* 直播專區樣式（不動） */
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         
@@ -78,33 +79,19 @@
         <div class="weather-grid">
             <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">--%</span></div>
             <div class="weather-item">💧 今日雨量: <span id="dayRain">0.0mm</span></div>
-            <div class="weather-item">🌬️ 風向: <span id="windDir">--</span></div>
-            <div class="weather-item">🌪️ 風速: <span id="windSpeed">-- m/s</span></div>
-            <div class="weather-item sun-info">
-                🌅 日出 <span id="sunriseTime">06:35</span> | 🌇 日落 <span id="sunsetTime">18:02</span><br>
-                <small id="sunCountdown">載入中...</small>
-            </div>
+            <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:02</div>
         </div>
     </div>
 
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部地區地震快報</div>
         <div id="eqDisplayArea" class="eq-display-card">正在連線氣象署...</div>
-        <div id="eqHistoryArea"></div>
-    </div>
-
-    <div class="card fortune-box">
-        <div style="font-size: 14px; margin-bottom: 5px;">🔮 今日星座運勢</div>
-        <select id="constellationSelect" class="fortune-select count-click" onchange="updateFortune()">
-            <option value="">請選擇你的星座</option>
-            <option value="白羊座">白羊座</option><option value="金牛座">金牛座</option><option value="雙子座">雙子座</option><option value="巨蟹座">巨蟹座</option><option value="獅子座">獅子座</option><option value="處女座">處女座</option><option value="天秤座">天秤座</option><option value="天蠍座">天蠍座</option><option value="射手座">射手座</option><option value="摩羯座">摩羯座</option><option value="水瓶座">水瓶座</option><option value="雙魚座">雙魚座</option>
-        </select>
-        <div id="fortuneResult" class="fortune-result"></div>
     </div>
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 中部即時直播專區</strong>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
     </div>
 
     <div class="card countdown-box">
@@ -128,6 +115,7 @@
 <script>
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     
+    // 計數邏輯
     function addCount() {
         let views = localStorage.getItem('page_views');
         views = (views === null) ? 1 : parseInt(views) + 1;
@@ -161,9 +149,6 @@
     }
 
     function updateWeatherDisplay() {
-        const city = document.getElementById('citySelect').value;
-        const town = document.getElementById('townSelect').value;
-        document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
         const temp = Math.floor(Math.random() * 5) + 20;
         document.getElementById('weatherDisplay').innerHTML = `${temp}°C ☀️`;
         document.getElementById('rainProb').innerText = Math.floor(Math.random() * 40) + "%";
@@ -175,18 +160,12 @@
             const data = await res.json();
             const list = data.records.Earthquake.filter(eq => ["彰化", "台中", "南投"].some(l => eq.EarthquakeInfo.EarthquakeLocation.includes(l)));
             if (list.length > 0) {
-                window.eqData = list;
-                showEQ(0);
+                const e = list[0];
+                document.getElementById('eqDisplayArea').innerHTML = `
+                    <div class="eq-info-line">📍 ${e.EarthquakeInfo.EarthquakeLocation}<br>⚠️ 最大震度：<span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span></div>
+                `;
             }
         } catch (err) {}
-    }
-
-    function showEQ(i) {
-        const e = window.eqData[i];
-        document.getElementById('eqDisplayArea').innerHTML = `
-            <span class="eq-latest-badge">最新中部地震</span>
-            <div class="eq-info-line">📍 ${e.EarthquakeInfo.EarthquakeLocation}<br>⚠️ 最大震度：<span style="color:red;">${e.Intensity.MaxIntensity[0].IntensityValue}級</span></div>
-        `;
     }
 
     function formatCountdownText(targetDate) {
@@ -203,25 +182,10 @@
     function updateTime() {
         document.getElementById('school-days').innerText = formatCountdownText('2026-02-23');
         document.getElementById('grad-days').innerText = formatCountdownText('2026-06-01');
-        const now = new Date();
-        const sunset = new Date(); sunset.setHours(18, 10);
-        let target = (now < sunset) ? sunset : new Date(now.getTime() + 86400000);
-        let diff = Math.floor((target - now) / 1000);
-        let h = Math.floor(diff/3600), m = Math.floor((diff%3600)/60), s = diff%60;
-        document.getElementById('sunCountdown').innerText = `距離日落還有 ${h}時${m}分${s}秒`;
-    }
-
-    function updateFortune() {
-        const v = document.getElementById('constellationSelect').value;
-        const r = document.getElementById('fortuneResult');
-        if(!v) return r.style.display = 'none';
-        r.innerHTML = `<b>${v}</b>：${["大吉！今天諸事順遂", "中吉，工作有效率", "小吉，注意開銷"][Math.floor(Math.random()*3)]}`;
-        r.style.display = 'block';
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
-    setInterval(updateTime, 1000);
     addCount();
     initTownshipSelect();
     fetchEarthquake();
