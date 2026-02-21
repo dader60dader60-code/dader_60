@@ -12,17 +12,17 @@
         .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
-        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
+        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; text-decoration: none; }
 
-        /* 直播區塊 */
+        /* 直播專區修復 */
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
         /* 天氣區塊 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 100%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-bottom: 10px; cursor: pointer; font-size: 16px; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
-        .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
+        .weather-item { background: rgba(255,255,255,0.2); padding: 8px; border-radius: 10px; }
 
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
@@ -38,7 +38,7 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <a href="https://tellonym.me/dader_60" class="card" style="background: #6c5ce7; color: white;">🔗 匿名投稿連結 (Apple 用戶請點此)</a>
+    <a href="https://tellonym.me/dader_60" target="_blank" class="card" style="background: #6c5ce7; color: white;">🔗 匿名投稿連結🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
@@ -54,12 +54,12 @@
     <div class="live-section">
         <strong>彰化即時直播直播區 📡</strong><br><br>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/z_m4_X7A8u8?autoplay=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/z_m4_X7A8u8" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/9Bv_39-8_0M?autoplay=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/9Bv_39-8_0M" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
-        <div style="font-size: 12px; color: #666;">即時影像來源：彰化縣政府 / 彰化氣象站</div>
+        <div style="font-size: 12px; color: #666;">即時影像來源：彰化縣政府</div>
     </div>
 
     <div class="card weather-box">
@@ -92,9 +92,9 @@
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    // 全台鄉鎮資料 (保持完整)
+    // 完整的縣市鄉鎮資料庫
     const taiwanData = {
-        "彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "福興鄉", "秀水鄉", "花壇鄉", "芬園鄉", "線西鄉", "伸港鄉", "埔心鄉", "埔鹽鄉", "大村鄉", "永靖鄉", "社頭鄉", "二水鄉", "田尾鄉", "埤頭鄉", "芳苑鄉", "大城鄉", "竹塘鄉", "溪州鄉", "北斗鎮"],
+        "彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "福興鄉", "秀水鄉", "花壇鄉", "芬園鄉", "線西鄉", "伸港鄉", "埔心鄉", "埔鹽鄉", "大村鄉", "永靖鄉", "社頭鄉", "二水鄉", "田尾鄉", "埤頭鄉", "芳苑鄉", "大城鄉", "竹塘鄉", "溪州鄉"],
         "臺北市": ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "內湖區", "南港區", "士林區", "北投區", "文山區"],
         "新北市": ["板橋區", "三重區", "中和區", "永和區", "新莊區", "新店區", "樹林區", "鶯歌區", "三峽區", "淡水區", "汐止區", "瑞芳區", "土城區", "蘆洲區", "五股區", "泰山區", "林口區", "深坑區", "石碇區", "坪林區", "三芝區", "石門區", "八里區", "平溪區", "雙溪區", "貢寮區", "金山區", "萬里區", "烏來區"],
         "基隆市": ["仁愛區", "信義區", "中正區", "中山區", "安樂區", "暖暖區", "七堵區"],
@@ -119,6 +119,7 @@
     };
 
     function init() {
+        // 1. 初始化天氣選單
         const citySelect = document.getElementById('citySelect');
         for (let city in taiwanData) {
             let opt = document.createElement('option');
@@ -127,6 +128,8 @@
             citySelect.appendChild(opt);
         }
         updateTownships();
+
+        // 2. 初始化時間與倒數
         updateTimeAndCountdown();
         setInterval(updateTimeAndCountdown, 1000);
     }
@@ -145,9 +148,10 @@
     }
 
     function updateWeather() {
-        document.getElementById('weatherDisplay').innerHTML = `${Math.floor(Math.random()*5)+22}°C ⛅`;
+        const temps = [22, 23, 24, 21, 25];
+        document.getElementById('weatherDisplay').innerHTML = `${temps[Math.floor(Math.random()*5)]}°C ⛅`;
         document.getElementById('rainProb').innerText = Math.floor(Math.random()*20) + "%";
-        document.getElementById('dayRain').innerText = (Math.random()*2).toFixed(1) + "mm";
+        document.getElementById('dayRain').innerText = (Math.random()*1).toFixed(1) + "mm";
     }
 
     function updateTimeAndCountdown() {
@@ -161,7 +165,10 @@
         document.getElementById('grad-days').innerText = gDiff > 0 ? gDiff + " 天" : "畢業快樂";
     }
 
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 ID")); }
+    function copyID() { 
+        navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 ID")); 
+    }
+
     init();
 </script>
 
