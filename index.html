@@ -9,19 +9,21 @@
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
-        .card, .line-section, .form-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
+        .card, .line-section, .form-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; cursor: pointer; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
         /* 天氣區塊 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
-        .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
-        .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         
-        .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
-        .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
-        .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; font-size: 16px; }
+        /* 內嵌視窗遮罩層 */
+        #iframe-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; }
+        #iframe-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; height: 80%; background: white; border-radius: 20px; overflow: hidden; }
+        #iframe-content { width: 100%; height: calc(100% - 40px); border: none; }
+        .close-iframe { width: 100%; height: 40px; background: #333; color: white; text-align: center; line-height: 40px; font-weight: bold; cursor: pointer; }
+
+        .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; display: block; text-decoration: none; text-align: center; }
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
     </style>
 </head>
@@ -33,10 +35,9 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <a href="javascript:void(0);" id="apple-fix-link" class="card">🔗 匿名投稿連結🔗</a>
+    <div onclick="openAnon()" class="card">🔗 匿名投稿連結🔗</div>
 
-    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
-    <a href="https://www.instagram.com/hbingzhe10.10?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
+    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
@@ -47,29 +48,10 @@
         <div style="font-size: 14px;">彰化縣 即時天氣預報</div>
         <select id="townshipSelect" class="weather-select" onchange="updateWeather()">
             <option value="彰化市">彰化市</option><option value="員林市">員林市</option>
-            <option value="和美鎮">和美鎮</option><option value="鹿港鎮">鹿港鎮</option>
-            <option value="溪湖鎮">溪湖鎮</option><option value="二林鎮">二林鎮</option>
-            <option value="田中鎮" selected>田中鎮</option><option value="北斗鎮">北斗鎮</option>
-            <option value="芳苑鄉">芳苑鄉</option><option value="大城鄉">大城鄉</option>
-            <option value="竹塘鄉">竹塘鄉</option><option value="埤頭鄉">埤頭鄉</option>
-            <option value="溪州鄉">溪州鄉</option><option value="二水鄉">二水鄉</option>
-            <option value="田尾鄉">田尾鄉</option><option value="社頭鄉">社頭鄉</option>
-            <option value="永靖鄉">永靖鄉</option><option value="埔心鄉">埔心鄉</option>
-            <option value="埔鹽鄉">埔鹽鄉</option><option value="大村鄉">大村鄉</option>
-            <option value="花壇鄉">花壇鄉</option><option value="芬園鄉">芬園鄉</option>
-            <option value="秀水鄉">秀水鄉</option><option value="福興鄉">福興鄉</option>
-            <option value="線西鄉">線西鄉</option><option value="伸港鄉">伸港鄉</option>
-        </select>
+            <option value="田中鎮" selected>田中鎮</option>
+            <option value="二林鎮">二林鎮</option><option value="鹿港鎮">鹿港鎮</option>
+            </select>
         <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
-        <div class="weather-grid">
-            <div class="weather-item">🌧️ 降雨機率: <span id="rainProb">--%</span></div>
-            <div class="weather-item">💧 今日雨量: <span id="dayRain">0.0mm</span></div>
-        </div>
-    </div>
-
-    <div class="card countdown-box">
-        <div style="font-size: 14px;">🎒 距離 2/23 開學日還有</div>
-        <div class="countdown-num" id="school-days">--</div>
     </div>
 
     <div class="form-section">
@@ -77,40 +59,40 @@
     </div>
 </div>
 
+<div id="iframe-overlay">
+    <div id="iframe-container">
+        <div class="close-iframe" onclick="closeAnon()">❌ 關閉視窗 (返回網頁)</div>
+        <iframe src="" id="iframe-content"></iframe>
+    </div>
+</div>
+
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    // 專治蘋果有 App 強制跳轉的最終方案
-    document.getElementById('apple-fix-link').addEventListener('click', function() {
-        const target = "https://lihi.cc/dVvVI";
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    // 專治蘋果跳轉：內嵌視窗法
+    function openAnon() {
+        const url = "https://tellonym.me/dader_60"; // 直接用原始 Tellonym 網址
+        document.getElementById('iframe-content').src = url;
+        document.getElementById('iframe-overlay').style.display = 'block';
+        // 鎖定背景捲動
+        document.body.style.overflow = 'hidden';
+    }
 
-        if (isIOS) {
-            // 蘋果用戶：開一個新分頁，這會強迫系統跳出 Universal Links 的判定路徑
-            const newWindow = window.open();
-            newWindow.opener = null;
-            newWindow.location = target;
-        } else {
-            // 安卓用戶：正常直接跳轉
-            window.location.href = target;
-        }
-    });
-
-    function updateData() {
-        const now = new Date();
-        const schoolDate = new Date(2026, 1, 23);
-        const sDiff = Math.ceil((schoolDate - now) / 86400000);
-        document.getElementById('school-days').innerText = sDiff > 0 ? sDiff + " 天" : "已開學";
+    function closeAnon() {
+        document.getElementById('iframe-overlay').style.display = 'none';
+        document.getElementById('iframe-content').src = "";
+        // 恢復背景捲動
+        document.body.style.overflow = 'auto';
     }
 
     function updateWeather() {
         document.getElementById('weatherDisplay').innerHTML = `${Math.floor(Math.random() * 5) + 20}°C ☀️`;
-        document.getElementById('rainProb').innerText = Math.floor(Math.random() * 20) + "%";
     }
 
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 ID")); }
+    function copyID() { 
+        navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 ID")); 
+    }
 
-    updateData();
     updateWeather();
 </script>
 
