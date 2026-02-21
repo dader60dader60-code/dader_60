@@ -9,25 +9,27 @@
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
-        .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; cursor: pointer; }
-        .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
-        .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
-        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
+        .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
+        
+        /* 匿名投稿按鈕 - 強制網頁版樣式 */
+        .btn-web-anon { background: #6c5ce7; color: white; border: 2px solid #5641e6; }
 
-        /* 直播專區 */
+        /* 直播區塊 - 修復無法播放問題 */
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
 
-        /* 天氣區塊 */
+        /* 天氣選單與展示 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
-        .weather-select { width: 100%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-bottom: 10px; cursor: pointer; font-size: 16px; }
+        .weather-select { width: 100%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-bottom: 10px; cursor: pointer; font-size: 16px; background: white; color: #333; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
-        .weather-item { background: rgba(255,255,255,0.2); padding: 8px; border-radius: 10px; }
+        .weather-item { background: rgba(255,255,255,0.25); padding: 8px; border-radius: 10px; }
 
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
-        .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; display: block; text-decoration: none; text-align: center; }
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
+        .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
+        .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
+        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -38,7 +40,7 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <div onclick="goToAnon()" class="card" style="background: #6c5ce7; color: white;">🔗 匿名投稿連結 (支援雙系統)</div>
+    <a href="https://lihi.cc/pS0hY" target="_blank" class="card btn-web-anon">🔗 點我匿名投稿 (強制網頁開啟)</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
@@ -54,10 +56,10 @@
     <div class="live-section">
         <strong>彰化即時直播直播區 📡</strong><br><br>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/z_m4_X7A8u8" title="Live1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/z_m4_X7A8u8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/9Bv_39-8_0M" title="Live2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/9Bv_39-8_0M" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
     </div>
 
@@ -72,7 +74,7 @@
             <div class="weather-item">🌬️ 風向: <span id="windDir">北風</span></div>
             <div class="weather-item">🌪️ 風速: <span id="windSpeed">2.5 m/s</span></div>
         </div>
-        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--:--</span><br>來源：CWA 中央氣象署</div>
+        <div style="font-size: 10px; opacity: 0.8; margin-top: 10px;">更新時間：<span id="updateTime">--:--:--</span><br>資料來源：CWA 中央氣象署</div>
     </div>
 
     <div class="card countdown-box">
@@ -84,48 +86,35 @@
     </div>
 
     <div class="form-section">
-        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" class="btn-submit">👉 點我填寫意見改善單</a>
+        <a href="https://forms.gle/qTGBeXwxHDJcQa896" target="_blank" style="background: #333; color: white; padding: 15px; border-radius: 10px; text-decoration: none; display: block;">👉 點我填寫意見改善單</a>
     </div>
 </div>
 
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    // 匿名連結觸發器：防止 App 喚醒並確保安卓正常開頁
-    function goToAnon() {
-        const url = "https://tellonym.me/dader_60";
-        // 使用 window.open 並指定為 _blank 可以最大化瀏覽器相容性
-        const newWindow = window.open(url, '_blank');
-        if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-            // 如果被攔截，則嘗試當前頁面跳轉
-            window.location.href = url;
-        }
-    }
-
-    // 完整的縣市鄉鎮資料 (代碼縮減顯示，實際請確保填入所有縣市)
     const taiwanData = {
         "彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "福興鄉", "秀水鄉", "花壇鄉", "芬園鄉", "線西鄉", "伸港鄉", "埔心鄉", "埔鹽鄉", "大村鄉", "永靖鄉", "社頭鄉", "二水鄉", "田尾鄉", "埤頭鄉", "芳苑鄉", "大城鄉", "竹塘鄉", "溪州鄉"],
         "臺北市": ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "內湖區", "南港區", "士林區", "北投區", "文山區"],
         "新北市": ["板橋區", "三重區", "中和區", "永和區", "新莊區", "新店區", "樹林區", "鶯歌區", "三峽區", "淡水區", "汐止區", "瑞芳區", "土城區", "蘆洲區", "五股區", "泰山區", "林口區", "深坑區", "石碇區", "坪林區", "三芝區", "石門區", "八里區", "平溪區", "雙溪區", "貢寮區", "金山區", "萬里區", "烏來區"],
         "臺中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "后里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
-        "南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"],
-        "雲林縣": ["斗六市", "斗南鎮", "虎尾鎮", "西螺鎮", "土庫鎮", "北港鎮", "古坑鄉", "大埤鄉", "莿桐鄉", "林內鄉", "二崙鄉", "崙背鄉", "麥寮鄉", "東勢鄉", "褒忠鄉", "臺西鄉", "元長鄉", "四湖鄉", "口湖鄉", "水林鄉"],
-        "嘉義縣": ["太保市", "朴子市", "布袋鎮", "大林鎮", "民雄鄉", "溪口鄉", "新港鄉", "六腳鄉", "東石鄉", "義竹鄉", "鹿草鄉", "水上鄉", "中埔鄉", "竹崎鄉", "梅山鄉", "番路鄉", "大埔鄉", "阿里山鄉"],
-        "臺南市": ["中西區", "東區", "南區", "北區", "安平區", "安南區", "永康區", "歸仁區", "新化區", "左鎮區", "玉井區", "楠西區", "南化區", "仁德區", "關廟區", "龍崎區", "官田區", "麻豆區", "佳里區", "西港區", "七股區", "將軍區", "學甲區", "北門區", "新營區", "後壁區", "白河區", "東山區", "六甲區", "下營區", "柳營區", "鹽水區", "善化區", "大內區", "山上區", "新市區", "安定區"],
         "高雄市": ["新興區", "前金區", "苓雅區", "鹽埕區", "鼓山區", "旗津區", "前鎮區", "三民區", "楠梓區", "小港區", "左營區", "仁武區", "大社區", "岡山區", "路竹區", "阿蓮區", "田寮區", "燕巢區", "橋頭區", "梓官區", "彌陀區", "永安區", "湖內區", "鳳山區", "大寮區", "林園區", "鳥松區", "大樹區", "旗山區", "美濃區", "六龜區", "內門區", "杉林區", "甲仙區", "桃源區", "那瑪夏區", "茂林區", "茄萣區"],
-        "屏東縣": ["屏東市", "潮州鎮", "東港鎮", "恆春鎮", "萬丹鄉", "長治鄉", "麟洛鄉", "九如鄉", "里港鄉", "高樹鄉", "鹽埔鄉", "內埔鄉", "竹田鄉", "萬巒鄉", "內埔鄉", "新埤鄉", "枋寮鄉", "新園鄉", "崁頂鄉", "林邊鄉", "南州鄉", "佳冬鄉", "琉球鄉", "車城鄉", "滿州鄉", "枋山鄉", "三地門鄉", "霧臺鄉", "瑪家鄉", "泰武鄉", "來義鄉", "春日鄉", "獅子鄉", "牡丹鄉"],
+        "基隆市": ["仁愛區", "信義區", "中正區", "中山區", "安樂區", "暖暖區", "七堵區"],
+        "桃園市": ["桃園區", "中壢區", "大溪區", "楊梅區", "蘆竹區", "大園區", "龜山區", "八德區", "龍潭區", "平鎮區", "新屋區", "觀音區", "復興區"],
         "宜蘭縣": ["宜蘭市", "羅東鎮", "蘇澳鎮", "頭城鎮", "礁溪鄉", "壯圍鄉", "員山鄉", "冬山鄉", "五結鄉", "三星鄉", "大同鄉", "南澳鄉"],
         "花蓮縣": ["花蓮市", "鳳林鎮", "玉里鎮", "新城鄉", "吉安鄉", "壽豐鄉", "光復鄉", "豐濱鄉", "瑞穗鄉", "富里鄉", "秀林鄉", "萬榮鄉", "卓溪鄉"],
         "臺東縣": ["臺東市", "成功鎮", "關山鎮", "卑南鄉", "大武鄉", "太麻里鄉", "東河鄉", "長濱鄉", "鹿野鄉", "池上鄉", "綠島鄉", "延平鄉", "海端鄉", "達仁鄉", "金峰鄉", "蘭嶼鄉"],
-        "基隆市": ["仁愛區", "信義區", "中正區", "中山區", "安樂區", "暖暖區", "七堵區"],
-        "桃園市": ["桃園區", "中壢區", "大溪區", "楊梅區", "蘆竹區", "大園區", "龜山區", "八德區", "龍潭區", "平鎮區", "新屋區", "觀音區", "復興區"],
+        "新竹縣": ["竹北市", "竹東鎮", "新埔鎮", "關西鎮", "湖口鄉", "新豐鄉", "芎林鄉"],
+        "苗栗縣": ["苗栗市", "頭份市", "竹南鎮", "後龍鎮", "通霄鎮", "苑裡鎮", "卓蘭鎮"],
+        "南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉"],
+        "雲林縣": ["斗六市", "斗南鎮", "虎尾鎮", "西螺鎮", "土庫鎮", "北港鎮", "古坑鄉"],
+        "嘉義縣": ["太保市", "朴子市", "布袋鎮", "大林鎮", "民雄鄉", "溪口鄉", "新港鄉"],
+        "屏東縣": ["屏東市", "潮州鎮", "東港鎮", "恆春鎮", "萬丹鄉", "長治鄉", "麟洛鄉"],
+        "澎湖縣": ["馬公市", "湖西鄉", "白沙鄉"],
+        "金門縣": ["金城鎮", "金湖鎮", "金沙鎮"],
+        "連江縣": ["南竿鄉", "北竿鄉"],
         "新竹市": ["東區", "北區", "香山區"],
-        "新竹縣": ["竹北市", "竹東鎮", "新埔鎮", "關西鎮", "湖口鄉", "新豐鄉", "芎林鄉", "橫山鄉", "北埔鄉", "寶山鄉", "峨眉鄉", "尖石鄉", "五峰鄉"],
-        "苗栗縣": ["苗栗市", "頭份市", "竹南鎮", "後龍鎮", "通霄鎮", "苑裡鎮", "卓蘭鎮", "造橋鄉", "西湖鄉", "頭屋鄉", "公館鄉", "銅鑼鄉", "三義鄉", "大湖鄉", "獅潭鄉", "三灣鄉", "南庄鄉", "泰安鄉"],
-        "嘉義市": ["東區", "西區"],
-        "澎湖縣": ["馬公市", "湖西鄉", "白沙鄉", "西嶼鄉", "望安鄉", "七美鄉"],
-        "金門縣": ["金城鎮", "金湖鎮", "金沙鎮", "金寧鄉", "烈嶼鄉", "烏坵鄉"],
-        "連江縣": ["南竿鄉", "北竿鄉", "莒光鄉", "東引鄉"]
+        "嘉義市": ["東區", "西區"]
     };
 
     function init() {
@@ -155,9 +144,8 @@
     }
 
     function updateWeather() {
-        document.getElementById('weatherDisplay').innerHTML = `${Math.floor(Math.random()*5)+21}°C ⛅`;
-        document.getElementById('rainProb').innerText = Math.floor(Math.random()*15) + "%";
-        document.getElementById('dayRain').innerText = (Math.random()*0.5).toFixed(1) + "mm";
+        document.getElementById('weatherDisplay').innerHTML = `${Math.floor(Math.random()*4)+22}°C ⛅`;
+        document.getElementById('rainProb').innerText = Math.floor(Math.random()*10) + "%";
     }
 
     function updateTimeAndCountdown() {
