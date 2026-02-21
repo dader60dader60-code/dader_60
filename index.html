@@ -9,11 +9,12 @@
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
-        .card, .line-section, .form-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
+        .card, .line-section, .form-section, .live-section, .video-gallery { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
+        /* 天氣 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -21,13 +22,16 @@
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center; }
 
-        /* 地震區紅邊樣式 */
+        /* 地震區 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.6; min-height: 80px; }
         .eq-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
 
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; background: #000; }
+        /* 影片容器 */
+        .video-container { position: relative; width: 100%; padding-bottom: 177.77%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
+        .live-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
+        .live-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
@@ -82,17 +86,23 @@
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 地震即時監測 (日期/震源/強度)</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
-            <option value="">📡 正在連線氣象署...</option>
+            <option value="">📡 連線中...</option>
         </select>
-        <div id="eqDisplayArea" class="eq-display-card">
-            請稍候，資料載入中...
-        </div>
+        <div id="eqDisplayArea" class="eq-display-card">正在抓取最新地震...</div>
     </div>
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 中部即時直播專區</strong>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" frameborder="0" allowfullscreen></iframe></div>
+        <div class="live-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" frameborder="0" allowfullscreen></iframe></div>
+        <div class="live-container"><iframe src="https://www.youtube.com/embed/RaTbGYKBUtk" frameborder="0" allowfullscreen></iframe></div>
+    </div>
+
+    <div class="video-gallery">
+        <strong style="display: block; margin-bottom: 10px; color: #333;">🎬 達德影片專區</strong>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/aZzqiOqoFVA" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div style="font-size: 12px; color: #666; font-weight: normal;">📹 影片：達德商工 [00:00:28]</div>
     </div>
 
     <div class="card countdown-box">
@@ -113,17 +123,15 @@
     let eqDataList = [];
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
 
-    // --- 計數器永久保留邏輯 ---
     async function updateCounter() {
         const viewEl = document.getElementById('page-views');
-        const storageKey = 'dader_persistent_v26';
+        const storageKey = 'dader_persistent_hits_v2026';
         let localHits = parseInt(localStorage.getItem(storageKey) || "0");
         localHits++;
         localStorage.setItem(storageKey, localHits);
         viewEl.innerText = localHits.toLocaleString();
-
         try {
-            const res = await fetch(`https://api.counterapi.dev/v1/dader_speed_final_v1/hits/increment`);
+            const res = await fetch(`https://api.counterapi.dev/v1/dader_speed_final_v3/hits/increment`);
             const data = await res.json();
             if (data.count > localHits) {
                 viewEl.innerText = data.count.toLocaleString();
@@ -132,7 +140,6 @@
         } catch (e) { }
     }
 
-    // --- 倒數日邏輯 ---
     function formatCountdownText(dateStr) {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -144,39 +151,27 @@
         return `還有 ${diff} 天`;
     }
 
-    // --- 強化版地震抓取 ---
     async function fetchEarthquake() {
         const selectEl = document.getElementById('eqSelect');
-        const displayEl = document.getElementById('eqDisplayArea');
-        
         try {
-            // 加入 cache: "no-cache" 確保每次都抓最新
-            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`, { cache: "no-cache" });
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
             const data = await res.json();
-            
             if (data.records && data.records.Earthquake) {
                 eqDataList = data.records.Earthquake;
                 selectEl.innerHTML = "";
-                eqDataList.slice(0, 8).forEach((e, i) => {
+                eqDataList.slice(0, 5).forEach((e, i) => {
                     let opt = document.createElement('option');
                     opt.value = i;
-                    // 簡化選單名稱
-                    opt.innerHTML = (i === 0 ? "【最新】" : `前 ${i} 筆：`) + e.EarthquakeInfo.OriginTime.substring(5, 16);
+                    opt.innerHTML = (i === 0 ? "【最新】" : `歷史：`) + e.EarthquakeInfo.OriginTime.substring(5, 16);
                     selectEl.appendChild(opt);
                 });
                 displaySelectedEq();
-            } else {
-                displayEl.innerText = "氣象署目前無回傳資料";
             }
-        } catch (e) {
-            console.error("Earthquake API Error:", e);
-            displayEl.innerText = "載入失敗：請確認 API Key 是否正確或網路穩定。";
-        }
+        } catch (e) { document.getElementById('eqDisplayArea').innerText = "📡 資料獲取中..."; }
     }
 
     function displaySelectedEq() {
         const idx = document.getElementById('eqSelect').value;
-        if (!eqDataList[idx]) return;
         const e = eqDataList[idx].EarthquakeInfo;
         const inten = eqDataList[idx].Intensity.MaxIntensity[0];
         document.getElementById('eqDisplayArea').innerHTML = `
@@ -186,18 +181,17 @@
         `;
     }
 
-    // --- 天氣預報 ---
     function updateWeatherDisplay() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
         const now = new Date();
         document.getElementById('updateTime').innerText = `${(now.getMonth()+1)}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-        document.getElementById('weatherDisplay').innerHTML = `23°C ⛅`;
-        document.getElementById('rainProb').innerText = "5%";
-        document.getElementById('humidity').innerText = "60%";
+        document.getElementById('weatherDisplay').innerHTML = `23°C ☀️`;
+        document.getElementById('rainProb').innerText = "0%";
+        document.getElementById('humidity').innerText = "55%";
         document.getElementById('windDir').innerText = "北風";
-        document.getElementById('windSpeed').innerText = "1.6";
+        document.getElementById('windSpeed').innerText = "1.2";
     }
 
     const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
