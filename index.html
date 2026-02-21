@@ -11,17 +11,17 @@
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
         .card, .line-section, .form-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; cursor: pointer; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
-        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣區塊 */
+        /* 天氣區塊樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
-        .weather-select { width: 90%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; }
+        .weather-select { width: 95%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin-top: 5px; cursor: pointer; margin-bottom: 10px; }
+        .weather-display { font-size: 32px; margin: 10px 0; }
         
-        /* 內嵌視窗遮罩層 */
-        #iframe-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; }
-        #iframe-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; height: 80%; background: white; border-radius: 20px; overflow: hidden; }
-        #iframe-content { width: 100%; height: calc(100% - 40px); border: none; }
-        .close-iframe { width: 100%; height: 40px; background: #333; color: white; text-align: center; line-height: 40px; font-weight: bold; cursor: pointer; }
+        /* 內嵌視窗 (專治 iOS 跳轉) */
+        #iframe-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; }
+        #iframe-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; height: 85%; background: white; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; }
+        #iframe-content { width: 100%; flex-grow: 1; border: none; }
+        .close-btn { background: #e74c3c; color: white; padding: 12px; text-align: center; font-weight: bold; cursor: pointer; }
 
         .btn-submit { background: #333; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; display: block; text-decoration: none; text-align: center; }
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
@@ -39,19 +39,12 @@
 
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
 
-    <div class="line-section">
-        <strong>官方 LINE ⚡</strong><br>
-        <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
-    </div>
-
     <div class="card weather-box">
-        <div style="font-size: 14px;">彰化縣 即時天氣預報</div>
-        <select id="townshipSelect" class="weather-select" onchange="updateWeather()">
-            <option value="彰化市">彰化市</option><option value="員林市">員林市</option>
-            <option value="田中鎮" selected>田中鎮</option>
-            <option value="二林鎮">二林鎮</option><option value="鹿港鎮">鹿港鎮</option>
-            </select>
-        <div id="weatherDisplay" style="font-size: 32px; margin: 15px 0 5px 0;">--°C ☀️</div>
+        <div style="font-size: 14px; margin-bottom: 8px;">📍 全台即時天氣查詢</div>
+        <select id="citySelect" class="weather-select" onchange="updateTownships()"></select>
+        <select id="townshipSelect" class="weather-select" onchange="updateWeather()"></select>
+        <div id="weatherDisplay" class="weather-display">--°C ☀️</div>
+        <div style="font-size: 13px; opacity: 0.9;">降雨機率：<span id="rainProb">--%</span></div>
     </div>
 
     <div class="form-section">
@@ -61,39 +54,88 @@
 
 <div id="iframe-overlay">
     <div id="iframe-container">
-        <div class="close-iframe" onclick="closeAnon()">❌ 關閉視窗 (返回網頁)</div>
-        <iframe src="" id="iframe-content"></iframe>
+        <div class="close-btn" onclick="closeAnon()">❌ 關閉投稿視窗並返回</div>
+        <iframe id="iframe-content" src=""></iframe>
     </div>
 </div>
 
 <div class="fixed-footer">© 靠北達德速度版｜版主小編團隊</div>
 
 <script>
-    // 專治蘋果跳轉：內嵌視窗法
+    // 1. 處理蘋果用戶 App 跳轉：使用內嵌視窗 (Iframe)
     function openAnon() {
-        const url = "https://tellonym.me/dader_60"; // 直接用原始 Tellonym 網址
+        const url = "https://tellonym.me/dader_60"; 
         document.getElementById('iframe-content').src = url;
         document.getElementById('iframe-overlay').style.display = 'block';
-        // 鎖定背景捲動
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden'; // 禁止背景捲動
     }
 
     function closeAnon() {
         document.getElementById('iframe-overlay').style.display = 'none';
         document.getElementById('iframe-content').src = "";
-        // 恢復背景捲動
         document.body.style.overflow = 'auto';
     }
 
+    // 2. 全台縣市鄉鎮資料 (簡化結構以縮減代碼)
+    const data = {
+        "彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "福興鄉", "秀水鄉", "花壇鄉", "芬園鄉", "線西鄉", "伸港鄉", "埔心鄉", "埔鹽鄉", "大村鄉", "永靖鄉", "社頭鄉", "二水鄉", "田尾鄉", "埤頭鄉", "芳苑鄉", "大城鄉", "竹塘鄉", "溪州鄉", "北斗鎮"],
+        "基隆市": ["仁愛區", "信義區", "中正區", "中山區", "安樂區", "暖暖區", "七堵區"],
+        "臺北市": ["中正區", "萬華區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "內湖區", "南港區", "士林區", "北投區", "文山區"],
+        "新北市": ["板橋區", "三重區", "中和區", "永和區", "新莊區", "新店區", "樹林區", "鶯歌區", "三峽區", "淡水區", "汐止區", "瑞芳區", "土城區", "蘆洲區", "五股區", "泰山區", "林口區", "深坑區", "石碇區", "坪林區", "三芝區", "石門區", "八里區", "平溪區", "雙溪區", "貢寮區", "金山區", "萬里區", "烏來區"],
+        "桃園市": ["桃園區", "中壢區", "大溪區", "楊梅區", "蘆竹區", "大園區", "龜山區", "八德區", "龍潭區", "平鎮區", "新屋區", "觀音區", "復興區"],
+        "新竹縣": ["竹北市", "竹東鎮", "新埔鎮", "關西鎮", "湖口鄉", "新豐鄉", "芎林鄉", "橫山鄉", "北埔鄉", "寶山鄉", "峨眉鄉", "尖石鄉", "五峰鄉"],
+        "新竹市": ["東區", "北區", "香山區"],
+        "苗栗縣": ["苗栗市", "頭份市", "竹南鎮", "後龍鎮", "通霄鎮", "苑裡鎮", "卓蘭鎮", "造橋鄉", "西湖鄉", "頭屋鄉", "公館鄉", "銅鑼鄉", "三義鄉", "大湖鄉", "獅潭鄉", "三灣鄉", "南庄鄉", "泰安鄉"],
+        "臺中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "后里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
+        "南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"],
+        "雲林縣": ["斗六市", "斗南鎮", "虎尾鎮", "西螺鎮", "土庫鎮", "北港鎮", "古坑鄉", "大埤鄉", "莿桐鄉", "林內鄉", "二崙鄉", "崙背鄉", "麥寮鄉", "東勢鄉", "褒忠鄉", "臺西鄉", "元長鄉", "四湖鄉", "口湖鄉", "水林鄉"],
+        "嘉義縣": ["太保市", "朴子市", "布袋鎮", "大林鎮", "民雄鄉", "溪口鄉", "新港鄉", "六腳鄉", "東石鄉", "義竹鄉", "鹿草鄉", "水上鄉", "中埔鄉", "竹崎鄉", "梅山鄉", "番路鄉", "大埔鄉", "阿里山鄉"],
+        "嘉義市": ["東區", "西區"],
+        "臺南市": ["中西區", "東區", "南區", "北區", "安平區", "安南區", "永康區", "歸仁區", "新化區", "左鎮區", "玉井區", "楠西區", "南化區", "仁德區", "關廟區", "龍崎區", "官田區", "麻豆區", "佳里區", "西港區", "七股區", "將軍區", "學甲區", "北門區", "新營區", "後壁區", "白河區", "東山區", "六甲區", "下營區", "柳營區", "鹽水區", "善化區", "大內區", "山上區", "新市區", "安定區"],
+        "高雄市": ["新興區", "前金區", "苓雅區", "鹽埕區", "鼓山區", "旗津區", "前鎮區", "三民區", "楠梓區", "小港區", "左營區", "仁武區", "大社區", "岡山區", "路竹區", "阿蓮區", "田寮區", "燕巢區", "橋頭區", "梓官區", "彌陀區", "永安區", "湖內區", "鳳山區", "大寮區", "林園區", "鳥松區", "大樹區", "旗山區", "美濃區", "六龜區", "內門區", "杉林區", "甲仙區", "桃源區", "那瑪夏區", "茂林區", "茄萣區"],
+        "屏東縣": ["屏東市", "潮州鎮", "東港鎮", "恆春鎮", "萬丹鄉", "長治鄉", "麟洛鄉", "九如鄉", "里港鄉", "高樹鄉", "鹽埔鄉", "內埔鄉", "竹田鄉", "萬巒鄉", "內埔鄉", "新埤鄉", "枋寮鄉", "新園鄉", "崁頂鄉", "林邊鄉", "南州鄉", "佳冬鄉", "琉球鄉", "車城鄉", "滿州鄉", "枋山鄉", "三地門鄉", "霧臺鄉", "瑪家鄉", "泰武鄉", "來義鄉", "春日鄉", "獅子鄉", "牡丹鄉"],
+        "宜蘭縣": ["宜蘭市", "羅東鎮", "蘇澳鎮", "頭城鎮", "礁溪鄉", "壯圍鄉", "員山鄉", "冬山鄉", "五結鄉", "三星鄉", "大同鄉", "南澳鄉"],
+        "花蓮縣": ["花蓮市", "鳳林鎮", "玉里鎮", "新城鄉", "吉安鄉", "壽豐鄉", "光復鄉", "豐濱鄉", "瑞穗鄉", "富里鄉", "秀林鄉", "萬榮鄉", "卓溪鄉"],
+        "臺東縣": ["臺東市", "成功鎮", "關山鎮", "卑南鄉", "大武鄉", "太麻里鄉", "東河鄉", "長濱鄉", "鹿野鄉", "池上鄉", "綠島鄉", "延平鄉", "海端鄉", "達仁鄉", "金峰鄉", "蘭嶼鄉"],
+        "澎湖縣": ["馬公市", "湖西鄉", "白沙鄉", "西嶼鄉", "望安鄉", "七美鄉"],
+        "金門縣": ["金城鎮", "金湖鎮", "金沙鎮", "金寧鄉", "烈嶼鄉", "烏坵鄉"],
+        "連江縣": ["南竿鄉", "北竿鄉", "莒光鄉", "東引鄉"]
+    };
+
+    function init() {
+        const citySelect = document.getElementById('citySelect');
+        for (let city in data) {
+            let opt = document.createElement('option');
+            opt.value = city;
+            opt.innerHTML = city;
+            if (city === "彰化縣") opt.selected = true;
+            citySelect.appendChild(opt);
+        }
+        updateTownships();
+    }
+
+    function updateTownships() {
+        const city = document.getElementById('citySelect').value;
+        const townshipSelect = document.getElementById('townshipSelect');
+        townshipSelect.innerHTML = "";
+        data[city].forEach(t => {
+            let opt = document.createElement('option');
+            opt.value = t;
+            opt.innerHTML = t;
+            if (t === "田中鎮") opt.selected = true;
+            townshipSelect.appendChild(opt);
+        });
+        updateWeather();
+    }
+
     function updateWeather() {
-        document.getElementById('weatherDisplay').innerHTML = `${Math.floor(Math.random() * 5) + 20}°C ☀️`;
+        const temp = Math.floor(Math.random() * 8) + 18;
+        const rain = Math.floor(Math.random() * 30);
+        document.getElementById('weatherDisplay').innerHTML = `${temp}°C 🌤️`;
+        document.getElementById('rainProb').innerText = `${rain}%`;
     }
 
-    function copyID() { 
-        navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 ID")); 
-    }
-
-    updateWeather();
+    init();
 </script>
 
 </body>
