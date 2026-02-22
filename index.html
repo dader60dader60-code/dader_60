@@ -23,9 +23,12 @@
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
+        /* 地震監測區 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.6; min-height: 80px; }
+        .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; }
         .eq-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
+        .eq-warning { color: #d35400; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
         .live-section { text-align: left; }
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 15px; background: #000; overflow: hidden; }
@@ -83,45 +86,30 @@
     </div>
 
     <div class="card earthquake-box">
-        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 地震即時監測</div>
+        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部區域有感地震監測</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
             <option value="">同步資料中...</option>
         </select>
-        <div id="eqDisplayArea" class="eq-display-card">載入中...</div>
+        <div id="eqDisplayArea" class="eq-display-card">載入即時資訊中...</div>
+        <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
     </div>
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
-        
         <span class="video-label">彰化縣重要路口即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" allowfullscreen></iframe>
-        </div>
-
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" allowfullscreen></iframe></div>
         <span class="video-label">八卦山美景即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" allowfullscreen></iframe>
-        </div>
-
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" allowfullscreen></iframe></div>
         <span class="video-label">彰化八卦山大佛即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/f3SQb8CBqYg" allowfullscreen></iframe>
-        </div>
-
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg" allowfullscreen></iframe></div>
         <span class="video-label">台灣彰化溪湖即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/7vNt6dkNt6I" allowfullscreen></iframe>
-        </div>
-
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I" allowfullscreen></iframe></div>
         <span class="video-label">彰化王功漁港即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/ABT9YRFUYXs" allowfullscreen></iframe>
-        </div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs" allowfullscreen></iframe></div>
     </div>
 
     <div class="live-section" style="padding-top: 10px;">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
-        
         <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ?si=vD6X6CMUKx5RS_7n" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
         <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw?si=EgnjHz6Pl4uiHiJ3" target="_blank" class="card yt-card">達德商工學務處專區</a>
         <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
@@ -146,14 +134,8 @@
 
     function tickTime() {
         const now = new Date();
-        const year = now.getFullYear();
-        const month = (now.getMonth() + 1).toString().padStart(2, '0');
-        const date = now.getDate().toString().padStart(2, '0');
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const seconds = now.getSeconds().toString().padStart(2, '0');
         const t = document.getElementById('updateTime');
-        if(t) t.innerText = `${year}/${month}/${date} ${hours}:${minutes}:${seconds}`;
+        if(t) t.innerText = now.toLocaleString();
     }
 
     function updateWeatherValues() {
@@ -183,26 +165,49 @@
             const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
             const data = await res.json();
             if (data.records && data.records.Earthquake) {
-                eqDataList = data.records.Earthquake;
+                const allEQ = data.records.Earthquake;
+                const targetCounties = ["臺中", "彰化", "南投", "雲林", "台中"]; // 包含舊字體
+                const now = new Date().getTime();
+                const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+
+                // 篩選中部區域地震並限制最多 15 個
+                eqDataList = allEQ.filter(e => {
+                    const loc = e.EarthquakeInfo.EarthquakeLocation;
+                    return targetCounties.some(c => loc.includes(c));
+                }).slice(0, 15);
+
                 const selectEl = document.getElementById('eqSelect');
                 selectEl.innerHTML = "";
-                eqDataList.slice(0, 5).forEach((e, i) => {
+
+                if (eqDataList.length === 0) {
+                    selectEl.innerHTML = "<option>近期中部無顯著有感地震</option>";
+                    document.getElementById('eqDisplayArea').innerText = "目前無符合條件的地震資訊。";
+                    return;
+                }
+
+                eqDataList.forEach((e, i) => {
+                    const eqTime = new Date(e.EarthquakeInfo.OriginTime).getTime();
+                    const isNew = (now - eqTime) < sevenDaysMs;
                     let opt = document.createElement('option');
                     opt.value = i;
-                    opt.innerHTML = (i === 0 ? "【最新】" : `記錄：`) + e.EarthquakeInfo.OriginTime.substring(5, 16);
+                    opt.innerHTML = (isNew ? "【最新資訊】" : "【歷史記錄】") + e.EarthquakeInfo.OriginTime;
                     selectEl.appendChild(opt);
                 });
                 displaySelectedEq();
             }
-        } catch (e) { }
+        } catch (e) { document.getElementById('eqDisplayArea').innerText = "地震資料載入失敗"; }
     }
 
     function displaySelectedEq() {
         if (!eqDataList.length) return;
         const idx = document.getElementById('eqSelect').value || 0;
         const e = eqDataList[idx].EarthquakeInfo;
-        const inten = eqDataList[idx].Intensity.MaxIntensity[0];
-        document.getElementById('eqDisplayArea').innerHTML = `📅 <b>時間：</b>${e.OriginTime}<br>📍 <b>地點：</b>${e.EarthquakeLocation}<br>⚠️ <b>強度：</b><span style="color:red; font-size:16px;">${inten.IntensityValue}級</span>`;
+        document.getElementById('eqDisplayArea').innerHTML = `
+            <b>🕒 日期時間：</b>${e.OriginTime}<br>
+            <b>📍 震央地點：</b>${e.EarthquakeLocation}<br>
+            <b>📏 地震規模：</b>M<sub>L</sub> ${e.EarthquakeMagnitude.MagnitudeValue}<br>
+            <b>📉 震源深度：</b>${e.FocalDepth} 公里
+        `;
     }
 
     function updateCountdowns() {
