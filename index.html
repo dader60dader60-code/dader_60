@@ -87,9 +87,9 @@
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部區域有感地震監測</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
-            <option value="">嘗試連線中...</option>
+            <option value="">正在同步資料...</option>
         </select>
-        <div id="eqDisplayArea" class="eq-display-card">等待資料同步...</div>
+        <div id="eqDisplayArea" class="eq-display-card">載入中...</div>
         <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
     </div>
 
@@ -149,15 +149,13 @@
         const city = document.getElementById('citySelect').value; 
         const townSelect = document.getElementById('townSelect'); 
         townSelect.innerHTML = ""; 
-        if(areaData[city]) {
-            areaData[city].forEach(town => { 
-                let opt = document.createElement('option'); 
-                opt.value = town; 
-                opt.innerHTML = town; 
-                if(town === "田中鎮") opt.selected = true; 
-                townSelect.appendChild(opt); 
-            }); 
-        }
+        areaData[city].forEach(town => { 
+            let opt = document.createElement('option'); 
+            opt.value = town; 
+            opt.innerHTML = town; 
+            if(town === "田中鎮") opt.selected = true; 
+            townSelect.appendChild(opt); 
+        }); 
         updateWeatherValues(); 
     }
 
@@ -166,67 +164,65 @@
         const displayArea = document.getElementById('eqDisplayArea');
         
         try {
-            // 使用快取破除參數確保抓到最新資料
-            const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&_=${new Date().getTime()}`;
-            const response = await fetch(url);
+            // 使用更直接的 API 路徑
+            const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`;
             
-            if (!response.ok) throw new Error('網路回應不成功');
+            const response = await fetch(url);
+            if (!response.ok) throw new Error();
             
             const data = await response.json();
-            
-            if (data.records && data.records.Earthquake) {
-                const allEQ = data.records.Earthquake;
-                const targetCounties = ["臺中", "彰化", "南投", "雲林", "台中"];
-                const now = new Date().getTime();
-                const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+            const earthquakes = data.records.Earthquake;
 
-                // 篩選與排序
-                eqDataList = allEQ.filter(e => {
-                    const loc = e.EarthquakeInfo.EarthquakeLocation;
-                    return targetCounties.some(c => loc.includes(c));
-                }).slice(0, 15);
+            const targetCounties = ["彰化", "台中", "臺中", "南投", "雲林"];
+            const now = new Date();
+            const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
 
-                selectEl.innerHTML = "";
+            // 1. 篩選區域
+            let filtered = earthquakes.filter(eq => {
+                const loc = eq.EarthquakeInfo.EarthquakeLocation;
+                return targetCounties.some(county => loc.includes(county));
+            });
 
-                if (eqDataList.length === 0) {
-                    selectEl.innerHTML = "<option>目前無中部有感地震記錄</option>";
-                    displayArea.innerText = "監測中，暫無中部符合條件的地震資訊。";
-                    return;
-                }
+            // 2. 取前 15 筆
+            eqDataList = filtered.slice(0, 15);
 
-                eqDataList.forEach((e, i) => {
-                    const timeStr = e.EarthquakeInfo.OriginTime;
-                    // 修正日期解析問題
-                    const eqTime = new Date(timeStr.replace(/-/g, "/")).getTime();
-                    const isNew = (now - eqTime) < sevenDaysMs;
-                    
-                    let opt = document.createElement('option');
-                    opt.value = i;
-                    opt.innerHTML = (isNew ? "【最新資訊】" : "【歷史記錄】") + timeStr;
-                    selectEl.appendChild(opt);
-                });
-                displaySelectedEq();
-            } else {
-                throw new Error('資料結構不符');
+            if (eqDataList.length === 0) {
+                selectEl.innerHTML = "<option>近期中部無有感地震</option>";
+                displayArea.innerText = "目前暫無符合條件的地震資訊。";
+                return;
             }
-        } catch (e) {
-            console.error("Earthquake Fetch Error:", e);
-            selectEl.innerHTML = "<option>資料讀取失敗</option>";
-            displayArea.innerHTML = "<span style='color:red;'>連線至氣象署失敗，請檢查網路或稍後重整網頁。</span>";
+
+            selectEl.innerHTML = "";
+            eqDataList.forEach((eq, index) => {
+                const timeStr = eq.EarthquakeInfo.OriginTime;
+                const eqDate = new Date(timeStr.replace(/-/g, "/")); // 確保相容性
+                const diff = now - eqDate;
+                
+                const prefix = (diff < sevenDaysInMs) ? "【最新資訊】" : "【歷史記錄】";
+                const opt = document.createElement('option');
+                opt.value = index;
+                opt.innerText = `${prefix} ${timeStr}`;
+                selectEl.appendChild(opt);
+            });
+
+            displaySelectedEq();
+
+        } catch (err) {
+            selectEl.innerHTML = "<option>連線逾時</option>";
+            displayArea.innerHTML = "<span style='color:red;'>無法取得氣象署即時資料。請確認網路環境或 API 金鑰權限。</span>";
         }
     }
 
     function displaySelectedEq() {
-        if (!eqDataList.length) return;
         const idx = document.getElementById('eqSelect').value;
         if (idx === "" || !eqDataList[idx]) return;
-        
-        const e = eqDataList[idx].EarthquakeInfo;
+
+        const eq = eqDataList[idx].EarthquakeInfo;
         document.getElementById('eqDisplayArea').innerHTML = `
-            <b>🕒 日期時間：</b>${e.OriginTime}<br>
-            <b>📍 震央地點：</b>${e.EarthquakeLocation}<br>
-            <b>📏 地震規模：</b>M<sub>L</sub> ${e.EarthquakeMagnitude.MagnitudeValue}<br>
-            <b>📉 震源深度：</b>${e.FocalDepth} 公里
+            <b>🕒 時間：</b>${eq.OriginTime}<br>
+            <b>📍 地點：</b>${eq.EarthquakeLocation}<br>
+            <b>📏 規模：</b>M<sub>L</sub> ${eq.EarthquakeMagnitude.MagnitudeValue}<br>
+            <b>📉 深度：</b>${eq.FocalDepth} km
         `;
     }
 
