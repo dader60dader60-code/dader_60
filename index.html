@@ -44,7 +44,7 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <a href="javascript:void(0)" onclick="window.open('https://lihi.cc/dVvVI', '_blank', 'noreferrer')" class="card">🔗 匿名投稿連結🔗</a>
+    <a href="javascript:void(0)" onclick="openLinkSafely('https://lihi.cc/dVvVI')" class="card">🔗 匿名投稿連結🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
@@ -121,6 +121,13 @@
 <div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
+    // 解決蘋果跳轉的核心函數：主動彈窗確認可阻斷 iOS App 喚起
+    function openLinkSafely(url) {
+        if (confirm("是否前往投稿頁面？\n(提示：若顯示跳轉 App，請在該頁面手動選擇留在網頁)")) {
+            window.location.href = url;
+        }
+    }
+
     function tickTime() {
         const now = new Date();
         const t = document.getElementById('updateTime');
