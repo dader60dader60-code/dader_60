@@ -83,6 +83,14 @@
         </div>
     </div>
 
+    <div class="live-section">
+        <strong style="display: block; margin-bottom: 15px; text-align: center;">📡 地震即時直播專區</strong>
+        <span class="video-label">台灣地震監測即時影像</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部區域有感地震監測</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
@@ -163,7 +171,6 @@
         const displayArea = document.getElementById('eqDisplayArea');
         
         try {
-            // 使用快取破解時間戳與 CORS 模式
             const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${Date.now()}`;
             
             const response = await fetch(url, { mode: 'cors' });
