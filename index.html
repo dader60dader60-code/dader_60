@@ -16,7 +16,7 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣區塊樣式 */
+        /* 天氣區塊 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -25,14 +25,15 @@
         .sun-countdown { grid-column: span 2; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px; text-align: center; font-size: 13px; margin-top: 5px; color: #fff; border: 1px dashed rgba(255,255,255,0.5); }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
-        /* 直播/地震區樣式 */
+        /* 直播通用樣式 */
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 8px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; text-align: left; }
+        .mute-hint { font-size: 12px; color: #666; font-weight: normal; margin-top: 5px; display: block; }
         .eq-warning { color: #ff0000; font-size: 15px; font-weight: bold; margin-top: 10px; display: block; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* 倒數區塊樣式 */
+        /* 倒數區塊 */
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
@@ -46,7 +47,7 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <a href="https://lihi.cc/dVvVI" class="card">🔗 匿名投稿連結🔗</a>
+    <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" target="_blank" class="card">🔗 匿名投稿連結🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
@@ -79,7 +80,7 @@
             <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
             <div id="sunCountdown" class="weather-item sun-countdown">計算中...</div>
         </div>
-        <div class="weather-meta">資料來源：氣象署 最後更新：<span id="updateTime">讀取中...</span></div>
+        <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
 
     <div class="live-section">
@@ -87,7 +88,30 @@
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?mute=1" allowfullscreen></iframe>
         </div>
-        <span class="eq-warning">⚠️地震發生時請保持冷靜！</span>
+        <span class="eq-warning">⚠️地震發生時請保持冷靜，注意安全！</span>
+        <span class="eq-warning">地震三步驟：趴下、掩護、穩住</span>
+    </div>
+
+    <div class="live-section">
+        <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
+        <span class="video-label">彰化縣重要路口即時影像</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe></div>
+        <span class="video-label">八卦山美景即時影像</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?mute=1" allowfullscreen></iframe></div>
+        <span class="video-label">彰化八卦山大佛即時影像</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg?mute=1" allowfullscreen></iframe></div>
+        <span class="video-label">台灣彰化溪湖即時影像</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?mute=1" allowfullscreen></iframe></div>
+        <span class="video-label">彰化王功漁港即時影像</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe></div>
+        <span class="mute-hint">💡 提示：影片預設靜音，需要請手動打開聲音</span>
+    </div>
+
+    <div class="live-section">
+        <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
+        <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ?si=vD6X6CMUKx5RS_7n" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
+        <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw?si=EgnjHz6Pl4uiHiJ3" target="_blank" class="card yt-card">達德商工學務處專區</a>
+        <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
     <div class="card countdown-box">
@@ -102,7 +126,6 @@
 <div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
-    /* 以下邏輯完全維持原樣，不作任何變更 */
     function tickTime() {
         const now = new Date();
         const t = document.getElementById('updateTime');
@@ -125,7 +148,11 @@
         const s = Math.floor((diff % 60000) / 1000);
         sunBox.innerText = `${label} ${pad(h)}:${pad(m)}:${pad(s)}`;
     }
-    const areaData = { "彰化縣": ["田中鎮", "彰化市"], "台中市": ["中區"], "南投縣": ["南投市"] };
+    const areaData = {
+        "彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
+        "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "后里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
+        "南投縣": ["南投市", "草屯鎮", "埔里鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]
+    };
     function initTownshipSelect() { 
         const city = document.getElementById('citySelect').value; 
         const townSelect = document.getElementById('townSelect'); 
@@ -146,7 +173,10 @@
         const today = new Date().setHours(0,0,0,0);
         const calc = (targetStr) => {
             const diff = Math.round((new Date(targetStr).getTime() - today) / 86400000);
-            return diff <= 0 ? "就是現在！" : `還有 ${diff} 天`;
+            if (diff < 0) return "已通過";
+            if (diff === 0) return "就是今天！";
+            if (diff === 1) return "就是明天！";
+            return `還有 ${diff} 天`;
         };
         document.getElementById('school-days').innerText = calc('2026-02-23');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
