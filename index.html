@@ -20,7 +20,8 @@
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
-        .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
+        .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; font-size: 14px; }
+        .sun-countdown { grid-column: span 2; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px; text-align: center; font-size: 13px; margin-top: 5px; color: #fff; border: 1px dashed rgba(255,255,255,0.5); }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
@@ -80,6 +81,7 @@
             <div class="weather-item">🌬️ 風向: 北風</div>
             <div class="weather-item">🌪️ 風速: 1.5 m/s</div>
             <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
+            <div id="sunCountdown" class="weather-item sun-countdown">計算中...</div>
         </div>
         <div class="weather-meta">最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
@@ -149,6 +151,45 @@
         const now = new Date();
         const t = document.getElementById('updateTime');
         if(t) t.innerText = now.toLocaleString();
+        updateSunCountdown(now); // 每一秒更新一次日出/日落倒數
+    }
+
+    // 更新日出日落倒數邏輯
+    function updateSunCountdown(now) {
+        const sunBox = document.getElementById('sunCountdown');
+        if(!sunBox) return;
+
+        // 設定固定的日出日落時間 (以當天為基準)
+        const sunrise = new Date(now);
+        sunrise.setHours(6, 35, 0);
+        const sunset = new Date(now);
+        sunset.setHours(18, 12, 0);
+
+        let target, label;
+
+        if (now < sunrise) {
+            // 凌晨時間，倒數當天日出
+            target = sunrise;
+            label = "🌇 距離下次日出還有";
+        } else if (now < sunset) {
+            // 白天時間，倒數當天日落
+            target = sunset;
+            label = "🌅 距離日落還有";
+        } else {
+            // 晚上時間，倒數隔天日出
+            target = new Date(now);
+            target.setDate(now.getDate() + 1);
+            target.setHours(6, 35, 0);
+            label = "🌇 距離下次日出還有";
+        }
+
+        const diff = target - now;
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+
+        const pad = (n) => n.toString().padStart(2, '0');
+        sunBox.innerText = `${label} ${pad(h)}:${pad(m)}:${pad(s)}`;
     }
 
     function updateWeatherValues() {
