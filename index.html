@@ -26,8 +26,8 @@
         .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.6; min-height: 80px; }
         .eq-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
 
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 15px; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
@@ -46,8 +46,7 @@
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
-    
-    <a href="https://www.tiktok.com/@hbingzhe10.10?is_from_webapp=1&sender_device=pc" target="_blank" class="card owner-tiktok">🎵 版主抖音 (TikTok)</a>
+    <a href="https://www.tiktok.com/@hbingzhe10.10" target="_blank" class="card owner-tiktok">🎵 版主抖音 (TikTok)</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
@@ -91,10 +90,10 @@
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 彰化縣即時直播專區</strong>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/S_I_643TzI0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/S_I_643TzI0" frameborder="0" allowfullscreen></iframe>
         </div>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/6_i9F_uSndc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/6_i9F_uSndc" frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -123,15 +122,14 @@
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const seconds = now.getSeconds().toString().padStart(2, '0');
-        const target = document.getElementById('updateTime');
-        if (target) target.innerText = `${year}/${month}/${date} ${hours}:${minutes}:${seconds}`;
+        const t = document.getElementById('updateTime');
+        if(t) t.innerText = `${year}/${month}/${date} ${hours}:${minutes}:${seconds}`;
     }
 
     function updateWeatherValues() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
-        const title = document.getElementById('regionTitle');
-        if (title) title.innerText = `${city} ${town} 即時預報`;
+        document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
     }
 
     const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
@@ -177,20 +175,22 @@
         document.getElementById('eqDisplayArea').innerHTML = `📅 <b>時間：</b>${e.OriginTime}<br>📍 <b>地點：</b>${e.EarthquakeLocation}<br>⚠️ <b>強度：</b><span style="color:red; font-size:16px;">${inten.IntensityValue}級</span>`;
     }
 
+    // --- 倒數日精確邏輯 ---
     function updateCountdowns() {
-        const getDiff = (targetStr) => {
-            const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        
+        const calc = (targetStr) => {
             const target = new Date(targetStr).getTime();
-            const diffDays = Math.round((target - today) / (1000 * 60 * 60 * 24));
-
-            if (diffDays === 0) return "就是今天！";
-            if (diffDays === 1) return "就是明天！";
-            if (diffDays < 0) return "已通過";
-            return `還有 ${diffDays} 天`;
+            const diff = Math.round((target - today) / 86400000);
+            if (diff === 0) return "就是今天！";
+            if (diff === 1) return "就是明天！";
+            if (diff < 0) return "已通過";
+            return `還有 ${diff} 天`;
         };
-        document.getElementById('school-days').innerText = getDiff('2026-02-23');
-        document.getElementById('grad-days').innerText = getDiff('2026-06-01');
+
+        document.getElementById('school-days').innerText = calc('2026-02-23');
+        document.getElementById('grad-days').innerText = calc('2026-06-01');
     }
     
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
