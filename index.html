@@ -25,7 +25,7 @@
 
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; }
-        .eq-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
+        .eq-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; margin-bottom: 10px; font-weight: bold; background: white; }
         .eq-warning { color: #d35400; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
@@ -87,14 +87,15 @@
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📡 地震即時直播專區</strong>
         <span class="video-label">台灣地震監測即時影像</span>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
     </div>
 
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部區域有感地震監測</div>
-        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
-            <option value="">嘗試連線中...</option>
+        <div id="eqStatus">正在同步資料中...</div>
+        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()" style="display:none;">
+            <option value="">請選擇地震報告時間</option>
         </select>
         <div id="eqDisplayArea" class="eq-display-card">載入中...</div>
         <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
@@ -103,15 +104,15 @@
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
         <span class="video-label">彰化縣重要路口即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe></div>
         <span class="video-label">八卦山美景即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?mute=1" allowfullscreen></iframe></div>
         <span class="video-label">彰化八卦山大佛即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg?mute=1" allowfullscreen></iframe></div>
         <span class="video-label">台灣彰化溪湖即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?mute=1" allowfullscreen></iframe></div>
         <span class="video-label">彰化王功漁港即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe></div>
     </div>
 
     <div class="live-section" style="padding-top: 10px;">
@@ -169,81 +170,53 @@
     async function fetchEarthquake() {
         const selectEl = document.getElementById('eqSelect');
         const displayArea = document.getElementById('eqDisplayArea');
-        
+        const statusEl = document.getElementById('eqStatus');
         try {
             const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${Date.now()}`;
-            
-            const response = await fetch(url, { mode: 'cors' });
-            if (!response.ok) throw new Error('API 連線失敗');
-            
+            const response = await fetch(url);
+            if (!response.ok) throw new Error();
             const data = await response.json();
             const earthquakes = data.records.Earthquake;
-
             const targetCounties = ["彰化", "台中", "臺中", "南投", "雲林"];
             const now = new Date();
-            const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
-
             let filtered = earthquakes.filter(eq => {
                 const loc = eq.EarthquakeInfo.EarthquakeLocation;
                 return targetCounties.some(county => loc.includes(county));
             });
-
             eqDataList = filtered.slice(0, 15);
-
             if (eqDataList.length === 0) {
-                selectEl.innerHTML = "<option>近期無中部有感地震</option>";
-                displayArea.innerText = "暫無中部符合條件的地震資訊。";
+                statusEl.innerText = "近期無中部有感地震記錄";
                 return;
             }
-
+            statusEl.style.display = "none";
+            selectEl.style.display = "block";
             selectEl.innerHTML = "";
             eqDataList.forEach((eq, index) => {
                 const timeStr = eq.EarthquakeInfo.OriginTime;
-                const eqDate = new Date(timeStr.replace(/-/g, "/"));
-                const isNew = (now - eqDate) < sevenDaysInMs;
-                
                 const opt = document.createElement('option');
                 opt.value = index;
-                opt.innerText = (isNew ? "【最新資訊】" : "【歷史記錄】") + timeStr;
+                opt.innerText = "【記錄】" + timeStr;
                 selectEl.appendChild(opt);
             });
-
             displaySelectedEq();
-
         } catch (err) {
-            console.error(err);
-            selectEl.innerHTML = "<option>資料無法同步</option>";
-            displayArea.innerHTML = `
-                <div style="color:red; font-size:12px;">
-                    無法直接連線至氣象署伺服器。<br>
-                    <a href="https://www.cwa.gov.tw/V8/C/E/index.html" target="_blank" style="color:#4A90E2;">👉 點此查看氣象署官網地震報告</a>
-                </div>`;
+            statusEl.style.display = "none";
+            displayArea.innerHTML = `<div style="text-align:center;"><p style="color:#c0392b; font-size:14px; font-weight:bold;">⚠️ 氣象署連線受阻</p><a href="https://www.cwa.gov.tw/V8/C/E/index.html" target="_blank" style="background:#4A90E2; color:white; text-decoration:none; padding:10px 20px; border-radius:10px; display:inline-block; font-size:14px;">查看官方地震報告</a></div>`;
         }
     }
 
     function displaySelectedEq() {
         const idx = document.getElementById('eqSelect').value;
         if (idx === "" || !eqDataList[idx]) return;
-
         const eq = eqDataList[idx].EarthquakeInfo;
-        document.getElementById('eqDisplayArea').innerHTML = `
-            <b>🕒 時間：</b>${eq.OriginTime}<br>
-            <b>📍 地點：</b>${eq.EarthquakeLocation}<br>
-            <b>📏 規模：</b>M<sub>L</sub> ${eq.EarthquakeMagnitude.MagnitudeValue}<br>
-            <b>📉 深度：</b>${eq.FocalDepth} km
-        `;
+        document.getElementById('eqDisplayArea').innerHTML = `<b>🕒 時間：</b>${eq.OriginTime}<br><b>📍 地點：</b>${eq.EarthquakeLocation}<br><b>📏 規模：</b>M<sub>L</sub> ${eq.EarthquakeMagnitude.MagnitudeValue}<br><b>📉 深度：</b>${eq.FocalDepth} km`;
     }
 
     function updateCountdowns() {
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        const today = new Date().setHours(0,0,0,0);
         const calc = (targetStr) => {
-            const target = new Date(targetStr).getTime();
-            const diff = Math.round((target - today) / 86400000);
-            if (diff === 0) return "就是今天！";
-            if (diff === 1) return "就是明天！";
-            if (diff < 0) return "已通過";
-            return `還有 ${diff} 天`;
+            const diff = Math.round((new Date(targetStr).getTime() - today) / 86400000);
+            return diff <= 0 ? (diff === 0 ? "就是今天！" : "已通過") : `還有 ${diff} 天`;
         };
         document.getElementById('school-days').innerText = calc('2026-02-23');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
