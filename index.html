@@ -16,6 +16,7 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
+        /* 天氣區塊 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -24,23 +25,23 @@
         .sun-countdown { grid-column: span 2; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px; text-align: center; font-size: 13px; margin-top: 5px; color: #fff; border: 1px dashed rgba(255,255,255,0.5); }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
+        /* 地震區塊 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; }
-        .eq-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; margin-bottom: 10px; font-weight: bold; background: white; }
+        .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; min-height: 60px; }
+        .eq-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; margin-bottom: 10px; font-weight: bold; background: white; display: none; }
         
         .eq-warning { color: #ff0000; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
         .eq-steps { display: block; text-align: center; font-size: 12px; color: #555; margin-top: 5px; font-weight: normal; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
+        /* 直播區塊 */
         .live-section { text-align: left; }
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
-        .video-label { font-size: 14px; color: #333; margin-bottom: 10px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; }
-        .mute-hint { font-size: 11px; color: #888; display: block; text-align: center; margin-bottom: 10px; font-weight: normal; }
+        .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 5px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; }
         
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
-        
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
     </style>
 </head>
@@ -95,16 +96,15 @@
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" allowfullscreen></iframe>
         </div>
-        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
         <span class="eq-warning" style="margin-top: 5px;">⚠️ 地震發生時請保持冷靜，注意安全！</span>
         <span class="eq-steps">🏃 記得三步驟：趴下、掩護、穩住</span>
     </div>
 
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 全台有感地震監測 (最新消息)</div>
-        <div id="eqStatus">正在同步全台地震資料...</div>
-        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()" style="display:none;"></select>
-        <div id="eqDisplayArea" class="eq-display-card">載入中...</div>
+        <div id="eqStatus" style="font-size: 13px; color: #888;">正在獲取最新地震資訊...</div>
+        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()"></select>
+        <div id="eqDisplayArea" class="eq-display-card">正在載入數據...</div>
         <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
         <span class="eq-steps">🏃 記得三步驟：趴下、掩護、穩住</span>
     </div>
@@ -117,17 +117,6 @@
         <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?mute=1" allowfullscreen></iframe></div>
         <span class="video-label">彰化八卦山大佛即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg?mute=1" allowfullscreen></iframe></div>
-        <span class="video-label">台灣彰化溪湖即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?mute=1" allowfullscreen></iframe></div>
-        <span class="video-label">彰化王功漁港即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe></div>
-    </div>
-
-    <div class="live-section" style="padding-top: 10px;">
-        <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
-        <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
-        <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw" target="_blank" class="card yt-card">達德商工學務處專區</a>
-        <a href="https://youtube.com/@dader520" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
     <div class="card countdown-box">
@@ -143,7 +132,7 @@
 
 <script>
     let eqDataList = [];
-    const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
+    const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120"; // 如果依然卡住，建議去氣象署官網重新申請一個 Key
 
     function tickTime() {
         const now = new Date();
@@ -162,21 +151,14 @@
         else if (now < sunset) { target = sunset; label = "🌅 距離日落還有"; }
         else { target = new Date(now); target.setDate(now.getDate() + 1); target.setHours(6, 35, 0); label = "🌇 距離下次日出還有"; }
         const diff = target - now;
+        const pad = (n) => n.toString().padStart(2, '0');
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
         const s = Math.floor((diff % 60000) / 1000);
-        const pad = (n) => n.toString().padStart(2, '0');
         sunBox.innerText = `${label} ${pad(h)}:${pad(m)}:${pad(s)}`;
     }
 
-    function updateWeatherValues() {
-        const city = document.getElementById('citySelect').value;
-        const town = document.getElementById('townSelect').value;
-        document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
-    }
-
-    const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
-    
+    const areaData = {"彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮"],"台中市": ["西屯區", "北屯區", "大里區", "太平區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮"]};
     function initTownshipSelect() { 
         const city = document.getElementById('citySelect').value; 
         const townSelect = document.getElementById('townSelect'); 
@@ -184,64 +166,89 @@
         areaData[city].forEach(town => { 
             let opt = document.createElement('option'); 
             opt.value = town; opt.innerHTML = town; 
-            if(town === "田中鎮") opt.selected = true; 
             townSelect.appendChild(opt); 
         }); 
         updateWeatherValues(); 
     }
+    function updateWeatherValues() {
+        const city = document.getElementById('citySelect').value;
+        const town = document.getElementById('townSelect').value;
+        document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
+    }
 
     async function fetchEarthquake() {
         const selectEl = document.getElementById('eqSelect');
+        const displayArea = document.getElementById('eqDisplayArea');
         const statusEl = document.getElementById('eqStatus');
+        
         try {
-            const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${Date.now()}`;
+            // 使用反向代理或直接請求 (加入快取清除)
+            const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${new Date().getTime()}`;
             const response = await fetch(url);
+            
+            if (!response.ok) throw new Error("網路回應不正常");
             const data = await response.json();
-            eqDataList = data.records.Earthquake.slice(0, 15);
-            if (eqDataList.length === 0) { statusEl.innerText = "目前暫無地震記錄"; return; }
+            
+            if (!data.records || !data.records.Earthquake) {
+                displayArea.innerHTML = "<span style='color:gray;'>暫無最新地震資料</span>";
+                return;
+            }
+
+            eqDataList = data.records.Earthquake.slice(0, 10);
             statusEl.style.display = "none";
             selectEl.style.display = "block";
-            const currentIdx = selectEl.value || 0;
+            
             selectEl.innerHTML = "";
             eqDataList.forEach((eq, index) => {
                 const opt = document.createElement('option');
                 opt.value = index;
-                opt.innerText = (index === 0 ? "🆕【最新】" : "【記錄】") + eq.EarthquakeInfo.OriginTime;
+                opt.innerText = (index === 0 ? "🆕 最新：" : "記錄：") + eq.EarthquakeInfo.OriginTime;
                 selectEl.appendChild(opt);
             });
-            selectEl.value = currentIdx;
+            
             displaySelectedEq();
-        } catch (err) { console.error("地震讀取失敗", err); }
+        } catch (err) {
+            console.error(err);
+            displayArea.innerHTML = "<span style='color:red;'>無法連線至氣象署伺服器<br>請重新整理或稍後再試</span>";
+        }
     }
 
     function displaySelectedEq() {
         const idx = document.getElementById('eqSelect').value;
         if (!eqDataList[idx]) return;
-        const eq = eqDataList[idx];
-        const info = eq.EarthquakeInfo;
+        const info = eqDataList[idx].EarthquakeInfo;
         
-        // 強化地點解析：氣象署在有感地震報告中會將鄉鎮寫在括號內或特定欄位
-        let loc = info.EarthquakeLocation;
-        const match = loc.match(/\(位於(.*?)\)/);
-        if (match && match[1]) { loc = match[1]; } 
-        else { loc = loc.replace(/政府.*方[\d.]*公里/, "").trim(); }
+        // --- 強化地點顯示邏輯 ---
+        let rawLoc = info.EarthquakeLocation;
+        let cleanLoc = rawLoc;
+        
+        // 抓取「位於」後面的精確行政區
+        const match = rawLoc.match(/\(位於(.*?)\)/);
+        if (match && match[1]) {
+            cleanLoc = match[1];
+        } else {
+            // 如果沒括號，則去掉「政府南方/北方XX公里」這類贅字
+            cleanLoc = rawLoc.replace(/政府.*公里/, "").trim();
+        }
 
-        document.getElementById('eqDisplayArea').innerHTML = `<b>🕒 時間：</b>${info.OriginTime}<br><b>📍 地點：</b>${loc}<br><b>📏 規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br><b>📉 深度：</b>${info.FocalDepth} km`;
+        document.getElementById('eqDisplayArea').innerHTML = `
+            <b>🕒 時間：</b>${info.OriginTime}<br>
+            <b>📍 地點：</b><span style="color:#e74c3c;">${cleanLoc}</span><br>
+            <b>📏 規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br>
+            <b>📉 深度：</b>${info.FocalDepth} km
+        `;
     }
 
     function updateCountdowns() {
         const today = new Date().setHours(0,0,0,0);
         const calc = (targetStr) => {
             const diff = Math.round((new Date(targetStr).getTime() - today) / 86400000);
-            if (diff < 0) return "已通過";
-            if (diff === 0) return "就是今天！";
-            if (diff === 1) return "就是明天！";
-            return `還有 ${diff} 天`;
+            return diff <= 0 ? (diff === 0 ? "就是今天！" : "已通過") : `還有 ${diff} 天`;
         };
         document.getElementById('school-days').innerText = calc('2026-02-23');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
     }
-    
+
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
     setInterval(tickTime, 1000); 
