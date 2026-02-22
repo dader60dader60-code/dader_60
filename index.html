@@ -12,9 +12,6 @@
         .card, .line-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .owner-tiktok { background: #000000; color: #ffffff; border: 2px solid #25F4EE; }
-        .yt-card { background: #fff1f1; border: 2px solid #ff0000; color: #ff0000; margin-bottom: 10px; }
-        .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
-        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
         /* 天氣區塊 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
@@ -29,13 +26,12 @@
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; min-height: 60px; }
         .eq-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; margin-bottom: 10px; font-weight: bold; background: white; display: none; }
+        .refresh-btn { background: #e74c3c; color: white; border: none; padding: 5px 15px; border-radius: 5px; font-size: 12px; cursor: pointer; float: right; }
         
         .eq-warning { color: #ff0000; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
-        .eq-steps { display: block; text-align: center; font-size: 12px; color: #555; margin-top: 5px; font-weight: normal; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* 直播區塊 */
-        .live-section { text-align: left; }
+        /* 直播與倒數 */
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 5px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; }
@@ -51,18 +47,9 @@
     <img src="avatar.jpg" alt="版主頭像" class="profile-pic">
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
-    <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-    <a href="https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
-    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
-    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
-    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
-    <a href="https://www.tiktok.com/@hbingzhe10.10" target="_blank" class="card owner-tiktok">🎵 版主抖音 (TikTok)</a>
-
-    <div class="line-section">
-        <strong>官方 LINE ⚡</strong><br>
-        <img src="line-qr.jpg" class="qrcode-img">
-        <a href="https://lin.ee/94g8LGJ" target="_blank" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
-        <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
+    <div style="display: flex; flex-direction: column; width: 100%;">
+        <a href="https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
+        <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
     </div>
 
     <div class="card weather-box">
@@ -90,33 +77,20 @@
         </div>
     </div>
 
-    <div class="live-section">
-        <strong style="display: block; margin-bottom: 15px; text-align: center;">📡 地震即時直播專區</strong>
-        <span class="video-label">台灣地震監測即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" allowfullscreen></iframe>
-        </div>
-        <span class="eq-warning" style="margin-top: 5px;">⚠️ 地震發生時請保持冷靜，注意安全！</span>
-        <span class="eq-steps">🏃 記得三步驟：趴下、掩護、穩住</span>
-    </div>
-
     <div class="card earthquake-box">
-        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 全台有感地震監測 (最新消息)</div>
+        <button class="refresh-btn" onclick="fetchEarthquake()">🔄 重新整理</button>
+        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 全台有感地震監測</div>
         <div id="eqStatus" style="font-size: 13px; color: #888;">正在獲取最新地震資訊...</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()"></select>
         <div id="eqDisplayArea" class="eq-display-card">正在載入數據...</div>
         <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
-        <span class="eq-steps">🏃 記得三步驟：趴下、掩護、穩住</span>
     </div>
 
     <div class="live-section">
-        <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
-        <span class="video-label">彰化縣重要路口即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe></div>
-        <span class="video-label">八卦山美景即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?mute=1" allowfullscreen></iframe></div>
-        <span class="video-label">彰化八卦山大佛即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg?mute=1" allowfullscreen></iframe></div>
+        <span class="video-label">台灣地震監測即時影像</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" allowfullscreen></iframe>
+        </div>
     </div>
 
     <div class="card countdown-box">
@@ -132,7 +106,7 @@
 
 <script>
     let eqDataList = [];
-    const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120"; // 如果依然卡住，建議去氣象署官網重新申請一個 Key
+    const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120"; 
 
     function tickTime() {
         const now = new Date();
@@ -181,16 +155,18 @@
         const displayArea = document.getElementById('eqDisplayArea');
         const statusEl = document.getElementById('eqStatus');
         
+        displayArea.innerHTML = "正在嘗試與氣象署連線...";
+        
         try {
-            // 使用反向代理或直接請求 (加入快取清除)
-            const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${new Date().getTime()}`;
+            // 加入抗快取參數
+            const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${Date.now()}`;
             const response = await fetch(url);
             
-            if (!response.ok) throw new Error("網路回應不正常");
+            if (!response.ok) throw new Error("API請求失敗");
             const data = await response.json();
             
             if (!data.records || !data.records.Earthquake) {
-                displayArea.innerHTML = "<span style='color:gray;'>暫無最新地震資料</span>";
+                displayArea.innerHTML = "目前暫無地震資料";
                 return;
             }
 
@@ -202,14 +178,13 @@
             eqDataList.forEach((eq, index) => {
                 const opt = document.createElement('option');
                 opt.value = index;
-                opt.innerText = (index === 0 ? "🆕 最新：" : "記錄：") + eq.EarthquakeInfo.OriginTime;
+                opt.innerText = (index === 0 ? "🆕最新：" : "記錄：") + eq.EarthquakeInfo.OriginTime;
                 selectEl.appendChild(opt);
             });
             
             displaySelectedEq();
         } catch (err) {
-            console.error(err);
-            displayArea.innerHTML = "<span style='color:red;'>無法連線至氣象署伺服器<br>請重新整理或稍後再試</span>";
+            displayArea.innerHTML = "<span style='color:red;'>⚠️ 無法取得資料<br>可能原因：API流量過載或網路不穩。<br>請稍後點擊右上角重試。</span>";
         }
     }
 
@@ -218,24 +193,24 @@
         if (!eqDataList[idx]) return;
         const info = eqDataList[idx].EarthquakeInfo;
         
-        // --- 強化地點顯示邏輯 ---
+        // 核心邏輯：修正縣市鄉鎮顯示
         let rawLoc = info.EarthquakeLocation;
-        let cleanLoc = rawLoc;
+        let finalLoc = rawLoc;
         
-        // 抓取「位於」後面的精確行政區
+        // 1. 優先找括號內的縣市鄉鎮 (最精確)
         const match = rawLoc.match(/\(位於(.*?)\)/);
         if (match && match[1]) {
-            cleanLoc = match[1];
+            finalLoc = match[1];
         } else {
-            // 如果沒括號，則去掉「政府南方/北方XX公里」這類贅字
-            cleanLoc = rawLoc.replace(/政府.*公里/, "").trim();
+            // 2. 移除「政府方位」等干擾文字，保留前面的縣市鄉鎮
+            finalLoc = rawLoc.split('政府')[0];
         }
 
         document.getElementById('eqDisplayArea').innerHTML = `
-            <b>🕒 時間：</b>${info.OriginTime}<br>
-            <b>📍 地點：</b><span style="color:#e74c3c;">${cleanLoc}</span><br>
-            <b>📏 規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br>
-            <b>📉 深度：</b>${info.FocalDepth} km
+            🕒 <b>時間：</b>${info.OriginTime}<br>
+            📍 <b>地點：</b><span style="color:#e74c3c;">${finalLoc}</span><br>
+            📏 <b>規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br>
+            📉 <b>深度：</b>${info.FocalDepth} km
         `;
     }
 
@@ -249,10 +224,8 @@
         document.getElementById('grad-days').innerText = calc('2026-06-01');
     }
 
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
-
     setInterval(tickTime, 1000); 
-    setInterval(fetchEarthquake, 300000); 
+    setInterval(fetchEarthquake, 300000); // 5分鐘自動更新
     initTownshipSelect();
     updateCountdowns();
     fetchEarthquake();
