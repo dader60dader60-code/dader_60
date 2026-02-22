@@ -28,9 +28,7 @@
         .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; }
         .eq-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; margin-bottom: 10px; font-weight: bold; background: white; }
         .eq-warning { color: #ff0000; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-
-        .live-section { text-align: left; }
+        
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-bottom: 10px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; }
@@ -91,23 +89,12 @@
     </div>
 
     <div class="live-section">
-        <strong style="display: block; margin-bottom: 15px; text-align: center;">📡 地震即時直播專區</strong>
+        <strong style="display: block; margin-bottom: 15px; text-align: center;">📡 即時直播專區</strong>
         <span class="video-label">台灣地震監測即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div class="live-section">
-        <strong style="display: block; margin: 15px 0; text-align: center;">📹 彰化縣即時直播專區</strong>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" allowfullscreen></iframe></div>
+        
         <span class="video-label">彰化縣重要路口即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe></div>
-        <span class="video-label">八卦山美景即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?mute=1" allowfullscreen></iframe></div>
-        <span class="video-label">彰化八卦山大佛即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg?mute=1" allowfullscreen></iframe></div>
-        <span class="video-label">台灣彰化溪湖即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?mute=1" allowfullscreen></iframe></div>
         <span class="video-label">彰化王功漁港即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe></div>
     </div>
@@ -115,7 +102,6 @@
     <div class="live-section" style="padding-top: 10px;">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
         <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
-        <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw" target="_blank" class="card yt-card">達德商工學務處專區</a>
         <a href="https://youtube.com/@dader520" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
@@ -158,17 +144,25 @@
         sunBox.innerText = `${label} ${pad(h)}:${pad(m)}:${pad(s)}`;
     }
 
-    const areaData = {"彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮"],"台中市": ["西屯區", "北屯區", "大里區", "太平區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮"]};
+    // --- 完整補全鄉鎮資料 ---
+    const areaData = {
+        "彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
+        "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "后里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
+        "南投縣": ["南投市", "草屯鎮", "埔里鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]
+    };
+
     function initTownshipSelect() { 
         const city = document.getElementById('citySelect').value; 
         const townSelect = document.getElementById('townSelect'); 
         townSelect.innerHTML = ""; 
-        (areaData[city] || areaData["彰化縣"]).forEach(town => { 
+        areaData[city].forEach(town => { 
             let opt = document.createElement('option'); opt.value = town; opt.innerHTML = town; 
+            if(city === "彰化縣" && town === "田中鎮") opt.selected = true;
             townSelect.appendChild(opt); 
         }); 
         updateWeatherValues(); 
     }
+    
     function updateWeatherValues() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
@@ -200,14 +194,11 @@
         const idx = document.getElementById('eqSelect').value;
         if (!eqDataList[idx]) return;
         const info = eqDataList[idx].EarthquakeInfo;
-        
-        // 僅修改此解析邏輯：優先找括號地點
         let rawLoc = info.EarthquakeLocation;
         let finalLoc = rawLoc;
         const match = rawLoc.match(/\(位於(.*?)\)/);
         if (match && match[1]) { finalLoc = match[1]; } 
         else { finalLoc = rawLoc.split('政府')[0]; }
-
         document.getElementById('eqDisplayArea').innerHTML = `🕒 <b>時間：</b>${info.OriginTime}<br>📍 <b>地點：</b>${finalLoc}<br>📏 <b>規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br>📉 <b>深度：</b>${info.FocalDepth} km`;
     }
 
