@@ -91,7 +91,7 @@
             <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" allowfullscreen></iframe>
         </div>
         <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
-        <span class="eq-warning" style="margin-top: 5px;">地震發生時請保持冷靜，注意安全！</span>
+        <span class="eq-warning" style="margin-top: 5px;">⚠️ 地震發生時請保持冷靜，注意安全！</span>
         <span class="eq-steps">🏃 記得三步驟：趴下、掩護、穩住</span>
     </div>
 
@@ -100,7 +100,7 @@
         <div id="eqStatus">正在同步全台地震資料...</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()" style="display:none;"></select>
         <div id="eqDisplayArea" class="eq-display-card">載入中...</div>
-        <span class="eq-warning">地震發生時請保持冷靜，注意安全！</span>
+        <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
         <span class="eq-steps">🏃 記得三步驟：趴下、掩護、穩住</span>
     </div>
 
@@ -213,9 +213,7 @@
         const idx = document.getElementById('eqSelect').value;
         if (idx === "" || !eqDataList[idx]) return;
         const info = eqDataList[idx].EarthquakeInfo;
-        // 抓取精確的縣市與鄉鎮地點
-        const location = info.EarthquakeLocation;
-        document.getElementById('eqDisplayArea').innerHTML = `<b>🕒 時間：</b>${info.OriginTime}<br><b>📍 地點：</b>${location}<br><b>📏 規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br><b>📉 深度：</b>${info.FocalDepth} km`;
+        document.getElementById('eqDisplayArea').innerHTML = `<b>🕒 時間：</b>${info.OriginTime}<br><b>📍 地點：</b>${info.EarthquakeLocation}<br><b>📏 規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br><b>📉 深度：</b>${info.FocalDepth} km`;
     }
 
     function updateCountdowns() {
