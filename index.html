@@ -187,18 +187,26 @@
         const displayArea = document.getElementById('eqDisplayArea');
         const statusEl = document.getElementById('eqStatus');
         try {
+            // 加入時間戳記避免快取，強制抓取最新資料
             const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${Date.now()}`;
             const response = await fetch(url);
             if (!response.ok) throw new Error();
             const data = await response.json();
+            
             eqDataList = data.records.Earthquake.slice(0, 15);
+            
             if (eqDataList.length === 0) {
                 statusEl.innerText = "目前暫無地震記錄";
                 return;
             }
+            
             statusEl.style.display = "none";
             selectEl.style.display = "block";
+            
+            // 記住使用者目前選取的索引，更新後盡量維持在同一個選項
+            const currentIdx = selectEl.value || 0;
             selectEl.innerHTML = "";
+            
             eqDataList.forEach((eq, index) => {
                 const timeStr = eq.EarthquakeInfo.OriginTime;
                 const opt = document.createElement('option');
@@ -206,10 +214,12 @@
                 opt.innerText = (index === 0 ? "🆕【最新消息】" : "【歷史記錄】") + timeStr;
                 selectEl.appendChild(opt);
             });
+            
+            selectEl.value = currentIdx;
             displaySelectedEq();
+            console.log("地震資料已自動更新至最新狀態");
         } catch (err) {
-            statusEl.style.display = "none";
-            displayArea.innerHTML = `<div style="text-align:center;"><p style="color:#c0392b; font-size:14px; font-weight:bold;">⚠️ 氣象署連線受阻</p><a href="https://www.cwa.gov.tw/V8/C/E/index.html" target="_blank" style="background:#4A90E2; color:white; text-decoration:none; padding:10px 20px; border-radius:10px; display:inline-block; font-size:14px;">查看官方地震報告</a></div>`;
+            console.error("更新地震資料失敗:", err);
         }
     }
 
@@ -232,7 +242,10 @@
     
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
-    setInterval(tickTime, 1000);
+    // 初始化與計時器
+    setInterval(tickTime, 1000); // 每秒更新一次顯示時間
+    setInterval(fetchEarthquake, 300000); // 每 5 分鐘 (300,000 毫秒) 自動重新抓取氣象署資料
+    
     initTownshipSelect();
     updateCountdowns();
     fetchEarthquake();
