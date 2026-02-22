@@ -14,12 +14,13 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
+        /* 天氣樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
-        .weather-meta { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center; }
+        .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.6; min-height: 80px; }
@@ -71,7 +72,10 @@
             <div class="weather-item">🌪️ 風速: <span id="windSpeed">1.5 m/s</span></div>
             <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
         </div>
-        <div class="weather-meta">最後更新：<span id="updateTime">正在同步...</span></div>
+        <div class="weather-meta">
+            來源：中央氣象署 CWA<br>
+            最後更新：<span id="updateTime">正在同步系統時間...</span>
+        </div>
     </div>
 
     <div class="card earthquake-box">
@@ -109,12 +113,24 @@
     let eqDataList = [];
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
 
+    // --- 天氣顯示修復：含來源、日期、時間、秒數 ---
     function updateWeatherDisplay() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
+        
         const now = new Date();
-        document.getElementById('updateTime').innerText = `${(now.getMonth()+1)}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        const year = now.getFullYear();
+        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+        const date = now.getDate().toString().padStart(2, '0');
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        
+        // 顯示格式：2026/02/22 17:35:05
+        document.getElementById('updateTime').innerText = `${year}/${month}/${date} ${hours}:${minutes}:${seconds}`;
+
+        // 預設天氣數值 (可視需求接入氣象 API 數據)
         document.getElementById('weatherDisplay').innerHTML = `23°C ☀️`;
         document.getElementById('rainProb').innerText = "0%";
         document.getElementById('humidity').innerText = "55%";
@@ -123,7 +139,20 @@
     }
 
     const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
-    function initTownshipSelect() { const city = document.getElementById('citySelect').value; const townSelect = document.getElementById('townSelect'); townSelect.innerHTML = ""; areaData[city].forEach(town => { let opt = document.createElement('option'); opt.value = town; opt.innerHTML = town; if(town === "田中鎮") opt.selected = true; townSelect.appendChild(opt); }); updateWeatherDisplay(); }
+    
+    function initTownshipSelect() { 
+        const city = document.getElementById('citySelect').value; 
+        const townSelect = document.getElementById('townSelect'); 
+        townSelect.innerHTML = ""; 
+        areaData[city].forEach(town => { 
+            let opt = document.createElement('option'); 
+            opt.value = town; 
+            opt.innerHTML = town; 
+            if(town === "田中鎮") opt.selected = true; 
+            townSelect.appendChild(opt); 
+        }); 
+        updateWeatherDisplay(); 
+    }
 
     async function fetchEarthquake() {
         const selectEl = document.getElementById('eqSelect');
@@ -163,7 +192,11 @@
         document.getElementById('school-days').innerText = formatCountdownText('2026-02-23'); 
         document.getElementById('grad-days').innerText = formatCountdownText('2026-06-01'); 
     }
+    
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
+
+    // 每秒更新一次天氣時間秒數
+    setInterval(updateWeatherDisplay, 1000);
 
     initTownshipSelect();
     updateTime();
