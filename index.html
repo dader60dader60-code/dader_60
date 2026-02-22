@@ -11,9 +11,8 @@
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
         .card, .line-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
-        .owner-tiktok { background: #000000; color: #ffffff; border: 2px solid #25F4EE; }
         
-        /* 天氣區塊 */
+        /* 天氣區 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -22,19 +21,17 @@
         .sun-countdown { grid-column: span 2; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px; text-align: center; font-size: 13px; margin-top: 5px; color: #fff; border: 1px dashed rgba(255,255,255,0.5); }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
-        /* 地震區塊 */
+        /* 【核心改動】地震區 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; min-height: 60px; }
+        .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; min-height: 80px; }
         .eq-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; margin-bottom: 10px; font-weight: bold; background: white; display: none; }
-        .refresh-btn { background: #e74c3c; color: white; border: none; padding: 5px 15px; border-radius: 5px; font-size: 12px; cursor: pointer; float: right; }
+        .refresh-btn { background: #e74c3c; color: white; border: none; padding: 5px 15px; border-radius: 5px; font-size: 12px; cursor: pointer; float: right; margin-bottom: 5px; }
         .eq-warning { color: #ff0000; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
-        
-        /* 影片區 */
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* 影片與倒數 */
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
-        .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 5px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; }
-        
-        /* 倒數區 - 完全不動樣式 */
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
@@ -68,23 +65,20 @@
             <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
             <div id="sunCountdown" class="weather-item sun-countdown">計算中...</div>
         </div>
-        <div class="weather-meta">
-            資料來源：交通部中央氣象署<br>
-            最後更新：<span id="updateTime">讀取中...</span>
-        </div>
+        <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
 
     <div class="card earthquake-box">
-        <button class="refresh-btn" onclick="fetchEarthquake()">🔄 重新整理</button>
-        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 全台有感地震監測</div>
-        <div id="eqStatus" style="font-size: 13px; color: #888;">正在獲取最新地震資訊...</div>
+        <button class="refresh-btn" onclick="fetchEarthquake()">🔄 更新</button>
+        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 全台地震監測 (縣市鄉鎮版)</div>
+        <div id="eqStatus" style="font-size: 13px; color: #888;">正在連線至氣象署...</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()"></select>
-        <div id="eqDisplayArea" class="eq-display-card">正在載入數據...</div>
+        <div id="eqDisplayArea" class="eq-display-card">資料讀取中...</div>
         <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
     </div>
 
     <div class="live-section">
-        <span class="video-label">台灣地震監測即時影像</span>
+        <strong style="display: block; margin-bottom: 10px; text-align: center;">📡 地震即時直播</strong>
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" allowfullscreen></iframe>
         </div>
@@ -103,7 +97,7 @@
 
 <script>
     let eqDataList = [];
-    const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120"; 
+    const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
 
     function tickTime() {
         const now = new Date();
@@ -112,23 +106,15 @@
         updateSunCountdown(now);
     }
 
-    // 天氣區的動態倒數邏輯
     function updateSunCountdown(now) {
         const sunBox = document.getElementById('sunCountdown');
         if(!sunBox) return;
         const sunrise = new Date(now); sunrise.setHours(6, 35, 0);
         const sunset = new Date(now); sunset.setHours(18, 12, 0);
         let target, label;
-
-        if (now < sunrise) { 
-            target = sunrise; label = "🌇 距離下次日出還有"; 
-        } else if (now < sunset) { 
-            target = sunset; label = "🌅 距離日落還有"; 
-        } else { 
-            target = new Date(now); target.setDate(now.getDate() + 1); target.setHours(6, 35, 0); 
-            label = "🌇 距離下次日出還有"; 
-        }
-
+        if (now < sunrise) { target = sunrise; label = "🌇 距離下次日出還有"; }
+        else if (now < sunset) { target = sunset; label = "🌅 距離日落還有"; }
+        else { target = new Date(now); target.setDate(now.getDate() + 1); target.setHours(6, 35, 0); label = "🌇 距離下次日出還有"; }
         const diff = target - now;
         const pad = (n) => n.toString().padStart(2, '0');
         const h = Math.floor(diff / 3600000);
@@ -155,47 +141,63 @@
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
     }
 
+    // 【修正版地震抓取函數】
     async function fetchEarthquake() {
         const selectEl = document.getElementById('eqSelect');
         const displayArea = document.getElementById('eqDisplayArea');
         const statusEl = document.getElementById('eqStatus');
+        
         try {
             const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${Date.now()}`;
             const response = await fetch(url);
             const data = await response.json();
-            if (!data.records || !data.records.Earthquake) {
-                displayArea.innerHTML = "目前暫無地震資料"; return;
+            
+            if (data.records && data.records.Earthquake) {
+                eqDataList = data.records.Earthquake.slice(0, 10);
+                statusEl.style.display = "none";
+                selectEl.style.display = "block";
+                selectEl.innerHTML = "";
+                eqDataList.forEach((eq, index) => {
+                    const opt = document.createElement('option');
+                    opt.value = index;
+                    opt.innerText = (index === 0 ? "🆕最新：" : "記錄：") + eq.EarthquakeInfo.OriginTime;
+                    selectEl.appendChild(opt);
+                });
+                displaySelectedEq(); // 抓到後立刻顯示
+            } else {
+                displayArea.innerHTML = "目前暫無地震資訊";
             }
-            eqDataList = data.records.Earthquake.slice(0, 10);
-            statusEl.style.display = "none";
-            selectEl.style.display = "block";
-            selectEl.innerHTML = "";
-            eqDataList.forEach((eq, index) => {
-                const opt = document.createElement('option');
-                opt.value = index;
-                opt.innerText = (index === 0 ? "🆕最新：" : "記錄：") + eq.EarthquakeInfo.OriginTime;
-                selectEl.appendChild(opt);
-            });
-            displaySelectedEq();
         } catch (err) {
-            displayArea.innerHTML = "<span style='color:red;'>無法連線氣象署，請稍後重試。</span>";
+            displayArea.innerHTML = "<span style='color:red;'>無法連線氣象署伺服器<br>請檢查網路或稍後重試</span>";
         }
     }
 
+    // 【核心改動：精準解析地點】
     function displaySelectedEq() {
         const idx = document.getElementById('eqSelect').value;
         if (!eqDataList[idx]) return;
         const info = eqDataList[idx].EarthquakeInfo;
-        let finalLoc = info.EarthquakeLocation.split('政府')[0];
+        
+        let rawLoc = info.EarthquakeLocation;
+        let finalLoc = "";
+
+        // 邏輯 1：尋找括號內的精確地點 (例如：位於花蓮縣近海)
+        const match = rawLoc.match(/\(位於(.*?)\)/);
+        if (match && match[1]) {
+            finalLoc = match[1];
+        } else {
+            // 邏輯 2：如果沒有括號，取「政府」二字前的文字 (例如：花蓮縣政府 -> 花蓮縣)
+            finalLoc = rawLoc.split('政府')[0];
+        }
+
         document.getElementById('eqDisplayArea').innerHTML = `
             🕒 <b>時間：</b>${info.OriginTime}<br>
-            📍 <b>地點：</b><span style="color:#e74c3c;">${finalLoc}</span><br>
+            📍 <b>地點：</b><span style="color:#e74c3c; font-size:16px;">${finalLoc}</span><br>
             📏 <b>規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br>
             📉 <b>深度：</b>${info.FocalDepth} km
         `;
     }
 
-    // --- 完全不動的倒數日邏輯 ---
     function updateCountdowns() {
         const today = new Date().setHours(0,0,0,0);
         const calc = (targetStr) => {
