@@ -30,8 +30,6 @@
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 8px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; text-align: left; }
         .mute-hint { font-size: 12px; color: #666; font-weight: normal; margin-top: 5px; display: block; }
-
-        /* 地震警示文字樣式 - 紅色閃爍 */
         .eq-warning { color: #ff0000; font-size: 15px; font-weight: bold; margin-top: 10px; display: block; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
@@ -48,7 +46,9 @@
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-    <a href="https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
+    
+    <div class="card" style="cursor: pointer;" onclick="openAnonymous()">🔗 匿名投稿連結🔗</div>
+
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
@@ -85,37 +85,29 @@
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
-        <span class="video-label">台灣地震監測即時影像</span>
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?mute=1" allowfullscreen></iframe>
         </div>
         <span class="eq-warning">⚠️地震發生時請保持冷靜，注意安全！</span>
         <span class="eq-warning">地震三步驟：趴下、掩護、穩住</span>
-        <span class="mute-hint">💡 提示：影片預設靜音，需要請手動打開聲音</span>
     </div>
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
-        
         <span class="video-label">彰化縣重要路口即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe></div>
-
         <span class="video-label">八卦山美景即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?mute=1" allowfullscreen></iframe></div>
-
         <span class="video-label">彰化八卦山大佛即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg?mute=1" allowfullscreen></iframe></div>
-
         <span class="video-label">台灣彰化溪湖即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?mute=1" allowfullscreen></iframe></div>
-
         <span class="video-label">彰化王功漁港即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe></div>
-
         <span class="mute-hint">💡 提示：影片預設靜音，需要請手動打開聲音</span>
     </div>
 
-    <div class="live-section" style="padding-top: 10px;">
+    <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
         <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ?si=vD6X6CMUKx5RS_7n" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
         <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw?si=EgnjHz6Pl4uiHiJ3" target="_blank" class="card yt-card">達德商工學務處專區</a>
@@ -134,13 +126,19 @@
 <div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
+    // 專門處理匿名連結跳轉的函數
+    function openAnonymous() {
+        const url = "https://lihi.cc/dVvVI";
+        const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+        if (newWindow) newWindow.opener = null;
+    }
+
     function tickTime() {
         const now = new Date();
         const t = document.getElementById('updateTime');
         if(t) t.innerText = now.toLocaleString();
         updateSunCountdown(now);
     }
-
     function updateSunCountdown(now) {
         const sunBox = document.getElementById('sunCountdown');
         if(!sunBox) return;
@@ -157,13 +155,11 @@
         const s = Math.floor((diff % 60000) / 1000);
         sunBox.innerText = `${label} ${pad(h)}:${pad(m)}:${pad(s)}`;
     }
-
     const areaData = {
         "彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
         "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "后里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
         "南投縣": ["南投市", "草屯鎮", "埔里鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]
     };
-
     function initTownshipSelect() { 
         const city = document.getElementById('citySelect').value; 
         const townSelect = document.getElementById('townSelect'); 
@@ -175,13 +171,11 @@
         }); 
         updateWeatherValues(); 
     }
-    
     function updateWeatherValues() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
     }
-
     function updateCountdowns() {
         const today = new Date().setHours(0,0,0,0);
         const calc = (targetStr) => {
@@ -194,9 +188,7 @@
         document.getElementById('school-days').innerText = calc('2026-02-23');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
     }
-    
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
-
     setInterval(tickTime, 1000); 
     initTownshipSelect();
     updateCountdowns();
