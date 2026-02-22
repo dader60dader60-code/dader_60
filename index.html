@@ -26,7 +26,9 @@
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; }
         .eq-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; margin-bottom: 10px; font-weight: bold; background: white; }
-        .eq-warning { color: #d35400; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
+        
+        /* 修改警告文字為紅色 */
+        .eq-warning { color: #ff0000; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
         .eq-steps { display: block; text-align: center; font-size: 12px; color: #555; margin-top: 5px; font-weight: normal; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
@@ -92,7 +94,7 @@
             <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
         <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
-        <span class="eq-warning" style="margin-top: 5px;">⚠️ 請注意地震安全！</span>
+        <span class="eq-warning" style="margin-top: 5px;">地震發生時請保持冷靜，注意安全！</span>
         <span class="eq-steps">🏃 記得三步驟：趴下、掩護、穩住</span>
     </div>
 
@@ -103,7 +105,7 @@
             <option value="">請選擇地震報告時間</option>
         </select>
         <div id="eqDisplayArea" class="eq-display-card">載入中...</div>
-        <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
+        <span class="eq-warning">地震發生時請保持冷靜，注意安全！</span>
         <span class="eq-steps">🏃 記得三步驟：趴下、掩護、穩住</span>
     </div>
 
@@ -228,7 +230,6 @@
     }
 
     function updateCountdowns() {
-        // 修正後的倒數邏輯：當天/明天/還有X天
         const today = new Date().setHours(0,0,0,0);
         const calc = (targetStr) => {
             const diff = Math.round((new Date(targetStr).getTime() - today) / 86400000);
