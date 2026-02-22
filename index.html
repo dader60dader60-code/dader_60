@@ -1,185 +1,32 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>靠北達德速度版⚡⚡⚡</title>
-    <style>
-        body { font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 80px; }
-        .container { width: 100%; max-width: 400px; }
-        .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
-        .card, .line-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
-        .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
-        .owner-tiktok { background: #000000; color: #ffffff; border: 2px solid #25F4EE; }
-        .yt-card { background: #fff1f1; border: 2px solid #ff0000; color: #ff0000; margin-bottom: 10px; }
-        .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
-        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
-        
-        .weather-box { background: #4A90E2; color: white; padding: 20px; }
-        .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
-        .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
-        .weather-item { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 10px; }
-        .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
-        .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
-
-        .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; }
-        .eq-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
-        .eq-warning { color: #d35400; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-
-        .live-section { text-align: left; }
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 15px; background: #000; overflow: hidden; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
-        .video-label { font-size: 14px; color: #333; margin-bottom: 10px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; }
-        
-        .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
-        .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
-        
-        .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <img src="avatar.jpg" alt="版主頭像" class="profile-pic">
-    <h2>靠北達德速度版⚡⚡⚡</h2>
-
-    <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-    <a href="https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
-    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
-    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
-    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
-    <a href="https://www.tiktok.com/@hbingzhe10.10" target="_blank" class="card owner-tiktok">🎵 版主抖音 (TikTok)</a>
-
-    <div class="line-section">
-        <strong>官方 LINE ⚡</strong><br>
-        <img src="line-qr.jpg" class="qrcode-img">
-        <a href="https://lin.ee/94g8LGJ" target="_blank" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
-        <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
-    </div>
-
-    <div class="card weather-box">
-        <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
-        <div style="display: flex; justify-content: center;">
-            <select id="citySelect" class="weather-select" onchange="initTownshipSelect()">
-                <option value="彰化縣" selected>彰化縣</option>
-                <option value="台中市">台中市</option>
-                <option value="南投縣">南投縣</option>
-            </select>
-            <select id="townSelect" class="weather-select" onchange="updateWeatherValues()"></select>
-        </div>
-        <div style="font-size: 32px; margin: 15px 0 5px 0;">23°C ☀️</div>
-        <div class="weather-grid">
-            <div class="weather-item">🌧️ 降雨機率: 0%</div>
-            <div class="weather-item">💧 相對濕度: 55%</div>
-            <div class="weather-item">🌬️ 風向: 北風</div>
-            <div class="weather-item">🌪️ 風速: 1.5 m/s</div>
-            <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
-        </div>
-        <div class="weather-meta">
-            來源：中央氣象署 CWA<br>
-            最後更新：<span id="updateTime">讀取中...</span>
-        </div>
-    </div>
-
-    <div class="card earthquake-box">
-        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部區域有感地震監測</div>
-        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
-            <option value="">同步資料中...</option>
-        </select>
-        <div id="eqDisplayArea" class="eq-display-card">載入即時資訊中...</div>
-        <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
-    </div>
-
-    <div class="live-section">
-        <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
-        <span class="video-label">彰化縣重要路口即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" allowfullscreen></iframe></div>
-        <span class="video-label">八卦山美景即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" allowfullscreen></iframe></div>
-        <span class="video-label">彰化八卦山大佛即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg" allowfullscreen></iframe></div>
-        <span class="video-label">台灣彰化溪湖即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I" allowfullscreen></iframe></div>
-        <span class="video-label">彰化王功漁港即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs" allowfullscreen></iframe></div>
-    </div>
-
-    <div class="live-section" style="padding-top: 10px;">
-        <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
-        <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ?si=vD6X6CMUKx5RS_7n" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
-        <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw?si=EgnjHz6Pl4uiHiJ3" target="_blank" class="card yt-card">達德商工學務處專區</a>
-        <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
-    </div>
-
-    <div class="card countdown-box">
-        <div style="font-size: 14px;">🎒 距離 2/23 開學日</div>
-        <div class="countdown-num" id="school-days">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🎓 距離 6/1 畢業日</div>
-        <div class="countdown-num" id="grad-days">--</div>
-    </div>
-</div>
-
-<div class="fixed-footer">
-    𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊
-</div>
-
-<script>
-    let eqDataList = [];
-    const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
-
-    function tickTime() {
-        const now = new Date();
-        const t = document.getElementById('updateTime');
-        if(t) t.innerText = now.toLocaleString();
-    }
-
-    function updateWeatherValues() {
-        const city = document.getElementById('citySelect').value;
-        const town = document.getElementById('townSelect').value;
-        document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
-    }
-
-    const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
-    
-    function initTownshipSelect() { 
-        const city = document.getElementById('citySelect').value; 
-        const townSelect = document.getElementById('townSelect'); 
-        townSelect.innerHTML = ""; 
-        areaData[city].forEach(town => { 
-            let opt = document.createElement('option'); 
-            opt.value = town; 
-            opt.innerHTML = town; 
-            if(town === "田中鎮") opt.selected = true; 
-            townSelect.appendChild(opt); 
-        }); 
-        updateWeatherValues(); 
-    }
-
-    async function fetchEarthquake() {
+async function fetchEarthquake() {
         try {
+            // 使用中央氣象署開放資料 API (有感地震報告)
             const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
+            
+            if (!res.ok) throw new Error('連線失敗');
+            
             const data = await res.json();
+            
             if (data.records && data.records.Earthquake) {
                 const allEQ = data.records.Earthquake;
                 const targetCounties = ["臺中", "彰化", "南投", "雲林", "台中"];
                 const now = new Date().getTime();
                 const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
 
+                // 篩選中部區域地震並限制最多 15 個
                 eqDataList = allEQ.filter(e => {
                     const loc = e.EarthquakeInfo.EarthquakeLocation;
                     return targetCounties.some(c => loc.includes(c));
                 }).slice(0, 15);
 
                 const selectEl = document.getElementById('eqSelect');
+                if(!selectEl) return;
+                
                 selectEl.innerHTML = "";
 
                 if (eqDataList.length === 0) {
                     selectEl.innerHTML = "<option>近期中部無顯著有感地震</option>";
-                    document.getElementById('eqDisplayArea').innerText = "目前無符合條件的地震資訊。";
+                    document.getElementById('eqDisplayArea').innerText = "目前無符合條件的中部地震資訊。";
                     return;
                 }
 
@@ -188,48 +35,16 @@
                     const isNew = (now - eqTime) < sevenDaysMs;
                     let opt = document.createElement('option');
                     opt.value = i;
+                    // 這裡會顯示完整的日期時間與秒數
                     opt.innerHTML = (isNew ? "【最新資訊】" : "【歷史記錄】") + e.EarthquakeInfo.OriginTime;
                     selectEl.appendChild(opt);
                 });
                 displaySelectedEq();
+            } else {
+                document.getElementById('eqDisplayArea').innerText = "暫無地震資料回傳";
             }
-        } catch (e) { document.getElementById('eqDisplayArea').innerText = "地震資料載入失敗"; }
+        } catch (e) { 
+            console.error(e);
+            document.getElementById('eqDisplayArea').innerText = "地震資料載入失敗，請確認網路連線或稍後再試。"; 
+        }
     }
-
-    function displaySelectedEq() {
-        if (!eqDataList.length) return;
-        const idx = document.getElementById('eqSelect').value || 0;
-        const e = eqDataList[idx].EarthquakeInfo;
-        document.getElementById('eqDisplayArea').innerHTML = `
-            <b>🕒 日期時間：</b>${e.OriginTime}<br>
-            <b>📍 震央地點：</b>${e.EarthquakeLocation}<br>
-            <b>📏 地震規模：</b>M<sub>L</sub> ${e.EarthquakeMagnitude.MagnitudeValue}<br>
-            <b>📉 震源深度：</b>${e.FocalDepth} 公里
-        `;
-    }
-
-    function updateCountdowns() {
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-        const calc = (targetStr) => {
-            const target = new Date(targetStr).getTime();
-            const diff = Math.round((target - today) / 86400000);
-            if (diff === 0) return "就是今天！";
-            if (diff === 1) return "就是明天！";
-            if (diff < 0) return "已通過";
-            return `還有 ${diff} 天`;
-        };
-        document.getElementById('school-days').innerText = calc('2026-02-23');
-        document.getElementById('grad-days').innerText = calc('2026-06-01');
-    }
-    
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
-
-    setInterval(tickTime, 1000);
-    initTownshipSelect();
-    updateCountdowns();
-    fetchEarthquake();
-    tickTime();
-</script>
-</body>
-</html>
