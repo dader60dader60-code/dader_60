@@ -42,7 +42,8 @@
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-    <a href="javascript:void(0)" onclick="openLinkSafely('https://lihi.cc/dVvVI')" class="card">🔗 匿名投稿連結🔗</a>
+    
+    <a href="javascript:void(0)" onclick="forceBrowserOpen('https://lihi.cc/dVvVI')" class="card">🔗 匿名投稿連結🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
@@ -118,9 +119,18 @@
 <div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
-    function openLinkSafely(url) {
-        if (confirm("是否前往投稿頁面？\n(提示：若顯示跳轉 App，請在該頁面手動選擇留在網頁)")) {
-            window.location.href = url;
+    // 解決全平台跳轉 App 的終極腳本
+    function forceBrowserOpen(url) {
+        // 先彈窗確認，這在安卓/蘋果上是切斷 App 關聯的必要動作
+        if (confirm("確認在瀏覽器中開啟投稿頁面？")) {
+            const newWin = window.open();
+            if (newWin) {
+                newWin.opener = null;
+                newWin.location = url;
+            } else {
+                // 如果彈窗攔截器擋住，則嘗試目前視窗強制跳轉
+                window.location.replace(url);
+            }
         }
     }
 
