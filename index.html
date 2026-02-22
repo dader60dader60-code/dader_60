@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>靠北達德速度版⚡⚡⚡</title>
     <style>
-        body { font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 110px; }
+        body { font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 80px; }
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
-        .card, .line-section, .live-section, .video-gallery { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
+        .card, .line-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣區塊 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -22,21 +21,17 @@
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 10px; text-align: center; }
 
-        /* 地震區塊 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
         .eq-display-card { background: #fff5f5; padding: 12px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.6; min-height: 80px; }
         .eq-select { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
 
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 15px; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
-        .shorts-container { position: relative; width: 100%; padding-bottom: 177.77%; height: 0; overflow: hidden; border-radius: 12px; background: #000; }
-        .shorts-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
         
-        .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 12px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
-        .view-counter { color: #E67E22; font-size: 12px; font-weight: normal; }
+        .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
     </style>
 </head>
 <body>
@@ -74,7 +69,7 @@
             <div class="weather-item">💧 相對濕度: <span id="humidity">55%</span></div>
             <div class="weather-item">🌬️ 風向: <span id="windDir">北風</span></div>
             <div class="weather-item">🌪️ 風速: <span id="windSpeed">1.5 m/s</span></div>
-            <div class="weather-item sun-info" id="sunStatus">🌅 日出 06:35 | 🌇 日落 18:12</div>
+            <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
         </div>
         <div class="weather-meta">最後更新：<span id="updateTime">正在同步...</span></div>
     </div>
@@ -90,17 +85,10 @@
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 彰化縣即時直播專區</strong>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/S_I_643TzI0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/S_I_643TzI0?rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/6_i9F_uSndc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div class="video-gallery">
-        <strong style="display: block; margin-bottom: 10px; color: #333;">🎬 達德商工</strong>
-        <div class="shorts-container">
-            <iframe src="https://www.youtube.com/embed/aZzqiOqoFVA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/6_i9F_uSndc?rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -114,43 +102,19 @@
 </div>
 
 <div class="fixed-footer">
-    𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊<br>
-    <span class="view-counter">🔥 全網累計點閱：<span id="page-views">0</span> 次</span>
+    𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊
 </div>
 
 <script>
     let eqDataList = [];
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
 
-    async function updateCounter() {
-        const viewEl = document.getElementById('page-views');
-        const storageKey = 'dader_hits_v9';
-        let localHits = parseInt(localStorage.getItem(storageKey) || "0");
-        localHits++;
-        localStorage.setItem(storageKey, localHits);
-        viewEl.innerText = localHits.toLocaleString();
-        try {
-            const res = await fetch(`https://api.counterapi.dev/v1/dader_speed_v9/hits/increment`);
-            const data = await res.json();
-            if (data.count > localHits) {
-                viewEl.innerText = data.count.toLocaleString();
-                localStorage.setItem(storageKey, data.count);
-            }
-        } catch (e) { }
-    }
-
-    // --- 天氣修復：更新時間與日落倒數 ---
     function updateWeatherDisplay() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
-        
-        // 抓取現在時間並更新「最後更新」
         const now = new Date();
-        const timeStr = `${(now.getMonth()+1)}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-        document.getElementById('updateTime').innerText = timeStr;
-
-        // 模擬天氣數值
+        document.getElementById('updateTime').innerText = `${(now.getMonth()+1)}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
         document.getElementById('weatherDisplay').innerHTML = `23°C ☀️`;
         document.getElementById('rainProb').innerText = "0%";
         document.getElementById('humidity').innerText = "55%";
@@ -172,7 +136,7 @@
                 eqDataList.slice(0, 5).forEach((e, i) => {
                     let opt = document.createElement('option');
                     opt.value = i;
-                    opt.innerHTML = (i === 0 ? "【最新】" : `地震記錄：`) + e.EarthquakeInfo.OriginTime.substring(5, 16);
+                    opt.innerHTML = (i === 0 ? "【最新】" : `記錄：`) + e.EarthquakeInfo.OriginTime.substring(5, 16);
                     selectEl.appendChild(opt);
                 });
                 displaySelectedEq();
@@ -204,7 +168,6 @@
     initTownshipSelect();
     updateTime();
     fetchEarthquake();
-    updateCounter(); 
 </script>
 </body>
 </html>
