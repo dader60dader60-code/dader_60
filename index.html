@@ -27,12 +27,14 @@
         .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; }
         .eq-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; margin-bottom: 10px; font-weight: bold; background: white; }
         .eq-warning { color: #d35400; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
+        .eq-steps { display: block; text-align: center; font-size: 12px; color: #555; margin-top: 5px; font-weight: normal; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
         .live-section { text-align: left; }
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 15px; background: #000; overflow: hidden; }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-bottom: 10px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; }
+        .mute-hint { font-size: 11px; color: #888; display: block; text-align: center; margin-bottom: 15px; font-weight: normal; }
         
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
@@ -89,6 +91,7 @@
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
+        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
     </div>
 
     <div class="card earthquake-box">
@@ -99,20 +102,30 @@
         </select>
         <div id="eqDisplayArea" class="eq-display-card">載入中...</div>
         <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
+        <span class="eq-steps">🏃 記得三步驟：趴下、掩護、穩住</span>
     </div>
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
         <span class="video-label">彰化縣重要路口即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe></div>
+        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
+
         <span class="video-label">八卦山美景即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?mute=1" allowfullscreen></iframe></div>
+        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
+
         <span class="video-label">彰化八卦山大佛即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg?mute=1" allowfullscreen></iframe></div>
+        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
+
         <span class="video-label">台灣彰化溪湖即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?mute=1" allowfullscreen></iframe></div>
+        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
+
         <span class="video-label">彰化王功漁港即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe></div>
+        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
     </div>
 
     <div class="live-section" style="padding-top: 10px;">
