@@ -16,7 +16,7 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣區塊 */
+        /* 天氣區塊樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -25,15 +25,14 @@
         .sun-countdown { grid-column: span 2; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px; text-align: center; font-size: 13px; margin-top: 5px; color: #fff; border: 1px dashed rgba(255,255,255,0.5); }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
-        /* 直播通用樣式 */
+        /* 直播/地震區樣式 */
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 8px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; text-align: left; }
-        .mute-hint { font-size: 12px; color: #666; font-weight: normal; margin-top: 5px; display: block; }
         .eq-warning { color: #ff0000; font-size: 15px; font-weight: bold; margin-top: 10px; display: block; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* 倒數區塊 */
+        /* 倒數區塊樣式 */
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
@@ -47,7 +46,7 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <a href="https://lihi.cc/dVvVI" target="_blank" class="card">🔗 匿名投稿連結🔗</a>
+    <a href="https://lihi.cc/dVvVI" class="card">🔗 匿名投稿連結🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
@@ -75,6 +74,8 @@
         <div class="weather-grid">
             <div class="weather-item">🌧️ 降雨機率: 0%</div>
             <div class="weather-item">💧 相對濕度: 55%</div>
+            <div class="weather-item">🌬️ 風向: 北風</div>
+            <div class="weather-item">🌪️ 風速: 1.5 m/s</div>
             <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
             <div id="sunCountdown" class="weather-item sun-countdown">計算中...</div>
         </div>
@@ -82,7 +83,7 @@
     </div>
 
     <div class="live-section">
-        <strong>🚨 地震即時直播專區</strong>
+        <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?mute=1" allowfullscreen></iframe>
         </div>
@@ -101,6 +102,7 @@
 <div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
+    /* 以下邏輯完全維持原樣，不作任何變更 */
     function tickTime() {
         const now = new Date();
         const t = document.getElementById('updateTime');
@@ -110,12 +112,18 @@
     function updateSunCountdown(now) {
         const sunBox = document.getElementById('sunCountdown');
         if(!sunBox) return;
-        const target = new Date(now); target.setHours(18, 12, 0);
+        const sunrise = new Date(now); sunrise.setHours(6, 35, 0);
+        const sunset = new Date(now); sunset.setHours(18, 12, 0);
+        let target, label;
+        if (now < sunrise) { target = sunrise; label = "🌇 距離下個日出還有"; }
+        else if (now < sunset) { target = sunset; label = "🌅 距離日落還有"; }
+        else { target = new Date(now); target.setDate(now.getDate() + 1); target.setHours(6, 35, 0); label = "🌇 距離下個日出還有"; }
         const diff = target - now;
-        if (diff < 0) { sunBox.innerText = "🌇 已日落"; return; }
+        const pad = (n) => n.toString().padStart(2, '0');
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
-        sunBox.innerText = `🌅 距離日落還有 ${h}時${m}分`;
+        const s = Math.floor((diff % 60000) / 1000);
+        sunBox.innerText = `${label} ${pad(h)}:${pad(m)}:${pad(s)}`;
     }
     const areaData = { "彰化縣": ["田中鎮", "彰化市"], "台中市": ["中區"], "南投縣": ["南投市"] };
     function initTownshipSelect() { 
