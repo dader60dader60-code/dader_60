@@ -151,43 +151,22 @@
         const now = new Date();
         const t = document.getElementById('updateTime');
         if(t) t.innerText = now.toLocaleString();
-        updateSunCountdown(now); // 每一秒更新一次日出/日落倒數
+        updateSunCountdown(now);
     }
 
-    // 更新日出日落倒數邏輯
     function updateSunCountdown(now) {
         const sunBox = document.getElementById('sunCountdown');
         if(!sunBox) return;
-
-        // 設定固定的日出日落時間 (以當天為基準)
-        const sunrise = new Date(now);
-        sunrise.setHours(6, 35, 0);
-        const sunset = new Date(now);
-        sunset.setHours(18, 12, 0);
-
+        const sunrise = new Date(now); sunrise.setHours(6, 35, 0);
+        const sunset = new Date(now); sunset.setHours(18, 12, 0);
         let target, label;
-
-        if (now < sunrise) {
-            // 凌晨時間，倒數當天日出
-            target = sunrise;
-            label = "🌇 距離下次日出還有";
-        } else if (now < sunset) {
-            // 白天時間，倒數當天日落
-            target = sunset;
-            label = "🌅 距離日落還有";
-        } else {
-            // 晚上時間，倒數隔天日出
-            target = new Date(now);
-            target.setDate(now.getDate() + 1);
-            target.setHours(6, 35, 0);
-            label = "🌇 距離下次日出還有";
-        }
-
+        if (now < sunrise) { target = sunrise; label = "🌇 距離下次日出還有"; }
+        else if (now < sunset) { target = sunset; label = "🌅 距離日落還有"; }
+        else { target = new Date(now); target.setDate(now.getDate() + 1); target.setHours(6, 35, 0); label = "🌇 距離下次日出還有"; }
         const diff = target - now;
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
         const s = Math.floor((diff % 60000) / 1000);
-
         const pad = (n) => n.toString().padStart(2, '0');
         sunBox.innerText = `${label} ${pad(h)}:${pad(m)}:${pad(s)}`;
     }
@@ -216,45 +195,49 @@
 
     async function fetchEarthquake() {
         const selectEl = document.getElementById('eqSelect');
-        const displayArea = document.getElementById('eqDisplayArea');
         const statusEl = document.getElementById('eqStatus');
         try {
             const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${Date.now()}`;
             const response = await fetch(url);
-            if (!response.ok) throw new Error();
             const data = await response.json();
-            
             eqDataList = data.records.Earthquake.slice(0, 15);
-            if (eqDataList.length === 0) {
-                statusEl.innerText = "目前暫無地震記錄";
-                return;
-            }
-            
+            if (eqDataList.length === 0) { statusEl.innerText = "目前暫無地震記錄"; return; }
             statusEl.style.display = "none";
             selectEl.style.display = "block";
             const currentIdx = selectEl.value || 0;
             selectEl.innerHTML = "";
-            
             eqDataList.forEach((eq, index) => {
-                const timeStr = eq.EarthquakeInfo.OriginTime;
                 const opt = document.createElement('option');
                 opt.value = index;
-                opt.innerText = (index === 0 ? "🆕【最新消息】" : "【歷史記錄】") + timeStr;
+                opt.innerText = (index === 0 ? "🆕【最新】" : "【記錄】") + eq.EarthquakeInfo.OriginTime;
                 selectEl.appendChild(opt);
             });
-            
             selectEl.value = currentIdx;
             displaySelectedEq();
-        } catch (err) {
-            console.error("更新地震資料失敗:", err);
-        }
+        } catch (err) { console.error("更新地震失敗", err); }
     }
 
     function displaySelectedEq() {
         const idx = document.getElementById('eqSelect').value;
-        if (idx === "" || !eqDataList[idx]) return;
-        const info = eqDataList[idx].EarthquakeInfo;
-        document.getElementById('eqDisplayArea').innerHTML = `<b>🕒 時間：</b>${info.OriginTime}<br><b>📍 地點：</b>${info.EarthquakeLocation}<br><b>📏 規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br><b>📉 深度：</b>${info.FocalDepth} km`;
+        if (!eqDataList[idx]) return;
+        const eq = eqDataList[idx];
+        const info = eq.EarthquakeInfo;
+        
+        // --- 核心邏輯：從描述中解析出最精確的行政區 ---
+        let exactLocation = info.EarthquakeLocation; // 預設值
+        
+        // 氣象署 API 在某些版本會提供分級位置，如果沒有，我們從描述中抓取縣市與鄉鎮
+        // 範例描述："花蓮縣政府南方 20.0 公里 (位於花蓮縣近海)"
+        const match = info.EarthquakeLocation.match(/\(位於(.*?)\)/);
+        if (match && match[1]) {
+            exactLocation = match[1]; // 抓取括號內的精確地點，如「花蓮縣近海」
+        } else {
+            // 如果沒有括號，嘗試抓取前幾個字（通常是縣市鄉鎮）
+            // 排除掉「XX縣政府」這種描述
+            exactLocation = info.EarthquakeLocation.split('政府')[0] || info.EarthquakeLocation;
+        }
+
+        document.getElementById('eqDisplayArea').innerHTML = `<b>🕒 時間：</b>${info.OriginTime}<br><b>📍 地點：</b>${exactLocation}<br><b>📏 規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br><b>📉 深度：</b>${info.FocalDepth} km`;
     }
 
     function updateCountdowns() {
