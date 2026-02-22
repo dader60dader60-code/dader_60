@@ -88,10 +88,10 @@
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 彰化縣即時直播專區</strong>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/S_I_643TzI0?enablejsapi=1&autoplay=0&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/S_I_643TzI0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/6_i9F_uSndc?enablejsapi=1&autoplay=0&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/6_i9F_uSndc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -173,14 +173,14 @@
         document.getElementById('eqDisplayArea').innerHTML = `📅 <b>時間：</b>${e.OriginTime}<br>📍 <b>地點：</b>${e.EarthquakeLocation}<br>⚠️ <b>強度：</b><span style="color:red; font-size:16px;">${inten.IntensityValue}級</span>`;
     }
 
-    // --- 倒數日邏輯精修 ---
+    // --- 倒數日極簡修復邏輯 ---
     function updateCountdowns() {
-        const calculate = (targetDateStr) => {
+        const getDiff = (targetStr) => {
             const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const target = new Date(targetDateStr);
-            const diffTime = target - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            // 統一設為凌晨 00:00:00 來比較
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            const target = new Date(targetStr).getTime();
+            const diffDays = Math.round((target - today) / (1000 * 60 * 60 * 24));
 
             if (diffDays === 0) return "就是今天！";
             if (diffDays === 1) return "就是明天！";
@@ -188,13 +188,13 @@
             return `還有 ${diffDays} 天`;
         };
 
-        document.getElementById('school-days').innerText = calculate('2026-02-23');
-        document.getElementById('grad-days').innerText = calculate('2026-06-01');
+        document.getElementById('school-days').innerText = getDiff('2026-02-23');
+        document.getElementById('grad-days').innerText = getDiff('2026-06-01');
     }
     
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
-    // 初始化與設定
+    // 初始化
     setInterval(tickTime, 1000);
     initTownshipSelect();
     updateCountdowns();
