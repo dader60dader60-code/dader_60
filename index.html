@@ -187,7 +187,6 @@
         const displayArea = document.getElementById('eqDisplayArea');
         const statusEl = document.getElementById('eqStatus');
         try {
-            // 加入時間戳記避免快取，強制抓取最新資料
             const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${Date.now()}`;
             const response = await fetch(url);
             if (!response.ok) throw new Error();
@@ -203,7 +202,6 @@
             statusEl.style.display = "none";
             selectEl.style.display = "block";
             
-            // 記住使用者目前選取的索引，更新後盡量維持在同一個選項
             const currentIdx = selectEl.value || 0;
             selectEl.innerHTML = "";
             
@@ -217,7 +215,6 @@
             
             selectEl.value = currentIdx;
             displaySelectedEq();
-            console.log("地震資料已自動更新至最新狀態");
         } catch (err) {
             console.error("更新地震資料失敗:", err);
         }
@@ -231,10 +228,14 @@
     }
 
     function updateCountdowns() {
+        // 修正後的倒數邏輯：當天/明天/還有X天
         const today = new Date().setHours(0,0,0,0);
         const calc = (targetStr) => {
             const diff = Math.round((new Date(targetStr).getTime() - today) / 86400000);
-            return diff <= 0 ? (diff === 0 ? "就是今天！" : "已通過") : `還有 ${diff} 天`;
+            if (diff < 0) return "已通過";
+            if (diff === 0) return "就是今天！";
+            if (diff === 1) return "就是明天！";
+            return `還有 ${diff} 天`;
         };
         document.getElementById('school-days').innerText = calc('2026-02-23');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
@@ -242,9 +243,8 @@
     
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
-    // 初始化與計時器
-    setInterval(tickTime, 1000); // 每秒更新一次顯示時間
-    setInterval(fetchEarthquake, 300000); // 每 5 分鐘 (300,000 毫秒) 自動重新抓取氣象署資料
+    setInterval(tickTime, 1000); 
+    setInterval(fetchEarthquake, 300000); 
     
     initTownshipSelect();
     updateCountdowns();
