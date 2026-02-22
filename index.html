@@ -27,7 +27,6 @@
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 8px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; text-align: left; }
-        .mute-hint { font-size: 12px; color: #666; font-weight: normal; margin-top: 5px; display: block; }
         .eq-warning { color: #ff0000; font-size: 15px; font-weight: bold; margin-top: 10px; display: block; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
@@ -43,7 +42,6 @@
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-    
     <a href="javascript:void(0)" onclick="openLinkSafely('https://lihi.cc/dVvVI')" class="card">🔗 匿名投稿連結🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
@@ -82,7 +80,7 @@
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?mute=1" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/KyT4qSK8lJo" allowfullscreen></iframe></div>
         <span class="eq-warning">⚠️地震發生時請保持冷靜，注意安全！</span>
         <span class="eq-warning">地震三步驟：趴下、掩護、穩住</span>
     </div>
@@ -90,16 +88,15 @@
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
         <span class="video-label">彰化縣重要路口即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" allowfullscreen></iframe></div>
         <span class="video-label">八卦山美景即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?mute=1" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" allowfullscreen></iframe></div>
         <span class="video-label">彰化八卦山大佛即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg?mute=1" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg" allowfullscreen></iframe></div>
         <span class="video-label">台灣彰化溪湖即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?mute=1" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I" allowfullscreen></iframe></div>
         <span class="video-label">彰化王功漁港即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe></div>
-        <span class="mute-hint">💡 提示：影片預設靜音，需要請手動打開聲音</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs" allowfullscreen></iframe></div>
     </div>
 
     <div class="live-section">
@@ -121,7 +118,6 @@
 <div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
-    // 解決蘋果跳轉的核心函數：主動彈窗確認可阻斷 iOS App 喚起
     function openLinkSafely(url) {
         if (confirm("是否前往投稿頁面？\n(提示：若顯示跳轉 App，請在該頁面手動選擇留在網頁)")) {
             window.location.href = url;
