@@ -25,12 +25,11 @@
         .sun-countdown { grid-column: span 2; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px; text-align: center; font-size: 13px; margin-top: 5px; color: #fff; border: 1px dashed rgba(255,255,255,0.5); }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
-        /* 直播區塊 */
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-bottom: 10px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; }
         
-        /* 倒數區塊 */
+        /* 倒數區塊 - 嚴格保留原始樣式與邏輯 */
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
@@ -82,11 +81,8 @@
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📡 即時直播專區</strong>
         <span class="video-label">台灣地震監測即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" allowfullscreen></iframe></div>
-        
         <span class="video-label">彰化縣重要路口即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe></div>
-        <span class="video-label">彰化王功漁港即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe></div>
     </div>
 
     <div class="live-section" style="padding-top: 10px;">
@@ -155,6 +151,7 @@
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
     }
 
+    /* 倒數日原始邏輯 */
     function updateCountdowns() {
         const today = new Date().setHours(0,0,0,0);
         const calc = (targetStr) => {
