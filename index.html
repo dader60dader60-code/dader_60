@@ -87,9 +87,9 @@
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部區域有感地震監測</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
-            <option value="">同步資料中...</option>
+            <option value="">嘗試連線中...</option>
         </select>
-        <div id="eqDisplayArea" class="eq-display-card">載入即時資訊中...</div>
+        <div id="eqDisplayArea" class="eq-display-card">等待資料同步...</div>
         <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
     </div>
 
@@ -149,24 +149,28 @@
         const city = document.getElementById('citySelect').value; 
         const townSelect = document.getElementById('townSelect'); 
         townSelect.innerHTML = ""; 
-        areaData[city].forEach(town => { 
-            let opt = document.createElement('option'); 
-            opt.value = town; 
-            opt.innerHTML = town; 
-            if(town === "田中鎮") opt.selected = true; 
-            townSelect.appendChild(opt); 
-        }); 
+        if(areaData[city]) {
+            areaData[city].forEach(town => { 
+                let opt = document.createElement('option'); 
+                opt.value = town; 
+                opt.innerHTML = town; 
+                if(town === "田中鎮") opt.selected = true; 
+                townSelect.appendChild(opt); 
+            }); 
+        }
         updateWeatherValues(); 
     }
 
-    // 地震資料抓取邏輯 (修正載入失敗問題)
     async function fetchEarthquake() {
+        const selectEl = document.getElementById('eqSelect');
+        const displayArea = document.getElementById('eqDisplayArea');
+        
         try {
-            // 使用氣象署「顯著有感地震報告」資料集
-            const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`;
+            // 使用快取破除參數確保抓到最新資料
+            const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&_=${new Date().getTime()}`;
             const response = await fetch(url);
             
-            if (!response.ok) throw new Error('API連線失敗');
+            if (!response.ok) throw new Error('網路回應不成功');
             
             const data = await response.json();
             
@@ -176,24 +180,23 @@
                 const now = new Date().getTime();
                 const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
 
-                // 篩選指定縣市地震，最多取 15 筆
+                // 篩選與排序
                 eqDataList = allEQ.filter(e => {
                     const loc = e.EarthquakeInfo.EarthquakeLocation;
                     return targetCounties.some(c => loc.includes(c));
                 }).slice(0, 15);
 
-                const selectEl = document.getElementById('eqSelect');
                 selectEl.innerHTML = "";
 
                 if (eqDataList.length === 0) {
-                    selectEl.innerHTML = "<option>近期中部無顯著有感地震</option>";
-                    document.getElementById('eqDisplayArea').innerText = "目前無符合條件的中部地震資訊。";
+                    selectEl.innerHTML = "<option>目前無中部有感地震記錄</option>";
+                    displayArea.innerText = "監測中，暫無中部符合條件的地震資訊。";
                     return;
                 }
 
                 eqDataList.forEach((e, i) => {
                     const timeStr = e.EarthquakeInfo.OriginTime;
-                    // 兼容 Safari 的日期轉換
+                    // 修正日期解析問題
                     const eqTime = new Date(timeStr.replace(/-/g, "/")).getTime();
                     const isNew = (now - eqTime) < sevenDaysMs;
                     
@@ -203,16 +206,21 @@
                     selectEl.appendChild(opt);
                 });
                 displaySelectedEq();
+            } else {
+                throw new Error('資料結構不符');
             }
         } catch (e) {
-            console.error(e);
-            document.getElementById('eqDisplayArea').innerText = "地震資料讀取失敗，請確認 API Key 或連線環境。";
+            console.error("Earthquake Fetch Error:", e);
+            selectEl.innerHTML = "<option>資料讀取失敗</option>";
+            displayArea.innerHTML = "<span style='color:red;'>連線至氣象署失敗，請檢查網路或稍後重整網頁。</span>";
         }
     }
 
     function displaySelectedEq() {
         if (!eqDataList.length) return;
-        const idx = document.getElementById('eqSelect').value || 0;
+        const idx = document.getElementById('eqSelect').value;
+        if (idx === "" || !eqDataList[idx]) return;
+        
         const e = eqDataList[idx].EarthquakeInfo;
         document.getElementById('eqDisplayArea').innerHTML = `
             <b>🕒 日期時間：</b>${e.OriginTime}<br>
