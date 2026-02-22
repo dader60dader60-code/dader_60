@@ -79,7 +79,6 @@
             <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
         </div>
         <div class="weather-meta">
-            來源：中央氣象署 CWA<br>
             最後更新：<span id="updateTime">讀取中...</span>
         </div>
     </div>
@@ -87,7 +86,7 @@
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部區域有感地震監測</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()">
-            <option value="">正在同步資料...</option>
+            <option value="">嘗試連線中...</option>
         </select>
         <div id="eqDisplayArea" class="eq-display-card">載入中...</div>
         <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
@@ -164,11 +163,11 @@
         const displayArea = document.getElementById('eqDisplayArea');
         
         try {
-            // 使用更直接的 API 路徑
-            const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`;
+            // 使用快取破解時間戳與 CORS 模式
+            const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${Date.now()}`;
             
-            const response = await fetch(url);
-            if (!response.ok) throw new Error();
+            const response = await fetch(url, { mode: 'cors' });
+            if (!response.ok) throw new Error('API 連線失敗');
             
             const data = await response.json();
             const earthquakes = data.records.Earthquake;
@@ -177,39 +176,41 @@
             const now = new Date();
             const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
 
-            // 1. 篩選區域
             let filtered = earthquakes.filter(eq => {
                 const loc = eq.EarthquakeInfo.EarthquakeLocation;
                 return targetCounties.some(county => loc.includes(county));
             });
 
-            // 2. 取前 15 筆
             eqDataList = filtered.slice(0, 15);
 
             if (eqDataList.length === 0) {
-                selectEl.innerHTML = "<option>近期中部無有感地震</option>";
-                displayArea.innerText = "目前暫無符合條件的地震資訊。";
+                selectEl.innerHTML = "<option>近期無中部有感地震</option>";
+                displayArea.innerText = "暫無中部符合條件的地震資訊。";
                 return;
             }
 
             selectEl.innerHTML = "";
             eqDataList.forEach((eq, index) => {
                 const timeStr = eq.EarthquakeInfo.OriginTime;
-                const eqDate = new Date(timeStr.replace(/-/g, "/")); // 確保相容性
-                const diff = now - eqDate;
+                const eqDate = new Date(timeStr.replace(/-/g, "/"));
+                const isNew = (now - eqDate) < sevenDaysInMs;
                 
-                const prefix = (diff < sevenDaysInMs) ? "【最新資訊】" : "【歷史記錄】";
                 const opt = document.createElement('option');
                 opt.value = index;
-                opt.innerText = `${prefix} ${timeStr}`;
+                opt.innerText = (isNew ? "【最新資訊】" : "【歷史記錄】") + timeStr;
                 selectEl.appendChild(opt);
             });
 
             displaySelectedEq();
 
         } catch (err) {
-            selectEl.innerHTML = "<option>連線逾時</option>";
-            displayArea.innerHTML = "<span style='color:red;'>無法取得氣象署即時資料。請確認網路環境或 API 金鑰權限。</span>";
+            console.error(err);
+            selectEl.innerHTML = "<option>資料無法同步</option>";
+            displayArea.innerHTML = `
+                <div style="color:red; font-size:12px;">
+                    無法直接連線至氣象署伺服器。<br>
+                    <a href="https://www.cwa.gov.tw/V8/C/E/index.html" target="_blank" style="color:#4A90E2;">👉 點此查看氣象署官網地震報告</a>
+                </div>`;
         }
     }
 
