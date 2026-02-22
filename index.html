@@ -83,7 +83,10 @@
             <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
             <div id="sunCountdown" class="weather-item sun-countdown">計算中...</div>
         </div>
-        <div class="weather-meta">最後更新：<span id="updateTime">讀取中...</span></div>
+        <div class="weather-meta">
+            資料來源：交通部中央氣象署<br>
+            最後更新：<span id="updateTime">讀取中...</span>
+        </div>
     </div>
 
     <div class="live-section">
@@ -110,19 +113,14 @@
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
         <span class="video-label">彰化縣重要路口即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe></div>
-        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
         <span class="video-label">八卦山美景即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?mute=1" allowfullscreen></iframe></div>
-        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
         <span class="video-label">彰化八卦山大佛即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg?mute=1" allowfullscreen></iframe></div>
-        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
         <span class="video-label">台灣彰化溪湖即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?mute=1" allowfullscreen></iframe></div>
-        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
         <span class="video-label">彰化王功漁港即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe></div>
-        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
     </div>
 
     <div class="live-section" style="padding-top: 10px;">
@@ -185,8 +183,7 @@
         townSelect.innerHTML = ""; 
         areaData[city].forEach(town => { 
             let opt = document.createElement('option'); 
-            opt.value = town; 
-            opt.innerHTML = town; 
+            opt.value = town; opt.innerHTML = town; 
             if(town === "田中鎮") opt.selected = true; 
             townSelect.appendChild(opt); 
         }); 
@@ -214,7 +211,7 @@
             });
             selectEl.value = currentIdx;
             displaySelectedEq();
-        } catch (err) { console.error("更新地震失敗", err); }
+        } catch (err) { console.error("地震讀取失敗", err); }
     }
 
     function displaySelectedEq() {
@@ -223,21 +220,13 @@
         const eq = eqDataList[idx];
         const info = eq.EarthquakeInfo;
         
-        // --- 核心邏輯：從描述中解析出最精確的行政區 ---
-        let exactLocation = info.EarthquakeLocation; // 預設值
-        
-        // 氣象署 API 在某些版本會提供分級位置，如果沒有，我們從描述中抓取縣市與鄉鎮
-        // 範例描述："花蓮縣政府南方 20.0 公里 (位於花蓮縣近海)"
-        const match = info.EarthquakeLocation.match(/\(位於(.*?)\)/);
-        if (match && match[1]) {
-            exactLocation = match[1]; // 抓取括號內的精確地點，如「花蓮縣近海」
-        } else {
-            // 如果沒有括號，嘗試抓取前幾個字（通常是縣市鄉鎮）
-            // 排除掉「XX縣政府」這種描述
-            exactLocation = info.EarthquakeLocation.split('政府')[0] || info.EarthquakeLocation;
-        }
+        // 強化地點解析：氣象署在有感地震報告中會將鄉鎮寫在括號內或特定欄位
+        let loc = info.EarthquakeLocation;
+        const match = loc.match(/\(位於(.*?)\)/);
+        if (match && match[1]) { loc = match[1]; } 
+        else { loc = loc.replace(/政府.*方[\d.]*公里/, "").trim(); }
 
-        document.getElementById('eqDisplayArea').innerHTML = `<b>🕒 時間：</b>${info.OriginTime}<br><b>📍 地點：</b>${exactLocation}<br><b>📏 規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br><b>📉 深度：</b>${info.FocalDepth} km`;
+        document.getElementById('eqDisplayArea').innerHTML = `<b>🕒 時間：</b>${info.OriginTime}<br><b>📍 地點：</b>${loc}<br><b>📏 規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br><b>📉 深度：</b>${info.FocalDepth} km`;
     }
 
     function updateCountdowns() {
