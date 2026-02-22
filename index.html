@@ -11,6 +11,7 @@
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
         .card, .line-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
+        .owner-tiktok { background: #000000; color: #ffffff; border: 2px solid #25F4EE; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
@@ -45,6 +46,8 @@
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
+    
+    <a href="https://www.tiktok.com/@hbingzhe10.10?is_from_webapp=1&sender_device=pc" target="_blank" class="card owner-tiktok">🎵 版主抖音 (TikTok)</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
@@ -127,7 +130,8 @@
     function updateWeatherValues() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
-        document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
+        const title = document.getElementById('regionTitle');
+        if (title) title.innerText = `${city} ${town} 即時預報`;
     }
 
     const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
@@ -173,11 +177,9 @@
         document.getElementById('eqDisplayArea').innerHTML = `📅 <b>時間：</b>${e.OriginTime}<br>📍 <b>地點：</b>${e.EarthquakeLocation}<br>⚠️ <b>強度：</b><span style="color:red; font-size:16px;">${inten.IntensityValue}級</span>`;
     }
 
-    // --- 倒數日極簡修復邏輯 ---
     function updateCountdowns() {
         const getDiff = (targetStr) => {
             const now = new Date();
-            // 統一設為凌晨 00:00:00 來比較
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
             const target = new Date(targetStr).getTime();
             const diffDays = Math.round((target - today) / (1000 * 60 * 60 * 24));
@@ -187,14 +189,12 @@
             if (diffDays < 0) return "已通過";
             return `還有 ${diffDays} 天`;
         };
-
         document.getElementById('school-days').innerText = getDiff('2026-02-23');
         document.getElementById('grad-days').innerText = getDiff('2026-06-01');
     }
     
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
-    // 初始化
     setInterval(tickTime, 1000);
     initTownshipSelect();
     updateCountdowns();
