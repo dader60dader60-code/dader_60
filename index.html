@@ -29,7 +29,7 @@
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
-        .countdown-num { font-size: 42px; font-weight: bold; margin: 5px 0; }
+        .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
         
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
     </style>
@@ -61,8 +61,7 @@
                 <option value="台中市">台中市</option>
                 <option value="南投縣">南投縣</option>
             </select>
-            <select id="townSelect" class="weather-select" onchange="updateWeatherValues()">
-                </select>
+            <select id="townSelect" class="weather-select" onchange="updateWeatherValues()"></select>
         </div>
         <div style="font-size: 32px; margin: 15px 0 5px 0;">23°C ☀️</div>
         <div class="weather-grid">
@@ -89,10 +88,10 @@
     <div class="live-section">
         <strong style="display: block; margin-bottom: 10px;">📹 彰化縣即時直播專區</strong>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/S_I_643TzI0?rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/S_I_643TzI0?enablejsapi=1&autoplay=0&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/6_i9F_uSndc?rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/6_i9F_uSndc?enablejsapi=1&autoplay=0&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -113,7 +112,6 @@
     let eqDataList = [];
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
 
-    // 1. 只更新時間秒數，不重繪整個天氣區塊 (解決直播失效問題)
     function tickTime() {
         const now = new Date();
         const year = now.getFullYear();
@@ -122,15 +120,14 @@
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const seconds = now.getSeconds().toString().padStart(2, '0');
-        document.getElementById('updateTime').innerText = `${year}/${month}/${date} ${hours}:${minutes}:${seconds}`;
+        const target = document.getElementById('updateTime');
+        if (target) target.innerText = `${year}/${month}/${date} ${hours}:${minutes}:${seconds}`;
     }
 
-    // 2. 當切換城市/地區時才執行的更新
     function updateWeatherValues() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
-        tickTime(); // 切換時也立即刷一下時間
     }
 
     const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
@@ -150,12 +147,12 @@
     }
 
     async function fetchEarthquake() {
-        const selectEl = document.getElementById('eqSelect');
         try {
             const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
             const data = await res.json();
             if (data.records && data.records.Earthquake) {
                 eqDataList = data.records.Earthquake;
+                const selectEl = document.getElementById('eqSelect');
                 selectEl.innerHTML = "";
                 eqDataList.slice(0, 5).forEach((e, i) => {
                     let opt = document.createElement('option');
@@ -176,27 +173,33 @@
         document.getElementById('eqDisplayArea').innerHTML = `📅 <b>時間：</b>${e.OriginTime}<br>📍 <b>地點：</b>${e.EarthquakeLocation}<br>⚠️ <b>強度：</b><span style="color:red; font-size:16px;">${inten.IntensityValue}級</span>`;
     }
 
-    function updateCountdowns() { 
-        const schoolTarget = new Date('2026-02-23');
-        const gradTarget = new Date('2026-06-01');
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    // --- 倒數日邏輯精修 ---
+    function updateCountdowns() {
+        const calculate = (targetDateStr) => {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const target = new Date(targetDateStr);
+            const diffTime = target - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        const diff1 = Math.round((schoolTarget - today) / 86400000);
-        const diff2 = Math.round((gradTarget - today) / 86400000);
+            if (diffDays === 0) return "就是今天！";
+            if (diffDays === 1) return "就是明天！";
+            if (diffDays < 0) return "已通過";
+            return `還有 ${diffDays} 天`;
+        };
 
-        document.getElementById('school-days').innerText = diff1 === 0 ? "就是今天！" : (diff1 < 0 ? "已開學" : `還有 ${diff1} 天`);
-        document.getElementById('grad-days').innerText = diff2 === 0 ? "就是今天！" : (diff2 < 0 ? "已畢業" : `還有 ${diff2} 天`);
+        document.getElementById('school-days').innerText = calculate('2026-02-23');
+        document.getElementById('grad-days').innerText = calculate('2026-06-01');
     }
     
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
-    // 每秒只跑時間跳動，不影響其他區塊
+    // 初始化與設定
     setInterval(tickTime, 1000);
-
     initTownshipSelect();
     updateCountdowns();
     fetchEarthquake();
+    tickTime();
 </script>
 </body>
 </html>
