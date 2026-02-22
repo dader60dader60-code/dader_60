@@ -126,14 +126,38 @@
         if(t) t.innerText = now.toLocaleString();
         updateSunCountdown(now);
     }
+
     function updateSunCountdown(now) {
         const sunBox = document.getElementById('sunCountdown');
         if(!sunBox) return;
-        const target = new Date(now); target.setHours(18, 12, 0);
+        
+        const sunriseTime = { h: 6, m: 35, s: 0 };
+        const sunsetTime = { h: 18, m: 12, s: 0 };
+        
+        let sunrise = new Date(now); sunrise.setHours(sunriseTime.h, sunriseTime.m, sunriseTime.s);
+        let sunset = new Date(now); sunset.setHours(sunsetTime.h, sunsetTime.m, sunsetTime.s);
+        
+        let target, label;
+        if (now < sunrise) {
+            target = sunrise;
+            label = "🌇 距離下次日出還有";
+        } else if (now < sunset) {
+            target = sunset;
+            label = "🌅 距離日落還有";
+        } else {
+            target = new Date(now);
+            target.setDate(now.getDate() + 1);
+            target.setHours(sunriseTime.h, sunriseTime.m, sunriseTime.s);
+            label = "🌇 距離下次日出還有";
+        }
+
         const diff = target - now;
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
-        sunBox.innerText = diff < 0 ? "🌇 已日落" : `🌅 距離日落還有 ${h}時${m}分`;
+        const s = Math.floor((diff % 60000) / 1000);
+        
+        const format = (n) => n.toString().padStart(2, '0');
+        sunBox.innerText = `${label} ${format(h)}:${format(m)}:${format(s)}`;
     }
 
     const areaData = {
