@@ -27,7 +27,6 @@
         .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; }
         .eq-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; margin-bottom: 10px; font-weight: bold; background: white; }
         
-        /* 修改警告文字為紅色 */
         .eq-warning { color: #ff0000; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
         .eq-steps { display: block; text-align: center; font-size: 12px; color: #555; margin-top: 5px; font-weight: normal; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
@@ -82,16 +81,14 @@
             <div class="weather-item">🌪️ 風速: 1.5 m/s</div>
             <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
         </div>
-        <div class="weather-meta">
-            最後更新：<span id="updateTime">讀取中...</span>
-        </div>
+        <div class="weather-meta">最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
 
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📡 地震即時直播專區</strong>
         <span class="video-label">台灣地震監測即時影像</span>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" allowfullscreen></iframe>
         </div>
         <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
         <span class="eq-warning" style="margin-top: 5px;">地震發生時請保持冷靜，注意安全！</span>
@@ -101,9 +98,7 @@
     <div class="card earthquake-box">
         <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 全台有感地震監測 (最新消息)</div>
         <div id="eqStatus">正在同步全台地震資料...</div>
-        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()" style="display:none;">
-            <option value="">請選擇地震報告時間</option>
-        </select>
+        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()" style="display:none;"></select>
         <div id="eqDisplayArea" class="eq-display-card">載入中...</div>
         <span class="eq-warning">地震發生時請保持冷靜，注意安全！</span>
         <span class="eq-steps">🏃 記得三步驟：趴下、掩護、穩住</span>
@@ -114,19 +109,15 @@
         <span class="video-label">彰化縣重要路口即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe></div>
         <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
-
         <span class="video-label">八卦山美景即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?mute=1" allowfullscreen></iframe></div>
         <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
-
         <span class="video-label">彰化八卦山大佛即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/f3SQb8CBqYg?mute=1" allowfullscreen></iframe></div>
         <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
-
         <span class="video-label">台灣彰化溪湖即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?mute=1" allowfullscreen></iframe></div>
         <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
-
         <span class="video-label">彰化王功漁港即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe></div>
         <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
@@ -134,9 +125,9 @@
 
     <div class="live-section" style="padding-top: 10px;">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
-        <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ?si=vD6X6CMUKx5RS_7n" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
-        <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw?si=EgnjHz6Pl4uiHiJ3" target="_blank" class="card yt-card">達德商工學務處專區</a>
-        <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
+        <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
+        <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw" target="_blank" class="card yt-card">達德商工學務處專區</a>
+        <a href="https://youtube.com/@dader520" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
     <div class="card countdown-box">
@@ -148,9 +139,7 @@
     </div>
 </div>
 
-<div class="fixed-footer">
-    𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊
-</div>
+<div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
     let eqDataList = [];
@@ -195,7 +184,6 @@
             const data = await response.json();
             
             eqDataList = data.records.Earthquake.slice(0, 15);
-            
             if (eqDataList.length === 0) {
                 statusEl.innerText = "目前暫無地震記錄";
                 return;
@@ -203,7 +191,6 @@
             
             statusEl.style.display = "none";
             selectEl.style.display = "block";
-            
             const currentIdx = selectEl.value || 0;
             selectEl.innerHTML = "";
             
@@ -225,8 +212,10 @@
     function displaySelectedEq() {
         const idx = document.getElementById('eqSelect').value;
         if (idx === "" || !eqDataList[idx]) return;
-        const eq = eqDataList[idx].EarthquakeInfo;
-        document.getElementById('eqDisplayArea').innerHTML = `<b>🕒 時間：</b>${eq.OriginTime}<br><b>📍 地點：</b>${eq.EarthquakeLocation}<br><b>📏 規模：</b>M<sub>L</sub> ${eq.EarthquakeMagnitude.MagnitudeValue}<br><b>📉 深度：</b>${eq.FocalDepth} km`;
+        const info = eqDataList[idx].EarthquakeInfo;
+        // 抓取精確的縣市與鄉鎮地點
+        const location = info.EarthquakeLocation;
+        document.getElementById('eqDisplayArea').innerHTML = `<b>🕒 時間：</b>${info.OriginTime}<br><b>📍 地點：</b>${location}<br><b>📏 規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br><b>📉 深度：</b>${info.FocalDepth} km`;
     }
 
     function updateCountdowns() {
@@ -246,7 +235,6 @@
 
     setInterval(tickTime, 1000); 
     setInterval(fetchEarthquake, 300000); 
-    
     initTownshipSelect();
     updateCountdowns();
     fetchEarthquake();
