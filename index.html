@@ -9,7 +9,7 @@
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
-        .card, .line-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
+        .card, .line-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .owner-tiktok { background: #000000; color: #ffffff; border: 2px solid #25F4EE; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
@@ -23,6 +23,12 @@
         .sun-info { grid-column: span 2; background: rgba(255,255,255,0.25); text-align: center; font-size: 14px; }
         .sun-countdown { grid-column: span 2; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px; text-align: center; font-size: 13px; margin-top: 5px; color: #fff; border: 1px dashed rgba(255,255,255,0.5); }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
+
+        /* 直播區塊樣式 */
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
+        .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 8px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; text-align: left; }
+        .mute-hint { font-size: 12px; color: #666; font-weight: normal; margin-top: 5px; display: block; }
 
         /* 倒數區塊 */
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
@@ -70,6 +76,37 @@
             <div id="sunCountdown" class="weather-item sun-countdown">計算中...</div>
         </div>
         <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
+    </div>
+
+    <div class="live-section">
+        <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
+        
+        <span class="video-label">彰化縣重要路口即時影像</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe>
+        </div>
+
+        <span class="video-label">八卦山美景即時影像</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?mute=1" allowfullscreen></iframe>
+        </div>
+
+        <span class="video-label">彰化八卦山大佛即時影像</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/f3SQb8CBqYg?mute=1" allowfullscreen></iframe>
+        </div>
+
+        <span class="video-label">台灣彰化溪湖即時影像</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?mute=1" allowfullscreen></iframe>
+        </div>
+
+        <span class="video-label">彰化王功漁港即時影像</span>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe>
+        </div>
+
+        <span class="mute-hint">💡 提示：影片預設靜音，需要請手動打開聲音</span>
     </div>
 
     <div class="card countdown-box">
