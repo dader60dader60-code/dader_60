@@ -95,8 +95,8 @@
     </div>
 
     <div class="card earthquake-box">
-        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 中部區域有感地震監測</div>
-        <div id="eqStatus">正在同步資料中...</div>
+        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 全台有感地震監測 (最新消息)</div>
+        <div id="eqStatus">正在同步全台地震資料...</div>
         <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()" style="display:none;">
             <option value="">請選擇地震報告時間</option>
         </select>
@@ -185,30 +185,30 @@
         const displayArea = document.getElementById('eqDisplayArea');
         const statusEl = document.getElementById('eqStatus');
         try {
+            // 抓取全台有感地震資料
             const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${Date.now()}`;
             const response = await fetch(url);
             if (!response.ok) throw new Error();
             const data = await response.json();
-            const earthquakes = data.records.Earthquake;
-            const targetCounties = ["彰化", "台中", "臺中", "南投", "雲林"];
-            const now = new Date();
-            let filtered = earthquakes.filter(eq => {
-                const loc = eq.EarthquakeInfo.EarthquakeLocation;
-                return targetCounties.some(county => loc.includes(county));
-            });
-            eqDataList = filtered.slice(0, 15);
+            
+            // 抓取所有地震，不再限制區域
+            eqDataList = data.records.Earthquake.slice(0, 15);
+            
             if (eqDataList.length === 0) {
-                statusEl.innerText = "近期無中部有感地震記錄";
+                statusEl.innerText = "目前暫無地震記錄";
                 return;
             }
+            
             statusEl.style.display = "none";
             selectEl.style.display = "block";
             selectEl.innerHTML = "";
+            
             eqDataList.forEach((eq, index) => {
                 const timeStr = eq.EarthquakeInfo.OriginTime;
                 const opt = document.createElement('option');
                 opt.value = index;
-                opt.innerText = "【記錄】" + timeStr;
+                // 第一筆資料標註為最新消息
+                opt.innerText = (index === 0 ? "🆕【最新消息】" : "【歷史記錄】") + timeStr;
                 selectEl.appendChild(opt);
             });
             displaySelectedEq();
