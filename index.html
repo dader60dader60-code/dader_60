@@ -9,10 +9,9 @@
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
-        .card, .line-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
+        .card, .line-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .owner-tiktok { background: #000000; color: #ffffff; border: 2px solid #25F4EE; }
-        .yt-card { background: #fff1f1; border: 2px solid #ff0000; color: #ff0000; margin-bottom: 10px; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
@@ -25,10 +24,6 @@
         .sun-countdown { grid-column: span 2; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px; text-align: center; font-size: 13px; margin-top: 5px; color: #fff; border: 1px dashed rgba(255,255,255,0.5); }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
-        .video-label { font-size: 14px; color: #333; margin-bottom: 10px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; text-align: left; }
-        
         /* 倒數區塊 */
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
@@ -75,32 +70,6 @@
             <div id="sunCountdown" class="weather-item sun-countdown">計算中...</div>
         </div>
         <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
-    </div>
-
-    <div class="live-section">
-        <strong style="display: block; margin-bottom: 15px; text-align: center;">📡 地震即時直播</strong>
-        <span class="video-label">台灣地震監測即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div class="live-section">
-        <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播</strong>
-        <span class="video-label">彰化縣重要路口即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?mute=1" allowfullscreen></iframe>
-        </div>
-        <span class="video-label">彰化王功漁港即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?mute=1" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div class="live-section" style="padding-top: 10px;">
-        <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
-        <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
-        <a href="https://youtube.com/@dader520" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
     <div class="card countdown-box">
@@ -167,7 +136,10 @@
         const today = new Date().setHours(0,0,0,0);
         const calc = (targetStr) => {
             const diff = Math.round((new Date(targetStr).getTime() - today) / 86400000);
-            return diff <= 0 ? (diff === 0 ? "就是今天！" : "已通過") : `還有 ${diff} 天`;
+            if (diff < 0) return "已通過";
+            if (diff === 0) return "就是今天！";
+            if (diff === 1) return "就是明天！";
+            return `還有 ${diff} 天`;
         };
         document.getElementById('school-days').innerText = calc('2026-02-23');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
