@@ -11,8 +11,11 @@
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
         .card, .line-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
+        .owner-tiktok { background: #000000; color: #ffffff; border: 2px solid #25F4EE; }
+        .yt-card { background: #fff1f1; border: 2px solid #ff0000; color: #ff0000; margin-bottom: 10px; }
+        .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
+        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* 天氣區 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -21,19 +24,22 @@
         .sun-countdown { grid-column: span 2; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px; text-align: center; font-size: 13px; margin-top: 5px; color: #fff; border: 1px dashed rgba(255,255,255,0.5); }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
-        /* 【核心改動】地震區 */
         .earthquake-box { background: #fdfdfd; border-left: 5px solid #e74c3c; text-align: left; }
-        .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; min-height: 80px; }
-        .eq-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; margin-bottom: 10px; font-weight: bold; background: white; display: none; }
-        .refresh-btn { background: #e74c3c; color: white; border: none; padding: 5px 15px; border-radius: 5px; font-size: 12px; cursor: pointer; float: right; margin-bottom: 5px; }
+        .eq-display-card { background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc; margin-bottom: 10px; font-size: 14px; line-height: 1.8; }
+        .eq-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; margin-bottom: 10px; font-weight: bold; background: white; }
         .eq-warning { color: #ff0000; font-weight: bold; font-size: 13px; margin-top: 10px; display: block; text-align: center; animation: blink 1.5s infinite; }
+        .eq-steps { display: block; text-align: center; font-size: 12px; color: #555; margin-top: 5px; font-weight: normal; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* 影片與倒數 */
+        .live-section { text-align: left; }
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
+        .video-label { font-size: 14px; color: #333; margin-bottom: 10px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; }
+        .mute-hint { font-size: 11px; color: #888; display: block; text-align: center; margin-bottom: 10px; font-weight: normal; }
+        
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
         .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
+        
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
     </style>
 </head>
@@ -43,8 +49,19 @@
     <img src="avatar.jpg" alt="版主頭像" class="profile-pic">
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
+    <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     <a href="https://lihi.cc/dVvVI" rel="noreferrer" class="card">🔗 匿名投稿連結🔗</a>
+    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
+    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
+    <a href="https://www.tiktok.com/@hbingzhe10.10" target="_blank" class="card owner-tiktok">🎵 版主抖音 (TikTok)</a>
+
+    <div class="line-section">
+        <strong>官方 LINE ⚡</strong><br>
+        <img src="line-qr.jpg" class="qrcode-img">
+        <a href="https://lin.ee/94g8LGJ" target="_blank" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
+        <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
+    </div>
 
     <div class="card weather-box">
         <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
@@ -65,23 +82,25 @@
             <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
             <div id="sunCountdown" class="weather-item sun-countdown">計算中...</div>
         </div>
-        <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
+        <div class="weather-meta">最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
 
     <div class="card earthquake-box">
-        <button class="refresh-btn" onclick="fetchEarthquake()">🔄 更新</button>
-        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 全台地震監測 (縣市鄉鎮版)</div>
-        <div id="eqStatus" style="font-size: 13px; color: #888;">正在連線至氣象署...</div>
-        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()"></select>
-        <div id="eqDisplayArea" class="eq-display-card">資料讀取中...</div>
+        <div style="color: #e74c3c; font-size: 15px; font-weight: bold; margin-bottom: 10px;">📢 全台有感地震監測 (最新消息)</div>
+        <div id="eqStatus">正在同步全台地震資料...</div>
+        <select id="eqSelect" class="eq-select" onchange="displaySelectedEq()" style="display:none;"></select>
+        <div id="eqDisplayArea" class="eq-display-card">載入中...</div>
         <span class="eq-warning">⚠️ 地震發生時請保持冷靜，注意安全！</span>
+        <span class="eq-steps">🏃 記得三步驟：趴下、掩護、穩住</span>
     </div>
 
     <div class="live-section">
-        <strong style="display: block; margin-bottom: 10px; text-align: center;">📡 地震即時直播</strong>
+        <strong style="display: block; margin-bottom: 15px; text-align: center;">📡 地震即時直播專區</strong>
+        <span class="video-label">台灣地震監測即時影像</span>
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?si=cY8j7MuN5KWXVvJG&mute=1" allowfullscreen></iframe>
         </div>
+        <span class="mute-hint">🔊 播放時為靜音，若需聲音請按影片內解除靜音</span>
     </div>
 
     <div class="card countdown-box">
@@ -116,86 +135,74 @@
         else if (now < sunset) { target = sunset; label = "🌅 距離日落還有"; }
         else { target = new Date(now); target.setDate(now.getDate() + 1); target.setHours(6, 35, 0); label = "🌇 距離下次日出還有"; }
         const diff = target - now;
-        const pad = (n) => n.toString().padStart(2, '0');
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
         const s = Math.floor((diff % 60000) / 1000);
+        const pad = (n) => n.toString().padStart(2, '0');
         sunBox.innerText = `${label} ${pad(h)}:${pad(m)}:${pad(s)}`;
     }
 
-    const areaData = {"彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮"],"台中市": ["西屯區", "北屯區", "大里區", "太平區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮"]};
+    const areaData = {"彰化縣": ["彰化市", "員林市", "田中鎮", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],"台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "大里區", "太平區", "清水區", "沙鹿區", "大甲區", "東勢區", "梧棲區", "烏日區", "神岡區", "大雅區", "后里區", "霧峰區", "潭子區", "大肚區", "龍井區", "外埔區", "和平區", "石岡區", "大安區", "新社區"],"南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]};
+    
     function initTownshipSelect() { 
         const city = document.getElementById('citySelect').value; 
         const townSelect = document.getElementById('townSelect'); 
         townSelect.innerHTML = ""; 
         areaData[city].forEach(town => { 
             let opt = document.createElement('option'); 
-            opt.value = town; opt.innerHTML = town; 
+            opt.value = town; 
+            opt.innerHTML = town; 
+            if(town === "田中鎮") opt.selected = true; 
             townSelect.appendChild(opt); 
         }); 
         updateWeatherValues(); 
     }
+
     function updateWeatherValues() {
         const city = document.getElementById('citySelect').value;
         const town = document.getElementById('townSelect').value;
         document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
     }
 
-    // 【修正版地震抓取函數】
     async function fetchEarthquake() {
         const selectEl = document.getElementById('eqSelect');
-        const displayArea = document.getElementById('eqDisplayArea');
         const statusEl = document.getElementById('eqStatus');
-        
         try {
             const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON&ts=${Date.now()}`;
             const response = await fetch(url);
             const data = await response.json();
-            
-            if (data.records && data.records.Earthquake) {
-                eqDataList = data.records.Earthquake.slice(0, 10);
-                statusEl.style.display = "none";
-                selectEl.style.display = "block";
-                selectEl.innerHTML = "";
-                eqDataList.forEach((eq, index) => {
-                    const opt = document.createElement('option');
-                    opt.value = index;
-                    opt.innerText = (index === 0 ? "🆕最新：" : "記錄：") + eq.EarthquakeInfo.OriginTime;
-                    selectEl.appendChild(opt);
-                });
-                displaySelectedEq(); // 抓到後立刻顯示
-            } else {
-                displayArea.innerHTML = "目前暫無地震資訊";
-            }
-        } catch (err) {
-            displayArea.innerHTML = "<span style='color:red;'>無法連線氣象署伺服器<br>請檢查網路或稍後重試</span>";
-        }
+            eqDataList = data.records.Earthquake.slice(0, 15);
+            if (eqDataList.length === 0) { statusEl.innerText = "目前暫無地震記錄"; return; }
+            statusEl.style.display = "none";
+            selectEl.style.display = "block";
+            selectEl.innerHTML = "";
+            eqDataList.forEach((eq, index) => {
+                const opt = document.createElement('option');
+                opt.value = index;
+                opt.innerText = (index === 0 ? "🆕 最新：" : "記錄：") + eq.EarthquakeInfo.OriginTime;
+                selectEl.appendChild(opt);
+            });
+            displaySelectedEq();
+        } catch (err) { console.error("地震讀取失敗", err); }
     }
 
-    // 【核心改動：精準解析地點】
+    // 【修改重點：強效地點解析】
     function displaySelectedEq() {
         const idx = document.getElementById('eqSelect').value;
         if (!eqDataList[idx]) return;
         const info = eqDataList[idx].EarthquakeInfo;
         
-        let rawLoc = info.EarthquakeLocation;
-        let finalLoc = "";
-
-        // 邏輯 1：尋找括號內的精確地點 (例如：位於花蓮縣近海)
-        const match = rawLoc.match(/\(位於(.*?)\)/);
+        let loc = info.EarthquakeLocation;
+        // 優先抓取括號內的文字，例如：(位於花蓮縣秀林鄉) -> 花蓮縣秀林鄉
+        const match = loc.match(/\(位於(.*?)\)/);
         if (match && match[1]) {
-            finalLoc = match[1];
+            loc = match[1];
         } else {
-            // 邏輯 2：如果沒有括號，取「政府」二字前的文字 (例如：花蓮縣政府 -> 花蓮縣)
-            finalLoc = rawLoc.split('政府')[0];
+            // 如果沒有括號，則去掉「政府」之後的所有文字，例如：彰化縣政府南方 -> 彰化縣
+            loc = loc.split('政府')[0];
         }
 
-        document.getElementById('eqDisplayArea').innerHTML = `
-            🕒 <b>時間：</b>${info.OriginTime}<br>
-            📍 <b>地點：</b><span style="color:#e74c3c; font-size:16px;">${finalLoc}</span><br>
-            📏 <b>規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br>
-            📉 <b>深度：</b>${info.FocalDepth} km
-        `;
+        document.getElementById('eqDisplayArea').innerHTML = `<b>🕒 時間：</b>${info.OriginTime}<br><b>📍 地點：</b>${loc}<br><b>📏 規模：</b>M<sub>L</sub> ${info.EarthquakeMagnitude.MagnitudeValue}<br><b>📉 深度：</b>${info.FocalDepth} km`;
     }
 
     function updateCountdowns() {
@@ -207,6 +214,8 @@
         document.getElementById('school-days').innerText = calc('2026-02-23');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
     }
+    
+    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
 
     setInterval(tickTime, 1000); 
     setInterval(fetchEarthquake, 300000); 
