@@ -111,35 +111,14 @@
 
     <!-- 倒數日區塊 -->
     <div class="card countdown-box">
-        <div style="font-size: 14px;">🎒 距離 2/23 開學日</div>
-        <div class="countdown-num" id="school-days">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🏮 距離 3/3 元宵節</div>
-        <div class="countdown-num" id="lantern-fest">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🎈 距離 4/4 兒童節</div>
-        <div class="countdown-num" id="childrens-day">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🕯️ 距離 4/5 清明節</div>
-        <div class="countdown-num" id="tomb-sweeping-day">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🛠️ 距離 5/1 勞動節</div>
-        <div class="countdown-num" id="labour-day">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">🎓 距離 6/1 畢業日</div>
         <div class="countdown-num" id="grad-days">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🛶 距離 6/19 端午節</div>
-        <div class="countdown-num" id="dragon-boat">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">☀️ 距離 6/30 結業式</div>
         <div class="countdown-num" id="end-school-days">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">🎂 距離 10/10 版主生日</div>
         <div class="countdown-num" id="owner-bday">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🎂 距離 10/12 副版主生日</div>
-        <div class="countdown-num" id="sub-owner-bday">--</div>
     </div>
 </div>
 
@@ -218,28 +197,9 @@
             return `還有 ${diff} 天`;
         };
 
-        // 節慶特殊處理 (若過期則計算明年的)
-        const calcHoliday = (targetDateStr) => {
-            let target = new Date(targetDateStr);
-            if (target < today) {
-                target.setFullYear(target.getFullYear() + 1);
-            }
-            const diff = Math.round((target.getTime() - today.getTime()) / 86400000);
-            if (diff === 0) return "就是今天！";
-            return `還有 ${diff} 天`;
-        };
-
-        document.getElementById('school-days').innerText = calc('2026-02-23');
-        document.getElementById('lantern-fest').innerText = calcHoliday('2026-03-03');
-        document.getElementById('childrens-day').innerText = calcHoliday('2026-04-04');
-        document.getElementById('tomb-sweeping-day').innerText = calcHoliday('2026-04-05');
-        document.getElementById('labour-day').innerText = calcHoliday('2026-05-01');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
-        document.getElementById('dragon-boat').innerText = calcHoliday('2026-06-19');
         document.getElementById('end-school-days').innerText = calc('2026-06-30');
-        
         document.getElementById('owner-bday').innerText = calcBday(10, 10);
-        document.getElementById('sub-owner-bday').innerText = calcBday(10, 12);
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
