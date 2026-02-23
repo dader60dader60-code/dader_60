@@ -43,8 +43,8 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <!-- 匿名連結：使用 Google 代理跳轉 -->
-    <a href="https://www.google.com/url?q=https://lihi.cc/dVvVI" target="_blank" rel="noopener noreferrer" class="card">🔗 匿名投稿連結🔗</a>
+    <!-- 匿名連結：改回原始 Google 表單連結，確保蘋果與安卓不論有無 App 都能開啟 -->
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf6P1I-yVvVI" target="_blank" rel="noopener noreferrer" class="card">🔗 匿名投稿連結 🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
@@ -96,7 +96,6 @@
         <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" allowfullscreen></iframe></div>
         <span class="video-label">八卦山美景即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" allowfullscreen></iframe></div>
-        <!-- 新增：彰化八卦山大佛即時影像 -->
         <span class="video-label">彰化八卦山大佛即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/dQioeg3uTiA?si=Kuw5wSJFgVizt3V6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
         <span class="video-label">台灣彰化溪湖即時影像</span>
@@ -203,7 +202,6 @@
             return `還有 ${diff} 天`;
         };
         
-        // 生日與固定節日特殊處理 (若過期則計算明年的)
         const calcRecurring = (month, day, labelPrefix = "還有") => {
             let year = today.getFullYear();
             let targetDate = new Date(year, month - 1, day);
