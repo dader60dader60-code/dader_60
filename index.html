@@ -43,8 +43,8 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <!-- 匿名連結：改回原始 Google 表單連結，確保蘋果與安卓不論有無 App 都能開啟 -->
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf6P1I-yVvVI" target="_blank" rel="noopener noreferrer" class="card">🔗 匿名投稿連結 🔗</a>
+    <!-- 匿名連結：使用特殊導向方式，嘗試繞過 App 跳轉，強制在網頁版開啟 -->
+    <a href="https://tellonym.me/dader_.60?rel=web" target="_blank" rel="noopener noreferrer" class="card" onclick="forceWeb(event)">🔗 匿名投稿連結 🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
@@ -142,6 +142,13 @@
 <div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
+    // 強制在網頁開啟的邏輯：利用 window.location 跳轉通常能繞過 App 喚起詢問
+    function forceWeb(e) {
+        e.preventDefault();
+        const url = "https://tellonym.me/dader_.60?rel=web";
+        window.location.href = url;
+    }
+
     function tickTime() {
         const now = new Date();
         const t = document.getElementById('updateTime');
