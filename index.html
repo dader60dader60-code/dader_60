@@ -116,11 +116,12 @@
         <div style="font-size: 14px;">🕯️ 距離 4/3~4/6 清明連假</div>
         <div class="countdown-num" id="tomb-sweeping-break">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🚣 距離 6/19~6/21 端午連假</div>
-        <div class="countdown-num" id="dragon-boat-break">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
+        <!-- 畢業日與端午連假對調 -->
         <div style="font-size: 14px;">🎓 距離 6/1 畢業日</div>
         <div class="countdown-num" id="grad-days">--</div>
+        <hr style="opacity: 0.3; margin: 15px 0;">
+        <div style="font-size: 14px;">🚣 距離 6/19~6/21 端午連假</div>
+        <div class="countdown-num" id="dragon-boat-break">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">☀️ 距離 6/30 結業式</div>
         <div class="countdown-num" id="end-school-days">--</div>
@@ -128,11 +129,12 @@
         <div style="font-size: 14px;">🥮 距離 9/25~9/28 中秋連假/教師節</div>
         <div class="countdown-num" id="moon-festival-break">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🎂 距離 10/10 版主生日</div>
-        <div class="countdown-num" id="owner-bday">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
+        <!-- 國慶連假與版主生日對調 -->
         <div style="font-size: 14px;">🇹🇼 距離 10/9~10/11 國慶連假</div>
         <div class="countdown-num" id="national-day-break">--</div>
+        <hr style="opacity: 0.3; margin: 15px 0;">
+        <div style="font-size: 14px;">🎂 距離 10/10 版主生日</div>
+        <div class="countdown-num" id="owner-bday">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">🎆 距離 1/1 元旦</div>
         <div class="countdown-num" id="new-year-day">--</div>
@@ -142,7 +144,6 @@
 <div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
-    // 強制在網頁開啟的邏輯：利用 window.location 跳轉通常能繞過 App 喚起詢問
     function forceWeb(e) {
         e.preventDefault();
         const url = "https://tellonym.me/dader_.60?rel=web";
