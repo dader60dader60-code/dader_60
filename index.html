@@ -114,14 +114,26 @@
         <div style="font-size: 14px;">🕯️ 距離 4/3~4/6 清明連假</div>
         <div class="countdown-num" id="tomb-sweeping-break">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
+        <div style="font-size: 14px;">🚣 距離 6/19~6/21 端午連假</div>
+        <div class="countdown-num" id="dragon-boat-break">--</div>
+        <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">🎓 距離 6/1 畢業日</div>
         <div class="countdown-num" id="grad-days">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">☀️ 距離 6/30 結業式</div>
         <div class="countdown-num" id="end-school-days">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
+        <div style="font-size: 14px;">🥮 距離 9/25~9/28 中秋連假/教師節</div>
+        <div class="countdown-num" id="moon-festival-break">--</div>
+        <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">🎂 距離 10/10 版主生日</div>
         <div class="countdown-num" id="owner-bday">--</div>
+        <hr style="opacity: 0.3; margin: 15px 0;">
+        <div style="font-size: 14px;">🇹🇼 距離 10/9~10/11 國慶連假</div>
+        <div class="countdown-num" id="national-day-break">--</div>
+        <hr style="opacity: 0.3; margin: 15px 0;">
+        <div style="font-size: 14px;">🎆 距離 1/1 元旦</div>
+        <div class="countdown-num" id="new-year-day">--</div>
     </div>
 </div>
 
@@ -188,22 +200,26 @@
             return `還有 ${diff} 天`;
         };
         
-        // 生日特殊處理 (若過期則計算明年的)
-        const calcBday = (month, day) => {
+        // 生日與固定節日特殊處理 (若過期則計算明年的)
+        const calcRecurring = (month, day, labelPrefix = "還有") => {
             let year = today.getFullYear();
-            let bday = new Date(year, month - 1, day);
-            if (bday < today) {
-                bday.setFullYear(year + 1);
+            let targetDate = new Date(year, month - 1, day);
+            if (targetDate < today) {
+                targetDate.setFullYear(year + 1);
             }
-            const diff = Math.round((bday.getTime() - today.getTime()) / 86400000);
-            if (diff === 0) return "🎂 生日快樂！";
-            return `還有 ${diff} 天`;
+            const diff = Math.round((targetDate.getTime() - today.getTime()) / 86400000);
+            if (diff === 0) return "就是今天！";
+            return `${labelPrefix} ${diff} 天`;
         };
 
         document.getElementById('tomb-sweeping-break').innerText = calc('2026-04-03');
+        document.getElementById('dragon-boat-break').innerText = calc('2026-06-19');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
         document.getElementById('end-school-days').innerText = calc('2026-06-30');
-        document.getElementById('owner-bday').innerText = calcBday(10, 10);
+        document.getElementById('moon-festival-break').innerText = calc('2026-09-25');
+        document.getElementById('owner-bday').innerText = calcRecurring(10, 10);
+        document.getElementById('national-day-break').innerText = calc('2026-10-09');
+        document.getElementById('new-year-day').innerText = calcRecurring(1, 1);
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
