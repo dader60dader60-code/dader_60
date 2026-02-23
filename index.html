@@ -43,7 +43,7 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <!-- 匿名連結：使用特殊導向方式，嘗試繞過 App 跳轉，強制在網頁版開啟 -->
+    <!-- 匿名連結：強制在網頁版開啟 -->
     <a href="https://tellonym.me/dader_.60?rel=web" target="_blank" rel="noopener noreferrer" class="card" onclick="forceWeb(event)">🔗 匿名投稿連結 🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
@@ -81,27 +81,44 @@
         <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
 
-    <!-- 🚨 地震直播 -->
+    <!-- 🚨 地震直播 - 加入自動播放與靜音 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/KyT4qSK8lJo" allowfullscreen></iframe></div>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
         <span class="eq-warning">⚠️地震發生時請保持冷靜，注意安全！</span>
         <span class="eq-warning">地震三步驟：趴下、掩護、穩住</span>
     </div>
 
-    <!-- 📹 彰化縣直播 -->
+    <!-- 📹 彰化縣直播 - 全部影像加入自動播放與靜音 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
+        
         <span class="video-label">彰化縣重要路口即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0" allowfullscreen></iframe></div>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        
         <span class="video-label">八卦山美景即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk" allowfullscreen></iframe></div>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        
         <span class="video-label">彰化八卦山大佛即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/dQioeg3uTiA?si=Kuw5wSJFgVizt3V6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/dQioeg3uTiA?autoplay=1&mute=1&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        
         <span class="video-label">台灣彰化溪湖即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I" allowfullscreen></iframe></div>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        
         <span class="video-label">彰化王功漁港即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs" allowfullscreen></iframe></div>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
     </div>
 
     <div class="live-section">
@@ -111,12 +128,11 @@
         <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
-    <!-- 倒數日區塊 -->
+    <!-- 倒數日區塊 - 保持現有順序 -->
     <div class="card countdown-box">
         <div style="font-size: 14px;">🕯️ 距離 4/3~4/6 清明連假</div>
         <div class="countdown-num" id="tomb-sweeping-break">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
-        <!-- 畢業日與端午連假對調 -->
         <div style="font-size: 14px;">🎓 距離 6/1 畢業日</div>
         <div class="countdown-num" id="grad-days">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
@@ -129,7 +145,6 @@
         <div style="font-size: 14px;">🥮 距離 9/25~9/28 中秋連假/教師節</div>
         <div class="countdown-num" id="moon-festival-break">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
-        <!-- 國慶連假與版主生日對調 -->
         <div style="font-size: 14px;">🇹🇼 距離 10/9~10/11 國慶連假</div>
         <div class="countdown-num" id="national-day-break">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
