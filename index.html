@@ -16,6 +16,7 @@
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
+        /* 天氣區塊樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
@@ -24,12 +25,23 @@
         .sun-countdown { grid-column: span 2; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px; text-align: center; font-size: 13px; margin-top: 5px; color: #fff; border: 1px dashed rgba(255,255,255,0.5); }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
+        /* 地震快訊樣式 */
+        .eq-news-section { background: #fff; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .eq-title { color: #d32f2f; font-size: 18px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .eq-list { text-align: left; font-size: 13px; }
+        .eq-item { border-bottom: 1px solid #eee; padding: 8px 0; }
+        .eq-item:last-child { border-bottom: none; }
+        .eq-date { color: #666; font-size: 11px; }
+        .eq-detail { display: flex; justify-content: space-between; margin-top: 3px; }
+        .eq-loc { color: #333; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; }
+        .eq-mag { color: #d32f2f; font-weight: bold; }
+        .eq-more-btn { background: #f5f5f5; color: #666; padding: 8px; border-radius: 10px; display: block; text-decoration: none; margin-top: 10px; font-size: 12px; text-align: center; }
+
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 8px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; text-align: left; }
         .eq-warning { color: #ff0000; font-size: 15px; font-weight: bold; margin-top: 10px; display: block; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
         .mute-hint { font-size: 12px; color: #666; margin-top: 10px; display: block; font-weight: normal; }
 
         .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
@@ -60,30 +72,40 @@
         <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
 
-    <!-- 天氣區塊 -->
+    <!-- 天氣區塊 (API 串接) -->
     <div class="card weather-box">
-        <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
+        <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">讀取中...</div>
         <div style="display: flex; justify-content: center;">
-            <select id="citySelect" class="weather-select" onchange="initTownshipSelect()">
+            <select id="citySelect" class="weather-select" onchange="fetchWeather()">
                 <option value="彰化縣" selected>彰化縣</option>
-                <option value="台中市">台中市</option>
+                <option value="臺中市">台中市</option>
                 <option value="南投縣">南投縣</option>
             </select>
-            <select id="townSelect" class="weather-select" onchange="updateWeatherValues()"></select>
+            <!-- 鄉鎮市區目前由於 API 縣市限制，主要顯示縣市大數據 -->
+            <select id="townSelect" class="weather-select" style="display:none;"></select>
         </div>
-        <div style="font-size: 32px; margin: 15px 0 5px 0;">23°C ☀️</div>
+        <div id="weatherTemp" style="font-size: 32px; margin: 15px 0 5px 0;">--°C --</div>
         <div class="weather-grid">
-            <div class="weather-item">🌧️ 降雨機率: 0%</div>
-            <div class="weather-item">💧 相對濕度: 55%</div>
-            <div class="weather-item">🌬️ 風向: 北風</div>
-            <div class="weather-item">🌪️ 風速: 1.5 m/s</div>
+            <div id="pop" class="weather-item">🌧️ 降雨機率: --%</div>
+            <div class="weather-item">💧 相對濕度: --%</div>
+            <div class="weather-item">🌬️ 風向: --</div>
+            <div class="weather-item">🌪️ 風速: --</div>
             <div class="weather-item sun-info">🌅 日出 06:35 | 🌇 日落 18:12</div>
             <div id="sunCountdown" class="weather-item sun-countdown">計算中...</div>
         </div>
         <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
 
-    <!-- 🚨 地震直播 - 加入自動播放與靜音 -->
+    <!-- 地震快訊區塊 (API 串接) -->
+    <div class="eq-news-section">
+        <div class="eq-title">📢 地震快訊 (7天內有感)</div>
+        <div id="eqList" class="eq-list">
+            <div style="text-align:center; padding: 20px; color: #999;">地震紀錄讀取中...</div>
+        </div>
+        <a href="https://www.cwa.gov.tw/V8/C/E/index.html" target="_blank" class="eq-more-btn">🕒 查看更多歷史紀錄</a>
+    </div>
+
+    <!-- 🚨 地震直播 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
         <div class="video-container">
@@ -94,7 +116,7 @@
         <span class="eq-warning">地震三步驟：趴下、掩護、穩住</span>
     </div>
 
-    <!-- 📹 彰化縣直播 - 全部影像加入自動播放與靜音 -->
+    <!-- 📹 彰化縣直播 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
         
@@ -133,7 +155,7 @@
         <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
-    <!-- 倒數日區塊 - 保持現有順序 -->
+    <!-- 倒數日區塊 -->
     <div class="card countdown-box">
         <div style="font-size: 14px;">🕯️ 距離 4/3~4/6 清明連假</div>
         <div class="countdown-num" id="tomb-sweeping-break">--</div>
@@ -164,16 +186,109 @@
 <div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
+    const CWA_API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
+
+    function copyID() { 
+        navigator.clipboard.writeText("@768mnxcr").then(() => {
+            alert("✅ 已複製 LINE ID: @768mnxcr");
+        }); 
+    }
+
     function forceWeb(e) {
         e.preventDefault();
-        const url = "https://tellonym.me/dader_.60?rel=web";
-        window.location.href = url;
+        window.location.href = "https://tellonym.me/dader_.60?rel=web";
+    }
+
+    // --- 地震 API 串接 ---
+    async function fetchEarthquakes() {
+        const eqListContainer = document.getElementById('eqList');
+        try {
+            // 獲取最近的有感地震 (E-A0015-001)
+            const response = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${CWA_API_KEY}&format=JSON`);
+            const data = await response.json();
+            
+            if (data.success === "true") {
+                const records = data.records.Earthquake;
+                const now = new Date();
+                const sevenDaysAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
+                
+                // 過濾 7 天內地震，最多 10 則
+                const filtered = records.filter(eq => {
+                    const eqDate = new Date(eq.EarthquakeInfo.OriginTime);
+                    return eqDate >= sevenDaysAgo;
+                }).slice(0, 10);
+
+                if (filtered.length === 0) {
+                    eqListContainer.innerHTML = '<div style="text-align:center; padding: 20px; color: #666;">最近 7 天內無顯著有感地震紀錄。</div>';
+                    return;
+                }
+
+                let html = '';
+                filtered.forEach(eq => {
+                    const info = eq.EarthquakeInfo;
+                    const dateObj = new Date(info.OriginTime);
+                    const dateStr = dateObj.getFullYear() + '-' + 
+                                   String(dateObj.getMonth() + 1).padStart(2, '0') + '-' + 
+                                   String(dateObj.getDate()).padStart(2, '0') + ' ' +
+                                   String(dateObj.getHours()).padStart(2, '0') + ':' +
+                                   String(dateObj.getMinutes()).padStart(2, '0');
+
+                    html += `
+                        <div class="eq-item">
+                            <div class="eq-date">${dateStr}</div>
+                            <div class="eq-detail">
+                                <div class="eq-loc">${info.Epicenter.Location}</div>
+                                <div class="eq-mag">規模 ${info.EarthquakeMagnitude.MagnitudeValue} 級</div>
+                            </div>
+                            <div style="font-size: 11px; color: #888; margin-top: 2px;">
+                                深度: ${info.FocalDepth.DepthValue}km | 最大震度: ${eq.Intensity.ShakingArea[0].AreaIntensity}級
+                            </div>
+                        </div>
+                    `;
+                });
+                eqListContainer.innerHTML = html;
+            } else {
+                eqListContainer.innerHTML = '<div style="text-align:center; padding: 20px; color: #f44336;">地震資料讀取失敗。</div>';
+            }
+        } catch (err) {
+            console.error("EQ Error:", err);
+            eqListContainer.innerHTML = '<div style="text-align:center; padding: 20px; color: #f44336;">無法連線至氣象署伺服器。</div>';
+        }
+    }
+
+    // --- 天氣 API 串接 ---
+    async function fetchWeather() {
+        const city = document.getElementById('citySelect').value;
+        const regionTitle = document.getElementById('regionTitle');
+        regionTitle.innerText = `${city} 即時預報`;
+        
+        try {
+            // 一般天氣預報 (F-C0032-001)
+            const response = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=${CWA_API_KEY}&locationName=${encodeURIComponent(city)}`);
+            const data = await response.json();
+            
+            if (data.success === "true") {
+                const location = data.records.location[0];
+                const weatherElements = location.weatherElement;
+                
+                // 抓取第一個時間段的資料
+                const wx = weatherElements.find(e => e.elementName === "Wx").time[0].parameter.parameterName; // 天氣現象
+                const pop = weatherElements.find(e => e.elementName === "PoP").time[0].parameter.parameterName; // 降雨機率
+                const minT = weatherElements.find(e => e.elementName === "MinT").time[0].parameter.parameterName; // 最低溫
+                const maxT = weatherElements.find(e => e.elementName === "MaxT").time[0].parameter.parameterName; // 最高溫
+                
+                document.getElementById('weatherTemp').innerText = `${minT}°C ~ ${maxT}°C ${wx}`;
+                document.getElementById('pop').innerText = `🌧️ 降雨機率: ${pop}%`;
+                document.getElementById('updateTime').innerText = new Date().toLocaleString();
+            }
+        } catch (err) {
+            console.error("Weather Error:", err);
+            regionTitle.innerText = "天氣資料讀取錯誤";
+        }
     }
 
     function tickTime() {
         const now = new Date();
-        const t = document.getElementById('updateTime');
-        if(t) t.innerText = now.toLocaleString();
         updateSunCountdown(now);
     }
 
@@ -196,29 +311,6 @@
         sunBox.innerText = `${label} ${format(h)}:${format(m)}:${format(s)}`;
     }
 
-    const areaData = {
-        "彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
-        "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "后里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
-        "南投縣": ["南投市", "草屯鎮", "埔里鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]
-    };
-
-    function initTownshipSelect() { 
-        const city = document.getElementById('citySelect').value; 
-        const townSelect = document.getElementById('townSelect'); 
-        townSelect.innerHTML = ""; 
-        areaData[city].forEach(town => { 
-            let opt = document.createElement('option'); opt.value = town; opt.innerHTML = town; 
-            if(city === "彰化縣" && town === "田中鎮") opt.selected = true;
-            townSelect.appendChild(opt); 
-        }); 
-        updateWeatherValues(); 
-    }
-    function updateWeatherValues() {
-        const city = document.getElementById('citySelect').value;
-        const town = document.getElementById('townSelect').value;
-        document.getElementById('regionTitle').innerText = `${city} ${town} 即時預報`;
-    }
-
     function updateCountdowns() {
         const today = new Date(); today.setHours(0,0,0,0);
         const calc = (targetStr) => {
@@ -233,9 +325,7 @@
         const calcRecurring = (month, day, labelPrefix = "還有") => {
             let year = today.getFullYear();
             let targetDate = new Date(year, month - 1, day);
-            if (targetDate < today) {
-                targetDate.setFullYear(year + 1);
-            }
+            if (targetDate < today) targetDate.setFullYear(year + 1);
             const diff = Math.round((targetDate.getTime() - today.getTime()) / 86400000);
             if (diff === 0) return "就是今天！";
             return `${labelPrefix} ${diff} 天`;
@@ -251,11 +341,18 @@
         document.getElementById('new-year-day').innerText = calcRecurring(1, 1);
     }
 
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
-    setInterval(tickTime, 1000); 
-    initTownshipSelect();
-    updateCountdowns();
-    tickTime();
+    // 初始化執行
+    window.onload = () => {
+        fetchWeather();
+        fetchEarthquakes();
+        updateCountdowns();
+        setInterval(tickTime, 1000);
+        // 每 10 分鐘自動更新一次數據
+        setInterval(() => {
+            fetchWeather();
+            fetchEarthquakes();
+        }, 600000);
+    };
 </script>
 </body>
 </html>
