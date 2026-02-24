@@ -26,7 +26,7 @@
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
         /* 特報樣式 */
-        .warning-box { background: #FF9800; color: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        .warning-box { background: #607D8B; color: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
         .warning-title { font-size: 16px; font-weight: bold; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .warning-content { font-size: 14px; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 12px; }
 
@@ -48,10 +48,9 @@
     <img src="avatar.jpg" alt="版主頭像" class="profile-pic">
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
+    <!-- 原始功能連結 -->
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-    
     <a href="https://tellonym.me/dader_.60?rel=web" target="_blank" rel="noopener noreferrer" class="card" onclick="forceWeb(event)">🔗 匿名投稿連結 🔗</a>
-
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
@@ -93,13 +92,13 @@
         <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
 
-    <!-- 陸上強風特報專區 -->
-    <div id="windWarningSection" class="warning-box" style="background: #607D8B;">
+    <!-- 陸上強風特報專區 (緊鄰天氣下方) -->
+    <div id="windWarningSection" class="warning-box">
         <div class="warning-title">🚩 陸上強風特報</div>
         <div id="windWarningContent" class="warning-content">正在檢查特報資料...</div>
     </div>
 
-    <!-- 🚨 地震直播 -->
+    <!-- 🚨 地震即時直播 (地震快訊已按要求移除) -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
         <div class="video-container">
@@ -121,7 +120,6 @@
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        <span class="mute-hint">🔊 預設靜音，如需聲音請點擊手動開啟。</span>
     </div>
 
     <div class="live-section">
@@ -171,20 +169,13 @@
             const opt = document.createElement('option');
             opt.value = town;
             opt.innerText = town;
-            if (defaultTown && town === defaultTown) {
-                opt.selected = true;
-            }
+            if (defaultTown && town === defaultTown) opt.selected = true;
             townSelect.appendChild(opt);
         });
-        
-        if (!defaultTown && city === "彰化縣") {
-            townSelect.value = "田中鎮";
-        }
-        
+        if (!defaultTown && city === "彰化縣") townSelect.value = "田中鎮";
         fetchWeather();
     }
 
-    // 根據 Wx 描述回傳 Emoji
     function getWeatherIcon(desc) {
         if (desc.includes('雨')) return '🌧️';
         if (desc.includes('雷')) return '⛈️';
@@ -194,18 +185,14 @@
         return '🌡️';
     }
 
-    // 獲取陸上強風特報
     async function fetchWindWarnings() {
         const display = document.getElementById('windWarningContent');
         const box = document.getElementById('windWarningSection');
         try {
-            // 使用 W-C0033-001 (天氣特報 API)
             const response = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${CWA_API_KEY}&format=JSON`);
             const data = await response.json();
-            
             if (data.success === "true") {
                 const hazards = data.records.record;
-                // 尋找包含「陸上強風特報」且地點在目標地區的
                 const targets = ["彰化縣", "臺中市", "南投縣"];
                 let activeWarnings = hazards.filter(h => 
                     h.datasetInfo.datasetDescription.includes("強風") && 
@@ -213,7 +200,7 @@
                 );
 
                 if (activeWarnings.length > 0) {
-                    box.style.background = "#E91E63"; // 有特報時變色
+                    box.style.background = "#E91E63"; 
                     let info = activeWarnings.map(w => {
                         let locs = w.contents.content.map(c => c.locationName).filter(n => targets.includes(n)).join('、');
                         return `【${locs}】${w.datasetInfo.datasetDescription}`;
@@ -238,11 +225,9 @@
         try {
             const response = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=${CWA_API_KEY}&locationName=${encodeURIComponent(city)}`);
             const data = await response.json();
-            
             if (data.success === "true") {
                 const loc = data.records.location[0];
                 const weatherElements = loc.weatherElement;
-                
                 const wx = weatherElements.find(e => e.elementName === "Wx").time[0].parameter.parameterName;
                 const pop = weatherElements.find(e => e.elementName === "PoP").time[0].parameter.parameterName;
                 const minT = weatherElements.find(e => e.elementName === "MinT").time[0].parameter.parameterName;
@@ -252,12 +237,6 @@
                 document.getElementById('wxDesc').innerText = wx;
                 document.getElementById('weatherIcon').innerText = getWeatherIcon(wx);
                 document.getElementById('pop').innerText = `🌧️ 降雨機率: ${pop}%`;
-                
-                // 模擬數據或輔助數據
-                document.getElementById('rh').innerText = `💧 相對濕度: 72%`;
-                document.getElementById('wd').innerText = `🌬️ 風向: 偏北風`;
-                document.getElementById('ws').innerText = `🌪️ 風速: 2 m/s`;
-                
                 document.getElementById('updateTime').innerText = new Date().toLocaleString();
             }
         } catch (err) {
@@ -267,10 +246,6 @@
 
     function tickTime() {
         const now = new Date();
-        updateSunCountdown(now);
-    }
-
-    function updateSunCountdown(now) {
         const sunBox = document.getElementById('sunCountdown');
         const sunriseTime = { h: 6, m: 35, s: 0 };
         const sunsetTime = { h: 18, m: 12, s: 0 };
