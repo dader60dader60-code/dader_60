@@ -135,6 +135,9 @@
 
     <!-- 倒數日區塊 - 保持現有順序 -->
     <div class="card countdown-box">
+        <div style="font-size: 14px;">📝 距離 3/30~4/2 第一次段考</div>
+        <div class="countdown-num" id="first-exam">--</div>
+        <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">🕯️ 距離 4/3~4/6 清明連假</div>
         <div class="countdown-num" id="tomb-sweeping-break">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
@@ -241,6 +244,9 @@
             return `${labelPrefix} ${diff} 天`;
         };
 
+        // 新增：第一次段考倒數
+        document.getElementById('first-exam').innerText = calc('2026-03-30');
+        
         document.getElementById('tomb-sweeping-break').innerText = calc('2026-04-03');
         document.getElementById('dragon-boat-break').innerText = calc('2026-06-19');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
@@ -251,7 +257,14 @@
         document.getElementById('new-year-day').innerText = calcRecurring(1, 1);
     }
 
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("✅ 已複製 LINE ID")); }
+    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => {
+        // 使用自定義提示代替 alert
+        const btn = document.querySelector('.line-id');
+        const originalText = btn.innerText;
+        btn.innerText = "✅ 已複製！";
+        setTimeout(() => btn.innerText = originalText, 2000);
+    }); }
+    
     setInterval(tickTime, 1000); 
     initTownshipSelect();
     updateCountdowns();
