@@ -290,15 +290,22 @@
                 hourlyScroll.appendChild(item);
             }
 
+            // 修正一週天氣邏輯：從今天開始排序
             const scroll = document.getElementById('forecastScroll');
             scroll.innerHTML = "";
-            const days = ["週一", "週二", "週三", "週四", "週五", "週六", "週日"];
-            days.forEach((day, i) => {
+            const allDays = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
+            const todayIdx = new Date().getDay();
+            
+            for (let i = 0; i < 7; i++) {
+                const dayIdx = (todayIdx + i) % 7;
+                const dayName = i === 0 ? "今天" : allDays[dayIdx];
                 const dayDiv = document.createElement('div');
                 dayDiv.className = "forecast-item";
-                dayDiv.innerHTML = `<div>${day}</div><div style="font-size:14px; margin:3px 0;">🌤️</div><div>${parseInt(maxT.parameterName)-2+i}°C</div>`;
+                // 模擬未來溫度變化
+                const temp = parseInt(maxT.parameterName) + (Math.floor(Math.random() * 5) - 2);
+                dayDiv.innerHTML = `<div>${dayName}</div><div style="font-size:14px; margin:3px 0;">🌤️</div><div>${temp}°C</div>`;
                 scroll.appendChild(dayDiv);
-            });
+            }
         }
     }
 
