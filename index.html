@@ -19,6 +19,8 @@
         /* 天氣區塊樣式 */
         .weather-box { background: #4A90E2; color: white; padding: 20px; }
         .weather-select { width: 45%; padding: 10px; border-radius: 10px; border: none; font-weight: bold; margin: 5px 2px; cursor: pointer; }
+        .weather-main-info { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 15px 0; }
+        .weather-icon-large { width: 60px; height: 60px; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2)); }
         .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; font-size: 13px; text-align: left; }
         .weather-item { background: rgba(255,255,255,0.15); padding: 10px; border-radius: 10px; display: flex; align-items: center; justify-content: flex-start; gap: 5px; }
         .sun-moon-info { grid-column: span 2; background: rgba(255,255,255,0.25); padding: 10px; border-radius: 10px; margin-top: 5px; }
@@ -29,6 +31,7 @@
         .forecast-scroll { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 8px; scrollbar-width: none; }
         .forecast-scroll::-webkit-scrollbar { display: none; }
         .forecast-item { min-width: 70px; text-align: center; background: rgba(0,0,0,0.1); padding: 8px; border-radius: 10px; font-size: 11px; flex-shrink: 0; }
+        .mini-icon { width: 24px; height: 24px; margin: 4px auto; display: block; }
         
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
@@ -82,17 +85,21 @@
             </select>
             <select id="townSelect" class="weather-select" onchange="updateWeatherDisplay()"></select>
         </div>
-        <div id="weatherMain" style="font-size: 28px; margin: 15px 0 5px 0;">目前溫度 --°C</div>
+
+        <!-- 顯示目前天氣圖示與溫度 -->
+        <div class="weather-main-info">
+            <div id="currentWeatherIcon"></div>
+            <div id="weatherMain" style="font-size: 32px; font-weight: bold;">目前溫度 --°C</div>
+        </div>
         
         <div class="weather-grid">
-            <!-- 修改後：同一行顯示 -->
             <div class="weather-item">
                 <span>降雨機率:</span>
                 <span id="mainRainProb" style="font-weight: bold;">--%</span>
             </div>
             
             <div id="weatherDesc" class="weather-item">狀況: --</div>
-            <div id="uvIndex" class="weather-item">☀️ 紫外線: --</div>
+            <div id="uvIndex" class="weather-item">☀️ 紫外線: --級</div>
             <div id="windDir" class="weather-item">🌬️ 風向: --</div>
             <div id="windSpeed" class="weather-item">🌪️ 風速: --</div>
             
@@ -108,7 +115,7 @@
             <div id="sunCountdown" class="sun-countdown">計算中...</div>
 
             <div class="forecast-container">
-                <div class="forecast-title">🕒 逐小時氣溫與降雨機率</div>
+                <div class="forecast-title">🕒 逐小時預報 (模擬)</div>
                 <div id="hourlyScroll" class="forecast-scroll"></div>
             </div>
 
@@ -207,6 +214,31 @@
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     let weatherDataCache = null;
 
+    // 天氣圖示映射函數 (基於 Wx 代碼)
+    function getWeatherSVG(wxCode, size = 24) {
+        const code = parseInt(wxCode);
+        let color = "#ffffff";
+        
+        // 晴天
+        if (code === 1) {
+            return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M17.66 6.34l1.42-1.42"/></svg>`;
+        }
+        // 多雲
+        if (code >= 2 && code <= 4) {
+            return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#f0f0f0" stroke-width="2"><path d="M17.5 19c2.5 0 4.5-2 4.5-4.5 0-2.4-1.9-4.3-4.3-4.5-.4-3.1-3-5.5-6.2-5.5-2.7 0-5 1.7-5.9 4.1C3.2 9.1 1 11.3 1 14c0 2.8 2.2 5 5 5h11.5z"/></svg>`;
+        }
+        // 陰天
+        if (code >= 5 && code <= 7) {
+            return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#bdc3c7" stroke-width="2"><path d="M17.5 19c2.5 0 4.5-2 4.5-4.5 0-2.4-1.9-4.3-4.3-4.5-.4-3.1-3-5.5-6.2-5.5-2.7 0-5 1.7-5.9 4.1C3.2 9.1 1 11.3 1 14c0 2.8 2.2 5 5 5h11.5z"/><path d="M12 12v.01" stroke-width="3"/></svg>`;
+        }
+        // 雨天
+        if (code >= 8) {
+            return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#7fbfff" stroke-width="2"><path d="M17.5 19c2.5 0 4.5-2 4.5-4.5 0-2.4-1.9-4.3-4.3-4.5-.4-3.1-3-5.5-6.2-5.5-2.7 0-5 1.7-5.9 4.1C3.2 9.1 1 11.3 1 14c0 2.8 2.2 5 5 5h11.5z"/><path d="M8 20v2m4-2v2m4-2v2"/></svg>`;
+        }
+        // 預設 (多雲)
+        return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M17.5 19c2.5 0 4.5-2 4.5-4.5 0-2.4-1.9-4.3-4.3-4.5-.4-3.1-3-5.5-6.2-5.5-2.7 0-5 1.7-5.9 4.1C3.2 9.1 1 11.3 1 14c0 2.8 2.2 5 5 5h11.5z"/></svg>`;
+    }
+
     function forceWeb(e) {
         e.preventDefault();
         window.location.href = "https://tellonym.me/dader_.60?rel=web";
@@ -266,6 +298,8 @@
             const maxT = cityData.weatherElement.find(e => e.elementName === "MaxT").time[0].parameter;
             const pop = cityData.weatherElement.find(e => e.elementName === "PoP").time[0].parameter;
 
+            // 更新主圖示
+            document.getElementById('currentWeatherIcon').innerHTML = getWeatherSVG(wx.parameterValue, 60);
             document.getElementById('weatherMain').innerText = `目前溫度 ${maxT.parameterName}°C`;
             document.getElementById('mainRainProb').innerText = `${pop.parameterName}%`;
             document.getElementById('weatherDesc').innerText = `狀況: ${wx.parameterName}`;
@@ -275,6 +309,7 @@
             document.getElementById('moonPhase').innerText = `🌔 月相: 盈凸月`;
             document.getElementById('moonTimes').innerText = `🌙 月出: 14:20 | 🌕 月沒: 03:45`;
 
+            // 逐小時預報
             const hourlyScroll = document.getElementById('hourlyScroll');
             hourlyScroll.innerHTML = "";
             const currentHour = new Date().getHours();
@@ -286,11 +321,13 @@
                 const rain = Math.floor(Math.random() * 20); 
                 const tempVar = Math.sin((nextHour - 6) * (Math.PI / 12)) * 5; 
                 const simulatedTemp = Math.round(parseInt(maxT.parameterName) - 2 + tempVar);
-                item.innerHTML = `<div>${timeStr}</div><div style="font-size:14px; margin:3px 0;">🌤️</div><div>${simulatedTemp}°C</div><div style="color:#7fbfff; font-size:10px;">💧${rain}%</div>`;
+                // 模擬小時圖示：晚上用陰天圖(5)，白天隨機
+                const hourWx = (nextHour < 6 || nextHour > 18) ? 5 : (Math.random() > 0.7 ? 8 : 1);
+                item.innerHTML = `<div>${timeStr}</div><div>${getWeatherSVG(hourWx, 24)}</div><div>${simulatedTemp}°C</div><div style="color:#7fbfff; font-size:10px;">💧${rain}%</div>`;
                 hourlyScroll.appendChild(item);
             }
 
-            // 修正一週天氣邏輯：從今天開始排序
+            // 一週天氣預報
             const scroll = document.getElementById('forecastScroll');
             scroll.innerHTML = "";
             const allDays = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
@@ -301,9 +338,10 @@
                 const dayName = i === 0 ? "今天" : allDays[dayIdx];
                 const dayDiv = document.createElement('div');
                 dayDiv.className = "forecast-item";
-                // 模擬未來溫度變化
                 const temp = parseInt(maxT.parameterName) + (Math.floor(Math.random() * 5) - 2);
-                dayDiv.innerHTML = `<div>${dayName}</div><div style="font-size:14px; margin:3px 0;">🌤️</div><div>${temp}°C</div>`;
+                // 模擬每日圖示
+                const dayWx = Math.random() > 0.8 ? 8 : (Math.random() > 0.4 ? 2 : 1);
+                dayDiv.innerHTML = `<div>${dayName}</div><div>${getWeatherSVG(dayWx, 24)}</div><div>${temp}°C</div>`;
                 scroll.appendChild(dayDiv);
             }
         }
