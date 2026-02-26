@@ -24,6 +24,11 @@
         .sun-countdown { grid-column: span 2; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px; text-align: center; font-size: 13px; margin-top: 5px; color: #fff; border: 1px dashed rgba(255,255,255,0.5); }
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
+        /* 強風警報樣式 */
+        .wind-warning-box { background: #fdf2f2; border: 2px solid #ef4444; border-radius: 15px; padding: 12px; margin-bottom: 15px; text-align: left; display: block; }
+        .wind-warning-title { color: #ef4444; font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 5px; margin-bottom: 5px; justify-content: center; }
+        .wind-warning-content { font-size: 13px; color: #4b5563; line-height: 1.4; text-align: center; }
+
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 8px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; text-align: left; }
@@ -45,7 +50,6 @@
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
     
-    <!-- 匿名連結：強制在網頁版開啟 -->
     <a href="https://tellonym.me/dader_.60?rel=web" target="_blank" rel="noopener noreferrer" class="card" onclick="forceWeb(event)">🔗 匿名投稿連結 🔗</a>
 
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
@@ -83,7 +87,13 @@
         <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
 
-    <!-- 🚨 地震直播 - 加入自動播放與靜音 -->
+    <!-- 🚩 陸上強風警報區塊 -->
+    <div id="windWarningCard" class="wind-warning-box">
+        <div class="wind-warning-title">🚩 陸上強風警報</div>
+        <div id="windWarningContent" class="wind-warning-content">偵測中...</div>
+    </div>
+
+    <!-- 🚨 地震直播 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
         <div class="video-container">
@@ -94,35 +104,29 @@
         <span class="eq-warning">地震三步驟：趴下、掩護、穩住</span>
     </div>
 
-    <!-- 📹 彰化縣直播 - 全部影像加入自動播放與靜音 -->
+    <!-- 📹 彰化縣直播 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
-        
         <span class="video-label">彰化縣重要路口即時影像</span>
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        
         <span class="video-label">八卦山美景即時影像</span>
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        
         <span class="video-label">彰化八卦山大佛即時影像</span>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/dQioeg3uTiA?autoplay=1&mute=1&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/dQioeg3uTiA?autoplay=1&mute=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        
         <span class="video-label">台灣彰化溪湖即時影像</span>
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        
         <span class="video-label">彰化王功漁港即時影像</span>
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-
         <span class="mute-hint">🔊 由於自動播放，影片預設靜音，如需聲音請點擊播放器手動開啟。</span>
     </div>
 
@@ -133,7 +137,7 @@
         <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
-    <!-- 倒數日區塊 - 保持現有順序 -->
+    <!-- 倒數日區塊 -->
     <div class="card countdown-box">
         <div style="font-size: 14px;">📝 距離 3/30~4/2 第一次段考</div>
         <div class="countdown-num" id="first-exam">--</div>
@@ -167,10 +171,46 @@
 <div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
+    const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
+
     function forceWeb(e) {
         e.preventDefault();
         const url = "https://tellonym.me/dader_.60?rel=web";
         window.location.href = url;
+    }
+
+    // 獲取強風警報 (針對彰化、台中、南投)
+    async function fetchWindWarning() {
+        try {
+            const response = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY}`);
+            const data = await response.json();
+            const content = document.getElementById('windWarningContent');
+            
+            const alarms = data.records?.record || [];
+            // 目標地區
+            const targets = ["彰化縣", "臺中市", "台中市", "南投縣"];
+            
+            // 過濾出包含目標地區的陸上強風警報
+            const windAlarm = alarms.find(a => {
+                const name = a.datasetInfo?.datasetName || "";
+                const isWind = name.includes("陸上強風警報");
+                const hasTarget = a.hazardConditions?.hazards?.some(h => 
+                    h.info?.affectedAreas?.some(area => targets.includes(area.areaName))
+                );
+                return isWind && hasTarget;
+            });
+
+            if (windAlarm) {
+                // 取得警報描述
+                const desc = windAlarm.contents?.content?.description || "請注意強風影響安全。";
+                content.innerText = desc;
+            } else {
+                content.innerText = "目前彰化、台中、南投地區無強風警報。";
+            }
+        } catch (error) {
+            console.error("無法讀取強風警報資料", error);
+            document.getElementById('windWarningContent').innerText = "警報資料讀取失敗，請稍後再試。";
+        }
     }
 
     function tickTime() {
@@ -244,9 +284,7 @@
             return `${labelPrefix} ${diff} 天`;
         };
 
-        // 新增：第一次段考倒數
         document.getElementById('first-exam').innerText = calc('2026-03-30');
-        
         document.getElementById('tomb-sweeping-break').innerText = calc('2026-04-03');
         document.getElementById('dragon-boat-break').innerText = calc('2026-06-19');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
@@ -258,7 +296,6 @@
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => {
-        // 使用自定義提示代替 alert
         const btn = document.querySelector('.line-id');
         const originalText = btn.innerText;
         btn.innerText = "✅ 已複製！";
@@ -266,9 +303,12 @@
     }); }
     
     setInterval(tickTime, 1000); 
+    setInterval(fetchWindWarning, 600000); 
+
     initTownshipSelect();
     updateCountdowns();
     tickTime();
+    fetchWindWarning();
 </script>
 </body>
 </html>
