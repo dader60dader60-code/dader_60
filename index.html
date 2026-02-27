@@ -185,11 +185,17 @@
         <div style="font-size: 14px;">🕯️ 距離 4/3~4/6 清明連假</div>
         <div class="countdown-num" id="tomb-sweeping-break">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
+        <div style="font-size: 14px;">🛠️ 距離 4/12 在校生丙級檢定學科測驗</div>
+        <div class="countdown-num" id="license-exam">--</div>
+        <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">🎓 距離 6/1 畢業日</div>
         <div class="countdown-num" id="grad-days">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">🚣 距離 6/19~6/21 端午連假</div>
         <div class="countdown-num" id="dragon-boat-break">--</div>
+        <hr style="opacity: 0.3; margin: 15px 0;">
+        <div style="font-size: 14px;">📖 距離 6/25~6/30 期末考</div>
+        <div class="countdown-num" id="final-exam">--</div>
         <hr style="opacity: 0.3; margin: 15px 0;">
         <div style="font-size: 14px;">☀️ 距離 6/30 結業式</div>
         <div class="countdown-num" id="end-school-days">--</div>
@@ -379,8 +385,10 @@
         };
         document.getElementById('first-exam').innerText = calc('2026-03-30');
         document.getElementById('tomb-sweeping-break').innerText = calc('2026-04-03');
-        document.getElementById('dragon-boat-break').innerText = calc('2026-06-19');
+        document.getElementById('license-exam').innerText = calc('2026-04-12');
         document.getElementById('grad-days').innerText = calc('2026-06-01');
+        document.getElementById('dragon-boat-break').innerText = calc('2026-06-19');
+        document.getElementById('final-exam').innerText = calc('2026-06-25');
         document.getElementById('end-school-days').innerText = calc('2026-06-30');
         document.getElementById('moon-festival-break').innerText = calc('2026-09-25');
         document.getElementById('owner-bday').innerText = calcRecurring(10, 10);
