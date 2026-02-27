@@ -127,9 +127,8 @@
             </div>
             <div id="sunCountdown" class="sun-countdown">計算中...</div>
 
-            <!-- 修改標題，明確顯示為每小時預報 -->
             <div class="forecast-container">
-                <div class="forecast-title">🕒 逐小時天氣預報 (每 1 小時更新)</div>
+                <div class="forecast-title">🕒 逐小時天氣預報 (每一小時)</div>
                 <div id="hourlyScroll" class="forecast-scroll"></div>
             </div>
 
@@ -165,14 +164,12 @@
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        <!-- 其他影像省略以便維持程式碼簡潔，邏輯一致 -->
     </div>
 
     <!-- 倒數日區塊 -->
     <div class="card countdown-box">
         <div style="font-size: 14px;">📝 距離 3/30~4/2 第一次段考</div>
         <div class="countdown-num" id="first-exam">--</div>
-        <!-- 其他倒數內容維持不變 -->
     </div>
 </div>
 
@@ -182,6 +179,13 @@
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     let weatherDataCache = null;
     let hourlyForecastCache = null;
+
+    // 所有行政區資料
+    const areaData = { 
+        "彰化縣": ["田中鎮", "彰化市", "鹿港鎮", "和美鎮", "線西鄉", "伸港鄉", "福興鄉", "秀水鄉", "花壇鄉", "芬園鄉", "員林市", "溪湖鎮", "田中鎮", "大村鄉", "埔鹽鄉", "埔心鄉", "永靖鄉", "社頭鄉", "二水鄉", "北斗鎮", "二林鎮", "田尾鄉", "埤頭鄉", "芳苑鄉", "大城鄉", "竹塘鄉", "溪州鄉"], 
+        "台中市": ["中區", "東區", "南區", "西區", "北區", "西屯區", "南屯區", "北屯區", "豐原區", "東勢區", "大甲區", "清水區", "沙鹿區", "梧棲區", "後里區", "神岡區", "潭子區", "大雅區", "新社區", "石岡區", "外埔區", "大安區", "烏日區", "大肚區", "龍井區", "霧峰區", "太平區", "大里區", "和平區"], 
+        "南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"] 
+    };
 
     function getWeatherSVG(wxCode, size = 30) {
         const code = parseInt(wxCode);
@@ -200,7 +204,6 @@
                 updateWeatherDisplay();
                 document.getElementById('updateTime').innerText = new Date().toLocaleString();
             }
-            // 獲取預報資料
             const resH = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-089?Authorization=${API_KEY}`);
             const dataH = await resH.json();
             if (dataH.success === "true") {
@@ -210,7 +213,6 @@
         } catch (error) {}
     }
 
-    // 插值運算函式：傳入 3 小時的數值，補足中間 1 小時與 2 小時的空缺
     function interpolate(val1, val2, step, totalSteps = 3) {
         return (parseFloat(val1) + (parseFloat(val2) - parseFloat(val1)) * (step / totalSteps)).toFixed(0);
     }
@@ -244,34 +246,19 @@
                 const hourlyScroll = document.getElementById('hourlyScroll');
                 hourlyScroll.innerHTML = "";
 
-                // 每 3 小時一筆，我們要跑插值補足每一小時
                 for (let i = 0; i < T.length - 1; i++) {
                     const baseTime = new Date(T[i].dataTime || T[i].startTime);
-                    
-                    // 每一小段 3 小時，產出 3 個 1 小時節點
                     for (let step = 0; step < 3; step++) {
                         const currentHour = new Date(baseTime);
                         currentHour.setHours(baseTime.getHours() + step);
                         const timeStr = `${currentHour.getHours().toString().padStart(2, '0')}:00`;
-                        
-                        // 溫度插值
                         const temp = interpolate(T[i].elementValue[0].value, T[i+1].elementValue[0].value, step);
                         const wxCode = Wx[i].elementValue[1].value;
-                        
-                        // 降雨機率 (降雨機率區間較長，直接取最近的區間值)
                         const rainProb = PoP ? (PoP[Math.floor(i/2)]?.elementValue[0].value || "0") : "--";
-
                         const item = document.createElement('div');
                         item.className = "forecast-item";
-                        item.innerHTML = `
-                            <div>${timeStr}</div>
-                            <div class="mini-icon-wrapper">${getWeatherSVG(wxCode, 30)}</div>
-                            <div>${temp}°C</div>
-                            <div style="color:#7fbfff; font-size:10px;">💧${rainProb}%</div>
-                        `;
+                        item.innerHTML = `<div>${timeStr}</div><div class="mini-icon-wrapper">${getWeatherSVG(wxCode, 30)}</div><div>${temp}°C</div><div style="color:#7fbfff; font-size:10px;">💧${rainProb}%</div>`;
                         hourlyScroll.appendChild(item);
-                        
-                        // 限制顯示長度，以免效能爆炸 (顯示 24 小時)
                         if (hourlyScroll.children.length >= 24) break;
                     }
                     if (hourlyScroll.children.length >= 24) break;
@@ -279,7 +266,6 @@
             }
         }
         
-        // 一週預報維持概況
         if (weatherDataCache) {
             const scroll = document.getElementById('forecastScroll');
             scroll.innerHTML = "";
@@ -295,13 +281,11 @@
         }
     }
 
-    // 區域資料與初始化
-    const areaData = { "彰化縣": ["田中鎮", "彰化市", "員林市"], "台中市": ["中區", "西屯區"], "南投縣": ["南投市", "埔里鎮"] };
     function initTownshipSelect() { 
         const city = document.getElementById('citySelect').value; 
         const townSelect = document.getElementById('townSelect'); 
         townSelect.innerHTML = ""; 
-        (areaData[city] || ["田中鎮"]).forEach(town => { 
+        areaData[city].forEach(town => { 
             let opt = document.createElement('option'); opt.value = town; opt.innerHTML = town; 
             if(town === "田中鎮") opt.selected = true;
             townSelect.appendChild(opt); 
@@ -312,8 +296,17 @@
     function forceWeb(e) { e.preventDefault(); window.location.href = "https://tellonym.me/dader_.60?rel=web"; }
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => { alert("已複製 ID"); }); }
 
+    function updateCountdown() {
+        const examDate = new Date('2026-03-30T00:00:00');
+        const now = new Date();
+        const diff = examDate - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        document.getElementById('first-exam').innerText = days > 0 ? days : 0;
+    }
+
     initTownshipSelect();
     fetchWeatherData();
+    updateCountdown();
     setInterval(fetchWeatherData, 1800000);
 </script>
 </body>
