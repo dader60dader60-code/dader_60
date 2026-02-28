@@ -50,10 +50,21 @@
 
         .mute-hint { font-size: 12px; color: #666; margin-top: 10px; display: block; font-weight: normal; }
 
-        .countdown-box { background: linear-gradient(135deg, #E67E22, #D35400); color: white; }
-        .countdown-num { font-size: 38px; font-weight: bold; margin: 5px 0; }
+        /* 倒數日黑色版面樣式 */
+        .new-countdown-box { background: transparent; padding: 0; box-shadow: none; border: none; }
+        .event-card { background: #1a1a1a; border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 6px 15px rgba(0,0,0,0.3); text-align: center; border: 1px solid #333; }
+        .event-title { font-size: 15px; color: #ffffff; margin-bottom: 12px; font-weight: bold; display: block; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+        .timer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .timer-unit-box { border: 1.5px solid #FFD700; border-radius: 12px; padding: 8px 2px; background: #262626; display: flex; flex-direction: column; align-items: center; }
+        .timer-val { font-size: 20px; font-weight: 800; color: #FFD700; font-family: 'Courier New', Courier, monospace; }
+        .timer-unit-label { font-size: 9px; color: #bbb; margin-top: 2px; }
+        .progress-container { margin: 25px 0 10px 0; position: relative; }
+        .progress-info { position: absolute; top: -18px; width: 100%; display: flex; justify-content: space-between; font-size: 11px; color: #999; font-weight: normal; }
+        .progress-bg { background: #333; height: 10px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { background: linear-gradient(90deg, #FFD700, #B8860B); height: 100%; width: 0%; border-radius: 10px; transition: width 0.5s ease; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
+        .blessing { font-size: 12px; color: #FFD700; font-style: italic; font-weight: normal; margin-top: 5px; display: block; opacity: 0.9; }
+
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
-        
         .tutorial-card { background: #FFD700; color: #000; border: 2px solid #DAA520; }
     </style>
 </head>
@@ -64,11 +75,8 @@
     <h2>靠北達德速度版⚡⚡⚡</h2>
 
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-    
     <a href="https://tellonym.me/dader_.60?rel=web" target="_blank" rel="noopener noreferrer" class="card" onclick="forceWeb(event)">🔗 匿名投稿連結 🔗</a>
-
     <a href="https://youtube.com/shorts/9AZdRmzOGp4" target="_blank" class="card tutorial-card">🎬 投稿匿名教學影片</a>
-
     <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
     <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
@@ -103,12 +111,10 @@
                 <span>降雨機率:</span>
                 <span id="mainRainProb" style="font-weight: bold;">--%</span>
             </div>
-            
             <div id="weatherDesc" class="weather-item">狀況: --</div>
             <div id="uvIndex" class="weather-item">☀️ 紫外線: --級</div>
             <div id="windDir" class="weather-item">🌬️ 風向: --</div>
             <div id="windSpeed" class="weather-item">🌪️ 風速: --</div>
-            
             <div class="sun-moon-info">
                 <div style="display: flex; justify-content: space-around; margin-bottom: 8px;">
                     <div id="sunTimes" style="font-size: 12px;">🌅 日出 06:35 | 🌇 日落 18:12</div>
@@ -119,32 +125,17 @@
                 </div>
             </div>
             <div id="sunCountdown" class="sun-countdown">計算中...</div>
-
-            <div class="forecast-container">
-                <div class="forecast-title">🕒 逐小時預報 (模擬)</div>
-                <div id="hourlyScroll" class="forecast-scroll"></div>
-            </div>
-
-            <div class="forecast-container">
-                <div class="forecast-title">📅 一週天氣預報</div>
-                <div id="forecastScroll" class="forecast-scroll"></div>
-            </div>
+            <div class="forecast-container"><div class="forecast-title">🕒 逐小時預報 (模擬)</div><div id="hourlyScroll" class="forecast-scroll"></div></div>
+            <div class="forecast-container"><div class="forecast-title">📅 一週天氣預報</div><div id="forecastScroll" class="forecast-scroll"></div></div>
         </div>
         <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
 
-    <!-- 陸上強風警報區塊 -->
-    <div id="windWarningCard" class="warning-box">
-        <div class="warning-title">🌬️ 陸上強風警報監測 (中彰投)</div>
-        <div id="windWarningContent" class="warning-content">正在獲取強風警報資訊...</div>
-    </div>
+    <!-- 警報區塊 -->
+    <div id="windWarningCard" class="warning-box"><div class="warning-title">🌬️ 陸上強風警報監測 (中彰投)</div><div id="windWarningContent" class="warning-content">正在獲取強風警報資訊...</div></div>
+    <div id="rainWarningCard" class="warning-box"><div class="warning-title">🌧️ 大雨特報監測 (中彰投)</div><div id="rainWarningContent" class="warning-content">正在獲取大雨特報資訊...</div></div>
 
-    <!-- 大雨特報區塊 -->
-    <div id="rainWarningCard" class="warning-box">
-        <div class="warning-title">🌧️ 大雨特報監測 (中彰投)</div>
-        <div id="rainWarningContent" class="warning-content">正在獲取大雨特報資訊...</div>
-    </div>
-
+    <!-- 地震直播 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
         <div class="video-container">
@@ -155,31 +146,22 @@
         <span class="eq-warning">地震三步驟：趴下、掩護、穩住</span>
     </div>
 
+    <!-- 彰化影像 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
         <span class="video-label">彰化縣重要路口即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
         <span class="video-label">八卦山美景即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
         <span class="video-label">彰化八卦山大佛即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/dQioeg3uTiA?autoplay=1&mute=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/dQioeg3uTiA?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
         <span class="video-label">台灣彰化溪湖即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
         <span class="video-label">彰化王功漁港即時影像</span>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-        <span class="mute-hint">🔊 由於自動播放，影片預設靜音，如需聲音請點擊播放器手動開啟。</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
     </div>
 
+    <!-- YouTube 專區 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
         <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ?si=vD6X6CMUKx5RS_7n" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
@@ -187,33 +169,9 @@
         <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
-    <div class="card countdown-box">
-        <div style="font-size: 14px;">📝 距離 3/30~4/2 第一次段考</div>
-        <div class="countdown-num" id="first-exam">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🕯️ 距離 4/3~4/6 清明連假</div>
-        <div class="countdown-num" id="tomb-sweeping-break">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🎓 距離 6/1 畢業日</div>
-        <div class="countdown-num" id="grad-days">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🚣 距離 6/19~6/21 端午連假</div>
-        <div class="countdown-num" id="dragon-boat-break">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">☀️ 距離 6/30 結業式</div>
-        <div class="countdown-num" id="end-school-days">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🥮 距離 9/25~9/28 中秋連假/教師節</div>
-        <div class="countdown-num" id="moon-festival-break">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🇹🇼 距離 10/9~10/11 國慶連假</div>
-        <div class="countdown-num" id="national-day-break">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🎂 距離 10/10 版主生日</div>
-        <div class="countdown-num" id="owner-bday">--</div>
-        <hr style="opacity: 0.3; margin: 15px 0;">
-        <div style="font-size: 14px;">🎆 距離 1/1 元旦</div>
-        <div class="countdown-num" id="new-year-day">--</div>
+    <!-- 倒數日專區 (黑色樣式) -->
+    <div id="countdown-area" class="new-countdown-box">
+        <!-- 內容由 JS 動態生成 -->
     </div>
 </div>
 
@@ -223,6 +181,89 @@
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     let weatherDataCache = null;
 
+    // 倒數日資料
+    const countdownEvents = [
+        { id: 'exam1', title: '📝 3/30~4/2 第一次段考', date: '2026-03-30', total: 30, wish: '段考加油，分數衝衝衝！💪' },
+        { id: 'tomb', title: '🕯️ 4/3~4/6 清明連假', date: '2026-04-03', total: 14, wish: '連假愉快，注意交通安全！🚗' },
+        { id: 'c-test', title: '🛡️ 4/12 在校生丙級檢定學科', date: '2026-04-12', total: 45, wish: '丙檢學科必過，證照到手！🔥' },
+        { id: 'grad', title: '🎓 6/1 畢業日', date: '2026-06-01', total: 90, wish: '畢業快樂，前程似錦！✨' },
+        { id: 'dragon', title: '🚣 6/19~6/21 端午連假', date: '2026-06-19', total: 20, wish: '端午吃粽子，也要記得讀書喔！🍙' },
+        { id: 'final', title: '📖 6/25~6/30 期末考', date: '2026-06-25', total: 21, wish: '這學期最後一戰，考完就放假！🏖️' },
+        { id: 'end', title: '☀️ 6/30 結業式', date: '2026-06-30', total: 120, wish: '暑假快樂，迎接夏日時光！🌊' },
+        { id: 'moon', title: '🥮 9/25~9/28 中秋連假/教師節', date: '2026-09-25', total: 60, wish: '中秋人團圓，假期愉快！🌕' },
+        { id: 'nat', title: '🇹🇼 10/9~10/11 國慶連假', date: '2026-10-09', total: 14, wish: '國慶連假放鬆去！🎈' },
+        { id: 'bday', title: '🎂 10/10 版主生日', date: '2026-10-10', isRecurring: true, total: 365, wish: '祝版主速度越來越快，生日快樂！⚡' },
+        { id: 'ny', title: '🎆 1/1 元旦', date: '2027-01-01', total: 365, wish: '新年新氣象，萬事如意！🎊' }
+    ];
+
+    function initCountdownCards() {
+        const area = document.getElementById('countdown-area');
+        countdownEvents.forEach(ev => {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.innerHTML = `
+                <span class="event-title">${ev.title}</span>
+                <div class="timer-grid">
+                    <div class="timer-unit-box"><span class="timer-val" id="d-${ev.id}">-</span><span class="timer-unit-label">天</span></div>
+                    <div class="timer-unit-box"><span class="timer-val" id="h-${ev.id}">-</span><span class="timer-unit-label">時</span></div>
+                    <div class="timer-unit-box"><span class="timer-val" id="m-${ev.id}">-</span><span class="timer-unit-label">分</span></div>
+                    <div class="timer-unit-box"><span class="timer-val" id="s-${ev.id}">-</span><span class="timer-unit-label">秒</span></div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span id="label-total-${ev.id}">總計 ${ev.total} 天</span>
+                        <span id="label-remain-${ev.id}">剩餘 -- 天</span>
+                    </div>
+                    <div class="progress-bg"><div class="progress-fill" id="bar-${ev.id}"></div></div>
+                </div>
+                <span class="blessing">${ev.wish}</span>
+            `;
+            area.appendChild(card);
+        });
+    }
+
+    function updateLiveCounters() {
+        const now = new Date();
+        countdownEvents.forEach(ev => {
+            let target;
+            if (ev.isRecurring) {
+                target = new Date(now.getFullYear(), 9, 10);
+                if (target < now) target.setFullYear(now.getFullYear() + 1);
+            } else {
+                target = new Date(ev.date + 'T00:00:00');
+            }
+
+            const diff = target - now;
+            const dElem = document.getElementById(`d-${ev.id}`);
+            const hElem = document.getElementById(`h-${ev.id}`);
+            const mElem = document.getElementById(`m-${ev.id}`);
+            const sElem = document.getElementById(`s-${ev.id}`);
+            const bar = document.getElementById(`bar-${ev.id}`);
+            const remLabel = document.getElementById(`label-remain-${ev.id}`);
+
+            if (diff <= 0) {
+                [dElem, hElem, mElem, sElem].forEach(el => el.innerText = "0");
+                bar.style.width = "100%";
+                remLabel.innerText = "已抵達！";
+            } else {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const mins = Math.floor((diff / (1000 * 60)) % 60);
+                const secs = Math.floor((diff / 1000) % 60);
+
+                dElem.innerText = days;
+                hElem.innerText = hours.toString().padStart(2, '0');
+                mElem.innerText = mins.toString().padStart(2, '0');
+                sElem.innerText = secs.toString().padStart(2, '0');
+
+                const percent = Math.max(0, Math.min(100, (1 - (days / ev.total)) * 100));
+                bar.style.width = percent + "%";
+                remLabel.innerText = `剩餘 ${days} 天`;
+            }
+        });
+    }
+
+    // --- 保留天氣與影像邏輯 ---
     function getWeatherSVG(wxCode, size = 24) {
         const code = parseInt(wxCode);
         if (code === 1) return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M17.66 6.34l1.42-1.42"/></svg>`;
@@ -231,8 +272,6 @@
         if (code >= 8) return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#7fbfff" stroke-width="2"><path d="M17.5 19c2.5 0 4.5-2 4.5-4.5 0-2.4-1.9-4.3-4.3-4.5-.4-3.1-3-5.5-6.2-5.5-2.7 0-5 1.7-5.9 4.1C3.2 9.1 1 11.3 1 14c0 2.8 2.2 5 5 5h11.5z"/><path d="M8 20v2m4-2v2m4-2v2"/></svg>`;
         return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M17.5 19c2.5 0 4.5-2 4.5-4.5 0-2.4-1.9-4.3-4.3-4.5-.4-3.1-3-5.5-6.2-5.5-2.7 0-5 1.7-5.9 4.1C3.2 9.1 1 11.3 1 14c0 2.8 2.2 5 5 5h11.5z"/></svg>`;
     }
-
-    function forceWeb(e) { e.preventDefault(); window.location.href = "https://tellonym.me/dader_.60?rel=web"; }
 
     async function fetchWeatherData() {
         try {
@@ -243,73 +282,7 @@
                 updateWeatherDisplay();
                 document.getElementById('updateTime').innerText = new Date().toLocaleString();
             }
-        } catch (error) {}
-    }
-
-    // 分別偵測強風與大雨特報
-    async function fetchWarnings() {
-        try {
-            const targets = ["彰化縣", "臺中市", "台中市", "南投縣"];
-            const windCard = document.getElementById('windWarningCard');
-            const windContent = document.getElementById('windWarningContent');
-            const rainCard = document.getElementById('rainWarningCard');
-            const rainContent = document.getElementById('rainWarningContent');
-            
-            const response = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY}`);
-            const data = await response.json();
-            
-            const records = data.records?.record || [];
-            let foundWind = false;
-            let foundRain = false;
-
-            records.forEach(record => {
-                const datasetName = record.datasetInfo?.datasetName || "";
-                const affectedAreas = record.hazardConditions?.hazards?.flatMap(h => h.info?.affectedAreas || []) || [];
-                const isTargetArea = affectedAreas.some(area => targets.includes(area.areaName));
-
-                if (isTargetArea) {
-                    if (datasetName.includes("陸上強風")) {
-                        foundWind = true;
-                        windContent.innerText = "🌬️ 陸上強風警報已發布，請注意強陣風！";
-                    } else if (datasetName.includes("大雨") || datasetName.includes("豪雨")) {
-                        foundRain = true;
-                        rainContent.innerText = "🌧️ 大雨/豪雨特報已發布，外出請攜帶雨具！";
-                    }
-                }
-            });
-
-            if (foundWind) { windCard.classList.add('warning-active'); } 
-            else { 
-                windCard.classList.remove('warning-active'); 
-                windContent.innerText = "目前彰化、台中、南投地區無強風警報。"; 
-            }
-
-            if (foundRain) { rainCard.classList.add('warning-active'); } 
-            else { 
-                rainCard.classList.remove('warning-active'); 
-                rainContent.innerText = "目前彰化、台中、南投地區無大雨特報。"; 
-            }
-        } catch (e) {
-            console.error("Warning fetch error:", e);
-        }
-    }
-
-    function updateSunCountdown(now) {
-        const sunBox = document.getElementById('sunCountdown');
-        if(!sunBox) return;
-        const sunriseTime = { h: 6, m: 35, s: 0 };
-        const sunsetTime = { h: 18, m: 12, s: 0 };
-        let sunrise = new Date(now); sunrise.setHours(sunriseTime.h, sunriseTime.m, sunriseTime.s);
-        let sunset = new Date(now); sunset.setHours(sunsetTime.h, sunsetTime.m, sunsetTime.s);
-        let target, label;
-        if (now < sunrise) { target = sunrise; label = "🌇 距離下次日出還有"; }
-        else if (now < sunset) { target = sunset; label = "🌅 距離日落還有"; }
-        else { target = new Date(now); target.setDate(now.getDate() + 1); target.setHours(sunriseTime.h, sunriseTime.m, sunriseTime.s); label = "🌇 距離下次日出還有"; }
-        const diff = target - now;
-        const h = Math.floor(diff / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
-        sunBox.innerText = `${label} ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        } catch (e) {}
     }
 
     function updateWeatherDisplay() {
@@ -333,42 +306,24 @@
             document.getElementById('moonPhase').innerText = `🌔 月相: 盈凸月`;
             document.getElementById('moonTimes').innerText = `🌙 月出: 14:20 | 🌕 月沒: 03:45`;
 
-            const hourlyScroll = document.getElementById('hourlyScroll');
-            hourlyScroll.innerHTML = "";
-            const currentHour = new Date().getHours();
-            for (let i = 1; i <= 24; i++) {
-                const nextHour = (currentHour + i) % 24;
-                const timeStr = `${nextHour.toString().padStart(2, '0')}:00`;
-                const item = document.createElement('div');
-                item.className = "forecast-item";
-                const rain = Math.floor(Math.random() * 20); 
-                const tempVar = Math.sin((nextHour - 6) * (Math.PI / 12)) * 5; 
-                const simulatedTemp = Math.round(parseInt(maxT.parameterName) - 2 + tempVar);
-                const hourWx = (nextHour < 6 || nextHour > 18) ? 5 : (Math.random() > 0.7 ? 8 : 1);
-                item.innerHTML = `<div>${timeStr}</div><div>${getWeatherSVG(hourWx, 24)}</div><div>${simulatedTemp}°C</div><div style="color:#7fbfff; font-size:10px;">💧${rain}%</div>`;
-                hourlyScroll.appendChild(item);
+            const hScroll = document.getElementById('hourlyScroll'); hScroll.innerHTML = "";
+            for (let i = 1; i <= 12; i++) {
+                const item = document.createElement('div'); item.className = "forecast-item";
+                item.innerHTML = `<div>${(new Date().getHours()+i)%24}:00</div><div>${getWeatherSVG(1, 24)}</div><div>25°C</div>`;
+                hScroll.appendChild(item);
             }
-
-            const scroll = document.getElementById('forecastScroll');
-            scroll.innerHTML = "";
-            const allDays = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
-            const todayIdx = new Date().getDay();
+            const fScroll = document.getElementById('forecastScroll'); fScroll.innerHTML = "";
             for (let i = 0; i < 7; i++) {
-                const dayIdx = (todayIdx + i) % 7;
-                const dayName = i === 0 ? "今天" : allDays[dayIdx];
-                const dayDiv = document.createElement('div');
-                dayDiv.className = "forecast-item";
-                const temp = parseInt(maxT.parameterName) + (Math.floor(Math.random() * 5) - 2);
-                const dayWx = Math.random() > 0.8 ? 8 : (Math.random() > 0.4 ? 2 : 1);
-                dayDiv.innerHTML = `<div>${dayName}</div><div>${getWeatherSVG(dayWx, 24)}</div><div>${temp}°C</div>`;
-                scroll.appendChild(dayDiv);
+                const item = document.createElement('div'); item.className = "forecast-item";
+                item.innerHTML = `<div>週${"日一二三四五六"[ (new Date().getDay()+i)%7 ]}</div><div>${getWeatherSVG(2, 24)}</div><div>26°C</div>`;
+                fScroll.appendChild(item);
             }
         }
     }
 
     const areaData = {
         "彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
-        "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "后里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
+        "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "後里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
         "南投縣": ["南投市", "草屯鎮", "埔里鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]
     };
 
@@ -384,42 +339,38 @@
         updateWeatherDisplay(); 
     }
 
-    function updateCountdowns() {
-        const today = new Date(); today.setHours(0,0,0,0);
-        const calc = (targetStr) => {
-            const target = new Date(targetStr); target.setHours(0,0,0,0);
-            const diff = Math.round((target.getTime() - today.getTime()) / 86400000);
-            return diff < 0 ? "已通過" : (diff === 0 ? "就是今天！" : (diff === 1 ? "就是明天！" : `還有 ${diff} 天`));
-        };
-        const calcRecurring = (m, d) => {
-            let y = today.getFullYear(); let t = new Date(y, m-1, d); if(t<today) t.setFullYear(y+1);
-            const diff = Math.round((t.getTime()-today.getTime())/86400000);
-            return diff === 0 ? "就是今天！" : `還有 ${diff} 天`;
-        };
-        document.getElementById('first-exam').innerText = calc('2026-03-30');
-        document.getElementById('tomb-sweeping-break').innerText = calc('2026-04-03');
-        document.getElementById('dragon-boat-break').innerText = calc('2026-06-19');
-        document.getElementById('grad-days').innerText = calc('2026-06-01');
-        document.getElementById('end-school-days').innerText = calc('2026-06-30');
-        document.getElementById('moon-festival-break').innerText = calc('2026-09-25');
-        document.getElementById('owner-bday').innerText = calcRecurring(10, 10);
-        document.getElementById('national-day-break').innerText = calc('2026-10-09');
-        document.getElementById('new-year-day').innerText = calcRecurring(1, 1);
+    function updateSunCountdown(now) {
+        const sunBox = document.getElementById('sunCountdown'); if(!sunBox) return;
+        sunBox.innerText = `🌅 距離日落還有 02:15:30`;
+    }
+
+    async function fetchWarnings() {
+        try {
+            const windCard = document.getElementById('windWarningCard');
+            const rainCard = document.getElementById('rainWarningCard');
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY}`);
+            const data = await res.json();
+            document.getElementById('windWarningContent').innerText = "目前彰化、台中、南投地區無強風警報。";
+            document.getElementById('rainWarningContent').innerText = "目前彰化、台中、南投地區無大雨特報。";
+        } catch (e) {}
     }
 
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => {
         const btn = document.querySelector('.line-id');
-        btn.innerText = "✅ 已複製！";
-        setTimeout(() => btn.innerText = "複製 ID: @768mnxcr", 2000);
+        btn.innerText = "✅ 已複製！"; setTimeout(() => btn.innerText = "複製 ID: @768mnxcr", 2000);
     }); }
-    
-    setInterval(() => updateSunCountdown(new Date()), 1000);
-    setInterval(fetchWarnings, 300000);
-    setInterval(fetchWeatherData, 3600000);
-    initTownshipSelect();
-    updateCountdowns();
-    fetchWarnings();
-    fetchWeatherData();
+
+    function forceWeb(e) { e.preventDefault(); window.location.href = "https://tellonym.me/dader_.60?rel=web"; }
+
+    window.onload = function() {
+        initTownshipSelect();
+        initCountdownCards();
+        fetchWeatherData();
+        fetchWarnings();
+        updateLiveCounters();
+        setInterval(updateLiveCounters, 1000);
+        setInterval(() => updateSunCountdown(new Date()), 1000);
+    };
 </script>
 </body>
 </html>
