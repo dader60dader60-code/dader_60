@@ -109,11 +109,11 @@
         <button id="searchBtn" onclick="fetchWeather()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-lg active:scale-95 flex items-center justify-center gap-2">
             <i data-lucide="search" class="w-5 h-5"></i> 立即查詢
         </button>
-        <p id="autoUpdateHint" class="text-center text-[10px] text-blue-500/60 mt-2 font-medium">系統已啟動：每小時自動刷新資料</p>
+        <p id="autoUpdateHint" class="text-center text-[10px] text-blue-500/60 mt-2 font-medium">資料來源：中央氣象署觀測數據</p>
 
         <div id="loading" class="hidden py-12 text-center">
             <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
-            <p class="text-slate-500 mt-3 font-medium">同步氣象署數據中...</p>
+            <p class="text-slate-500 mt-3 font-medium">正在取得即時數據...</p>
         </div>
 
         <div id="result" class="hidden space-y-8 mt-6">
@@ -130,12 +130,12 @@
             <!-- 數據網格 -->
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
-                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">體感溫度</div>
-                    <div id="feelsLike" class="text-xl font-bold text-blue-900">--°C</div>
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">24H 最高溫</div>
+                    <div id="maxTemp" class="text-xl font-bold text-red-600">--°C</div>
                 </div>
-                <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
-                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">降雨機率</div>
-                    <div id="pop" class="text-xl font-bold text-blue-600">--%</div>
+                <div id="popBox" class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">濕度</div>
+                    <div id="humidity" class="text-xl font-bold text-blue-500">--%</div>
                 </div>
                 <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
                     <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">風向</div>
@@ -145,57 +145,10 @@
                     <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">風速</div>
                     <div id="windSpeed" class="text-lg font-bold text-emerald-700">-- m/s</div>
                 </div>
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <div class="text-[11px] text-slate-400 font-bold uppercase mb-1">紫外線指數</div>
-                    <div id="uvi" class="text-xl font-bold text-orange-600">--</div>
-                </div>
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <div class="text-[11px] text-slate-400 font-bold uppercase mb-1">濕度</div>
-                    <div id="humidity" class="text-xl font-bold text-blue-500">--%</div>
-                </div>
-            </div>
-
-            <!-- 日月時間與倒數 -->
-            <div class="bg-gradient-to-r from-blue-900 to-indigo-950 p-5 rounded-2xl text-white shadow-lg border border-white/10">
-                <div class="grid grid-cols-2 gap-4 text-[10px] font-bold opacity-80 mb-4 uppercase tracking-tighter">
-                    <div class="flex flex-col gap-2">
-                        <div class="flex items-center gap-2">🌅 日出 <span id="sunrise" class="text-sm text-yellow-400">--:--</span></div>
-                        <div class="flex items-center gap-2">🌇 日落 <span id="sunset" class="text-sm text-orange-400">--:--</span></div>
-                    </div>
-                    <div class="flex flex-col gap-2 text-right">
-                        <div class="flex items-center justify-end gap-2">月出 <span id="moonrise" class="text-sm text-blue-200">--:--</span> 🌙</div>
-                        <div class="flex items-center justify-end gap-2">月沒 <span id="moonset" class="text-sm text-blue-400">--:--</span> 🌑</div>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl border border-white/5 mb-3">
-                    <span class="text-[10px] opacity-70">當前月相</span>
-                    <span id="moonPhase" class="text-sm font-bold text-blue-100">--</span>
-                </div>
-                <div id="sunCountdown" class="text-center font-bold bg-white/10 backdrop-blur py-3 rounded-xl text-xs tracking-widest border border-white/20 text-yellow-200">
-                    計算中...
-                </div>
-            </div>
-
-            <!-- 24小時預報 -->
-            <div>
-                <h3 class="text-sm font-bold text-slate-500 uppercase mb-3 px-1 flex items-center justify-between">
-                    <span>未來 24 小時預報</span>
-                    <i data-lucide="clock" class="w-3 h-3"></i>
-                </h3>
-                <div id="hourlyForecast" class="flex gap-3 overflow-x-auto forecast-scroll pb-4"></div>
-            </div>
-
-            <!-- 一週預報 -->
-            <div>
-                <h3 class="text-sm font-bold text-slate-500 uppercase mb-3 px-1 flex items-center justify-between">
-                    <span>一週天氣預報</span>
-                    <i data-lucide="calendar" class="w-3 h-3"></i>
-                </h3>
-                <div id="weeklyForecast" class="flex gap-3 overflow-x-auto forecast-scroll pb-4"></div>
             </div>
 
             <div class="pt-6 border-t border-slate-100 text-[10px] text-slate-400 flex justify-between items-center">
-                <span>來源：中央氣象署 (CWA) / AI 預測</span>
+                <span>來源：中央氣象署 (CWA) 自動觀測站</span>
                 <span id="lastUpdate" class="font-medium">更新時間：----</span>
             </div>
         </div>
@@ -247,9 +200,6 @@
 
 <script>
     const API_KEY_CWA = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
-    const API_KEY_GEMINI = ""; // 天氣查詢用
-
-    let currentAstroData = null;
 
     const districts = {
         "彰化縣": ["彰化市", "鹿港鎮", "和美鎮", "線西鄉", "伸港鄉", "福興鄉", "秀水鄉", "花壇鄉", "芬園鄉", "員林市", "溪湖鎮", "田中鎮", "大村鄉", "埔鹽鄉", "埔心鄉", "永靖鄉", "社頭鄉", "二水鄉", "北斗鎮", "二林鎮", "田尾鄉", "埤頭鄉", "芳苑鄉", "大城鄉", "竹塘鄉", "溪州鄉"],
@@ -334,18 +284,32 @@
                 if(remLabel) remLabel.innerText = `剩餘 ${days} 天`;
             }
         });
-        if (currentAstroData) updateSunCountdown();
     }
 
     async function fetchWarnings() {
         try {
             const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY_CWA}`);
             const data = await res.json();
-            document.getElementById('windWarningContent').innerText = "目前彰化、台中、南投地區無強風警報。";
-            document.getElementById('rainWarningContent').innerText = "目前彰化、台中、南投地區無大雨特報。";
+            const records = data.records.record || [];
+            
+            const targetCities = ["彰化縣", "臺中市", "南投縣"];
+            let windWarn = [];
+            let rainWarn = [];
+            
+            records.forEach(r => {
+                const content = r.contents.content || "";
+                const isTarget = targetCities.some(city => content.includes(city));
+                if (isTarget) {
+                    if (content.includes("強風")) windWarn.push(content);
+                    if (content.includes("大雨") || content.includes("豪雨")) rainWarn.push(content);
+                }
+            });
+
+            document.getElementById('windWarningContent').innerText = windWarn.length > 0 ? windWarn[0] : "目前彰化、台中、南投地區無強風警報。";
+            document.getElementById('rainWarningContent').innerText = rainWarn.length > 0 ? rainWarn[0] : "目前彰化、台中、南投地區無大雨特報。";
         } catch (e) {
-            document.getElementById('windWarningContent').innerText = "警報資訊獲取失敗。";
-            document.getElementById('rainWarningContent').innerText = "警報資訊獲取失敗。";
+            document.getElementById('windWarningContent').innerText = "警報資訊暫不提供。";
+            document.getElementById('rainWarningContent').innerText = "警報資訊暫不提供。";
         }
     }
 
@@ -390,136 +354,70 @@
         loadingDiv.classList.remove('hidden');
         resultDiv.classList.add('hidden');
 
-        const now = new Date();
-        const taiwanTimeStr = now.toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false });
-        
-        const systemPrompt = `你是一個專業氣象數據處理器。針對 ${city}${dist} 提供即時天氣觀測與預報。
-        現在台灣時間是 ${taiwanTimeStr}。
-        請根據最新氣象數據回傳 JSON 格式如下：
-        {
-          "current": {
-            "temp": 數字, "feelsLike": 數字, "desc": "天氣描述", "humidity": 數字, "pop": 數字, "uvi": 數字, 
-            "windDir": "風向", "windSpeed": 數字
-          },
-          "astro": {
-            "sunrise": "HH:MM", "sunset": "HH:MM", "moonrise": "HH:MM", "moonset": "HH:MM", "moonPhase": "描述"
-          },
-          "hourly": [
-            {"time": "HH:00", "temp": 數字, "pop": 數字, "desc": "描述"} (必須嚴格包含未來 24 小時，第一個項目必須是當前最近的小時)
-          ],
-          "weekly": [
-            {"day": "週幾", "tempHigh": 數字, "tempLow": 數字, "desc": "描述"} (包含今天起未來7天)
-          ],
-          "updateTime": "${taiwanTimeStr}"
-        }`;
-
         try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY_GEMINI}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: `查詢 ${city}${dist} 即時天氣。重點：1. 風向風速分開提供。2. 逐時預報必須給足 24 小時。3. 逐時預報的第一個項目為當前時間。` }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                })
-            });
-            const data = await res.json();
-            const text = data.candidates[0].content.parts[0].text;
-            const weather = JSON.parse(text.match(/\{.*\}/s)[0]);
-            renderWeather(weather, city, dist);
-            currentAstroData = weather.astro;
+            const response = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=${API_KEY_CWA}&StationName=${dist}`);
+            const data = await response.json();
+            
+            let station = data.records.Station?.[0];
+            
+            if (!station) {
+                const altRes = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${API_KEY_CWA}&StationName=${encodeURIComponent(city)}`);
+                const altData = await altRes.json();
+                station = altData.records.Station?.[0];
+            }
+
+            if (station) {
+                const obs = station.WeatherElement;
+                const weatherData = {
+                    temp: obs.AirTemperature || "--",
+                    humidity: obs.RelativeHumidity || "--",
+                    windDir: station.StationObsTimes?.StationObsTime?.[0]?.WeatherElement?.WindDirection || "靜風",
+                    windSpeed: obs.WindSpeed || "0",
+                    maxTemp: obs.DailyExtreme?.DailyMaximum?.Temperature || "--",
+                    time: station.ObsTime?.DateTime || new Date().toLocaleString()
+                };
+                renderWeatherDirect(weatherData, city, dist);
+            } else {
+                throw new Error("找不到該站點數據");
+            }
         } catch (e) {
             console.error("Fetch weather failed:", e);
             loadingDiv.classList.add('hidden');
-            document.getElementById('autoUpdateHint').innerText = "查詢失敗，請稍後再試。";
+            document.getElementById('autoUpdateHint').innerText = "站點離線或API異常，請選取鄰近鄉鎮查詢。";
         }
     }
 
-    function renderWeather(data, city, dist) {
+    function renderWeatherDirect(data, city, dist) {
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('result').classList.remove('hidden');
 
         document.getElementById('locationName').textContent = `${city} ${dist}`;
-        document.getElementById('temp').textContent = `${data.current.temp}°C`;
-        document.getElementById('desc').textContent = data.current.desc;
-        document.getElementById('weatherIconContainer').innerHTML = getWeatherIcon(data.current.desc, 80);
-        document.getElementById('feelsLike').textContent = `${data.current.feelsLike}°C`;
-        document.getElementById('pop').textContent = `${data.current.pop}%`;
+        document.getElementById('temp').textContent = `${data.temp}°C`;
+        document.getElementById('desc').textContent = parseFloat(data.temp) > 28 ? "天氣炎熱" : "天氣舒適";
+        document.getElementById('weatherIconContainer').innerHTML = getWeatherIcon(parseFloat(data.temp) > 28 ? "晴" : "雲", 80);
         
-        document.getElementById('windDir').textContent = data.current.windDir;
-        document.getElementById('windSpeed').textContent = `${data.current.windSpeed} m/s`;
+        document.getElementById('maxTemp').textContent = `${data.maxTemp}°C`;
+        document.getElementById('humidity').textContent = `${data.humidity}%`;
+        document.getElementById('windDir').textContent = data.windDir;
+        document.getElementById('windSpeed').textContent = `${data.windSpeed} m/s`;
         
-        document.getElementById('uvi').textContent = data.current.uvi;
-        document.getElementById('humidity').textContent = `${data.current.humidity}%`;
-        
-        document.getElementById('sunrise').textContent = data.astro.sunrise;
-        document.getElementById('sunset').textContent = data.astro.sunset;
-        document.getElementById('moonrise').textContent = data.astro.moonrise;
-        document.getElementById('moonset').textContent = data.astro.moonset;
-        document.getElementById('moonPhase').textContent = data.astro.moonPhase;
-        document.getElementById('lastUpdate').textContent = `更新：${data.updateTime}`;
+        document.getElementById('lastUpdate').textContent = `更新：${data.time}`;
 
         const umbrella = document.getElementById('umbrellaTip');
-        if (data.current.pop >= 30) {
-            umbrella.innerHTML = `<i data-lucide="umbrella" class="w-4 h-4"></i> 建議帶傘`;
-            umbrella.className = "mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold bg-blue-100 text-blue-700 shadow-sm";
-        } else {
-            umbrella.innerHTML = `<i data-lucide="sun" class="w-4 h-4"></i> 無需雨具`;
-            umbrella.className = "mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold bg-green-100 text-green-700 shadow-sm";
-        }
-
-        const hCont = document.getElementById('hourlyForecast');
-        hCont.innerHTML = data.hourly.map(h => `
-            <div class="flex-shrink-0 bg-white p-4 rounded-2xl border border-slate-100 text-center min-w-[85px] shadow-sm">
-                <div class="text-[10px] text-slate-400 font-bold mb-2">${h.time}</div>
-                <div class="flex justify-center mb-2">${getWeatherIcon(h.desc || data.current.desc, 32)}</div>
-                <div class="font-bold text-slate-700 text-lg">${h.temp}°</div>
-                <div class="text-[10px] text-blue-500 font-black mt-1">💧${h.pop}%</div>
-            </div>
-        `).join('');
-
-        const wCont = document.getElementById('weeklyForecast');
-        wCont.innerHTML = data.weekly.map(w => `
-            <div class="flex-shrink-0 bg-slate-50/50 p-3 rounded-2xl border border-slate-200 text-center min-w-[75px]">
-                <div class="text-[11px] font-bold text-slate-600 mb-1">${w.day}</div>
-                <div class="flex justify-center mb-1">${getWeatherIcon(w.desc, 24)}</div>
-                <div class="text-xs font-bold text-blue-800">${w.tempHigh}°</div>
-                <div class="text-[10px] text-slate-400">${w.tempLow}°</div>
-            </div>
-        `).join('');
+        umbrella.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> 即時觀測`;
+        umbrella.className = "mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold bg-slate-100 text-slate-700 shadow-sm";
 
         lucide.createIcons();
     }
 
-    function updateSunCountdown() {
-        const now = new Date();
-        const [srH, srM] = currentAstroData.sunrise.split(':').map(Number);
-        const [ssH, ssM] = currentAstroData.sunset.split(':').map(Number);
-        const sunriseDate = new Date(); sunriseDate.setHours(srH, srM, 0);
-        const sunsetDate = new Date(); sunsetDate.setHours(ssH, ssM, 0);
-        let label = "";
-        let target = null;
-        if (now < sunriseDate) { label = "距離日出還有"; target = sunriseDate; }
-        else if (now < sunsetDate) { label = "距離日落還有"; target = sunsetDate; }
-        else { label = "距離明日日出還有"; target = new Date(sunriseDate.getTime() + 24 * 60 * 60 * 1000); }
-        const diff = target - now;
-        const h = Math.floor(diff / (1000 * 60 * 60));
-        const m = Math.floor((diff / (1000 * 60)) % 60);
-        const s = Math.floor((diff / 1000) % 60);
-        document.getElementById('sunCountdown').innerText = `${label} ${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-    }
-
     window.onload = function() {
         initCountdownCards();
-        setInterval(updateLiveCounters, 1000);
+        // 修改預設為田中鎮
+        updateDistrictsList("田中鎮");
+        updateLiveCounters();
         fetchWarnings();
-        setInterval(fetchWarnings, 3600000);
-        
-        // 修正預設值：初始化彰化縣田中鎮
-        updateDistrictsList("田中鎮"); 
-        fetchWeather();
-        setInterval(fetchWeather, 3600000);
-    }
+        setInterval(updateLiveCounters, 1000);
+    };
 </script>
-
 </body>
 </html>
