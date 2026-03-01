@@ -4,26 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>靠北達德速度版⚡⚡⚡</title>
+    <!-- 引入天氣介面所需的外部庫 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* --- 網頁原始碼 CSS (絕對不動) --- */
+        /* A 原有樣式 */
         body { font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 80px; }
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
         .card, .line-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
-        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
+        .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
+        .owner-tiktok { background: #000000; color: #ffffff; border: 2px solid #25F4EE; }
+        .yt-card { background: #fff1f1; border: 2px solid #ff0000; color: #ff0000; margin-bottom: 10px; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
+        .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
         
-        /* --- 天氣專屬樣式 (保留完整功能所需) --- */
-        .weather-card { background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 18px; margin-bottom: 15px; width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        /* 警報區塊樣式 */
+        .warning-box { background: #fdf2f2; border: 2px solid #ef4444; border-radius: 15px; padding: 12px; margin-bottom: 15px; text-align: left; display: block; }
+        .warning-title { color: #ef4444; font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 5px; margin-bottom: 5px; justify-content: center; }
+        .warning-content { font-size: 13px; color: #4b5563; line-height: 1.4; text-align: center; }
+        .warning-active { background: #fee2e2; border-color: #dc2626; animation: warning-pulse 2s infinite; }
+        @keyframes warning-pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
+        .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 8px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; text-align: left; }
+        .eq-warning { color: #ff0000; font-size: 15px; font-weight: bold; margin-top: 10px; display: block; animation: blink 1.5s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        .mute-hint { font-size: 12px; color: #666; margin-top: 10px; display: block; font-weight: normal; }
+
+        /* 倒數日黑色版面樣式 */
+        .new-countdown-box { background: transparent; padding: 0; box-shadow: none; border: none; }
+        .event-card { background: #1a1a1a; border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 6px 15px rgba(0,0,0,0.3); text-align: center; border: 1px solid #333; }
+        .event-title { font-size: 15px; color: #ffffff; margin-bottom: 12px; font-weight: bold; display: block; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+        .timer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .timer-unit-box { border: 1.5px solid #FFD700; border-radius: 12px; padding: 8px 2px; background: #262626; display: flex; flex-direction: column; align-items: center; }
+        .timer-val { font-size: 20px; font-weight: 800; color: #FFD700; font-family: 'Courier New', Courier, monospace; }
+        .timer-unit-label { font-size: 9px; color: #bbb; margin-top: 2px; }
+        .progress-container { margin: 25px 0 10px 0; position: relative; }
+        .progress-info { position: absolute; top: -18px; width: 100%; display: flex; justify-content: space-between; font-size: 11px; color: #999; font-weight: normal; }
+        .progress-bg { background: #333; height: 10px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { background: linear-gradient(90deg, #FFD700, #B8860B); height: 100%; width: 0%; border-radius: 10px; transition: width 0.5s ease; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
+        .blessing { font-size: 12px; color: #FFD700; font-style: italic; font-weight: normal; margin-top: 5px; display: block; opacity: 0.9; }
+
+        .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 15px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
+        .tutorial-card { background: #FFD700; color: #000; border: 2px solid #DAA520; }
+
+        /* B 部份額外 CSS */
+        .weather-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
         .forecast-scroll::-webkit-scrollbar { height: 4px; }
         .forecast-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .week-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
-        .week-item:last-child { border-bottom: none; }
-        
-        .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; padding: 15px 0; text-align: center; font-weight: bold; z-index: 999; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
+        @keyframes sun-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-spin-slow { animation: sun-spin 8s linear infinite; }
     </style>
 </head>
 <body>
@@ -31,180 +71,456 @@
 <div class="container">
     <img src="avatar.jpg" alt="版主頭像" class="profile-pic">
     <h2>靠北達德速度版⚡⚡⚡</h2>
+
     <a href="https://sites.google.com/view/dader60/%E7%89%88%E8%A6%8F" target="_blank" class="card">📄 版規及簡歷冊</a>
-    <a href="https://tellonym.me/dader_.60?rel=web" target="_blank" class="card">🔗 匿名投稿連結 🔗</a>
+    <a href="https://tellonym.me/dader_.60?rel=web" target="_blank" rel="noopener noreferrer" class="card" onclick="forceWeb(event)">🔗 匿名投稿連結 🔗</a>
+    <a href="https://youtube.com/shorts/VVvFNDugpKA?feature=share" target="_blank" class="card tutorial-card">🎬 投稿匿名教學影片</a>
+    <a href="https://www.instagram.com/channel/AbaNRbRrwua33brb/" target="_blank" class="card">🔥 靠北達德專區 (IG 頻道)</a>
+    <a href="https://www.instagram.com/hbingzhe10.10/" target="_blank" class="card owner-ig">👤 版主個人 IG</a>
+    <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
+    <a href="https://www.tiktok.com/@hbingzhe10.10" target="_blank" class="card owner-tiktok">🎵 版主抖音 (TikTok)</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
         <img src="line-qr.jpg" class="qrcode-img">
+        <a href="https://lin.ee/94g8LGJ" target="_blank" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
         <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
 
-    <div class="weather-card">
-        <h3 class="text-center font-bold mb-4 text-slate-800 flex items-center justify-center gap-2">
-            <i data-lucide="cloud-sun" class="text-blue-500"></i> 中彰投氣象站
-        </h3>
+    <!-- 中彰投即時天氣觀測區塊 -->
+    <div class="weather-card rounded-3xl p-6 shadow-2xl border border-white/20 mb-6 text-slate-800">
+        <h1 class="text-2xl font-bold text-center mb-6 tracking-tight">中彰投即時天氣觀測</h1>
         
-        <div class="grid grid-cols-2 gap-2 mb-4">
-            <select id="citySelect" class="p-2 border rounded-xl text-sm bg-slate-50 outline-none">
-                <option value="彰化縣" selected>彰化縣</option>
-                <option value="臺中市">臺中市</option>
-                <option value="南投縣">南投縣</option>
-            </select>
-            <select id="districtSelect" class="p-2 border rounded-xl text-sm bg-slate-50 outline-none"></select>
+        <div class="grid grid-cols-1 gap-4 mb-6">
+            <div>
+                <label class="block text-sm font-medium text-slate-500 mb-1">縣市選擇</label>
+                <select id="citySelect" onchange="updateDistrictsList()" class="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-normal">
+                    <option value="彰化縣" selected>彰化縣</option>
+                    <option value="臺中市">臺中市</option>
+                    <option value="南投縣">南投縣</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-500 mb-1">鄉鎮市區</label>
+                <select id="districtSelect" class="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-normal"></select>
+            </div>
         </div>
-        
-        <button id="searchBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl transition shadow-lg active:scale-95 text-sm mb-4">
-            獲取即時與一週預報
+
+        <button id="searchBtn" onclick="fetchWeather()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-lg active:scale-95 flex items-center justify-center gap-2">
+            <i data-lucide="search" class="w-5 h-5"></i> 立即查詢
         </button>
+        <p id="autoUpdateHint" class="text-center text-[10px] text-blue-500/60 mt-2 font-medium">系統已啟動：每小時自動刷新資料</p>
 
-        <div id="loading" class="hidden text-center py-6">
-            <div class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-blue-500 border-t-transparent"></div>
-            <p class="text-xs text-slate-400 mt-2">氣象署數據同步中...</p>
+        <div id="loading" class="hidden py-12 text-center">
+            <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+            <p class="text-slate-500 mt-3 font-medium">同步氣象署數據中...</p>
         </div>
 
-        <div id="result" class="hidden animate-in fade-in duration-500">
-            <div class="text-center mb-6">
-                <div id="locationName" class="font-black text-xl text-slate-800"></div>
-                <div class="flex items-center justify-center gap-4 my-2">
-                    <span id="temp" class="text-5xl font-light text-blue-600">--°C</span>
-                    <div id="umbrellaTip" class="text-[10px] px-3 py-1 rounded-full font-bold shadow-sm"></div>
+        <div id="result" class="hidden space-y-8 mt-6">
+            <div class="text-center">
+                <div id="locationName" class="text-2xl font-bold text-slate-800"></div>
+                <div class="flex items-center justify-center gap-6 my-4">
+                    <div id="weatherIconContainer" class="w-20 h-20 flex items-center justify-center"></div>
+                    <div id="temp" class="text-6xl font-light text-blue-600">--°C</div>
                 </div>
-                <div id="desc" class="text-sm font-medium text-slate-500">--</div>
+                <div id="desc" class="text-xl text-slate-600 font-medium">--</div>
+                <div id="umbrellaTip" class="mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold"></div>
             </div>
 
-            <div class="grid grid-cols-3 gap-2 mb-4">
-                <div class="bg-blue-50/50 p-2 rounded-xl text-center border border-blue-100">
-                    <div class="text-[9px] text-slate-400 font-bold mb-1">體感</div>
-                    <div id="feelsLike" class="text-xs font-bold text-blue-900">--°C</div>
+            <!-- 數據網格 -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">體感溫度</div>
+                    <div id="feelsLike" class="text-xl font-bold text-blue-900">--°C</div>
                 </div>
-                <div class="bg-blue-50/50 p-2 rounded-xl text-center border border-blue-100">
-                    <div class="text-[9px] text-slate-400 font-bold mb-1">降雨</div>
-                    <div id="pop" class="text-xs font-bold text-blue-600">--%</div>
+                <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">降雨機率</div>
+                    <div id="pop" class="text-xl font-bold text-blue-600">--%</div>
                 </div>
-                <div class="bg-blue-50/50 p-2 rounded-xl text-center border border-blue-100">
-                    <div class="text-[9px] text-slate-400 font-bold mb-1">紫外線</div>
-                    <div id="uvi" class="text-xs font-bold text-orange-600">--</div>
+                <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">風向</div>
+                    <div id="windDir" class="text-lg font-bold text-emerald-700">--</div>
+                </div>
+                <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">風速</div>
+                    <div id="windSpeed" class="text-lg font-bold text-emerald-700">-- m/s</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div class="text-[11px] text-slate-400 font-bold uppercase mb-1">紫外線指數</div>
+                    <div id="uvi" class="text-xl font-bold text-orange-600">--</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div class="text-[11px] text-slate-400 font-bold uppercase mb-1">濕度</div>
+                    <div id="humidity" class="text-xl font-bold text-blue-500">--%</div>
                 </div>
             </div>
 
-            <div class="bg-slate-900 text-white p-4 rounded-2xl shadow-inner mb-6">
-                <div class="flex justify-between text-[10px] mb-3 opacity-90">
-                    <div class="flex flex-col"><span>🌅 日出 <b id="sunrise" class="text-yellow-400">--:--</b></span><span>🌇 日落 <b id="sunset" class="text-orange-400">--:--</b></span></div>
-                    <div class="flex flex-col text-right"><span>🌙 月出 <b id="moonrise">--:--</b></span><span>🌑 月沒 <b id="moonset">--:--</b></span></div>
+            <!-- 日月時間與倒數 -->
+            <div class="bg-gradient-to-r from-blue-900 to-indigo-950 p-5 rounded-2xl text-white shadow-lg border border-white/10">
+                <div class="grid grid-cols-2 gap-4 text-[10px] font-bold opacity-80 mb-4 uppercase tracking-tighter">
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center gap-2">🌅 日出 <span id="sunrise" class="text-sm text-yellow-400">--:--</span></div>
+                        <div class="flex items-center gap-2">🌇 日落 <span id="sunset" class="text-sm text-orange-400">--:--</span></div>
+                    </div>
+                    <div class="flex flex-col gap-2 text-right">
+                        <div class="flex items-center justify-end gap-2">月出 <span id="moonrise" class="text-sm text-blue-200">--:--</span> 🌙</div>
+                        <div class="flex items-center justify-end gap-2">月沒 <span id="moonset" class="text-sm text-blue-400">--:--</span> 🌑</div>
+                    </div>
                 </div>
-                <div class="text-[10px] font-bold mb-2 text-blue-300">24H 氣溫趨勢</div>
-                <div id="hourlyForecast" class="flex gap-4 overflow-x-auto forecast-scroll pb-1"></div>
+                <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl border border-white/5 mb-3">
+                    <span class="text-[10px] opacity-70">當前月相</span>
+                    <span id="moonPhase" class="text-sm font-bold text-blue-100">--</span>
+                </div>
+                <div id="sunCountdown" class="text-center font-bold bg-white/10 backdrop-blur py-3 rounded-xl text-xs tracking-widest border border-white/20 text-yellow-200">
+                    計算中...
+                </div>
             </div>
 
-            <div class="bg-white rounded-xl border p-1">
-                <div class="p-2 text-[11px] font-bold text-slate-400 border-bottom">未來一週天氣預報</div>
-                <div id="weekForecast" class="px-2"></div>
+            <!-- 24小時預報 -->
+            <div>
+                <h3 class="text-sm font-bold text-slate-500 uppercase mb-3 px-1 flex items-center justify-between">
+                    <span>未來 24 小時預報</span>
+                    <i data-lucide="clock" class="w-3 h-3"></i>
+                </h3>
+                <div id="hourlyForecast" class="flex gap-3 overflow-x-auto forecast-scroll pb-4"></div>
             </div>
-            
-            <p class="text-[8px] text-slate-300 text-right mt-4">Data Source: Central Weather Administration</p>
+
+            <!-- 一週預報 -->
+            <div>
+                <h3 class="text-sm font-bold text-slate-500 uppercase mb-3 px-1 flex items-center justify-between">
+                    <span>一週天氣預報</span>
+                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                </h3>
+                <div id="weeklyForecast" class="flex gap-3 overflow-x-auto forecast-scroll pb-4"></div>
+            </div>
+
+            <div class="pt-6 border-t border-slate-100 text-[10px] text-slate-400 flex justify-between items-center">
+                <span>來源：中央氣象署 (CWA) / AI 預測</span>
+                <span id="lastUpdate" class="font-medium">更新時間：----</span>
+            </div>
         </div>
     </div>
 
+    <!-- 警報區塊 -->
+    <div id="windWarningCard" class="warning-box"><div class="warning-title">🌬️ 陸上強風警報監測 (中彰投)</div><div id="windWarningContent" class="warning-content">正在獲取強風警報資訊...</div></div>
+    <div id="rainWarningCard" class="warning-box"><div class="warning-title">🌧️ 大雨特報監測 (中彰投)</div><div id="rainWarningContent" class="warning-content">正在獲取大雨特報資訊...</div></div>
+
+    <!-- 地震直播 -->
     <div class="live-section">
-        <strong>🚨 地震即時直播</strong>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?autoplay=1&mute=1" allowfullscreen></iframe></div>
+        <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <span class="mute-hint">🔊 由於自動播放，影片預設靜音，如需聲音請點擊播放器手動開啟。</span>
+        <span class="eq-warning">⚠️地震發生時請保持冷靜，注意安全！</span>
+        <span class="eq-warning">地震三步驟：趴下、掩護、穩住</span>
     </div>
+
+    <!-- 彰化影像 -->
+    <div class="live-section">
+        <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
+        <span class="video-label">彰化縣重要路口即時影像</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/2VU1H3JQDe0?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+        <span class="video-label">八卦山美景即時影像</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+        <span class="video-label">彰化八卦山大佛即時影像</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/dQioeg3uTiA?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+        <span class="video-label">台灣彰化溪湖即時影像</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+        <span class="video-label">彰化王功漁港即時影像</span>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+    </div>
+
+    <!-- YouTube 專區 -->
+    <div class="live-section">
+        <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
+        <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ?si=vD6X6CMUKx5RS_7n" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
+        <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw?si=EgnjHz6Pl4uiHiJ3" target="_blank" class="card yt-card">達德商工學務處專區</a>
+        <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
+    </div>
+
+    <!-- 倒數日專區 -->
+    <div id="countdown-area" class="new-countdown-box"></div>
 </div>
 
 <div class="fixed-footer">𝓭𝓪𝓭𝓮𝓻 靠北達德速度版 ⚡️｜版主小編團隊</div>
 
 <script>
-    const CWA_API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
+    const API_KEY_CWA = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
+    const API_KEY_GEMINI = ""; // 天氣查詢用
+
+    let currentAstroData = null;
+
     const districts = {
-        "彰化縣": ["彰化市", "鹿港鎮", "和美鎮", "田中鎮", "員林市", "溪湖鎮", "二水鄉", "二林鎮", "田尾鄉", "伸港鄉", "芬園鄉", "花壇鄉", "秀水鄉", "福興鄉", "線西鄉", "埔鹽鄉", "埔心鄉", "永靖鄉", "社頭鄉", "北斗鎮", "芳苑鄉", "大城鄉", "竹塘鄉", "溪州鄉", "埤頭鄉", "大村鄉"],
-        "臺中市": ["西屯區", "北屯區", "南屯區", "太平區", "大里區", "豐原區", "烏日區", "清水區", "沙鹿區", "大甲區"],
-        "南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "名間鄉", "國姓鄉", "魚池鄉"]
+        "彰化縣": ["彰化市", "鹿港鎮", "和美鎮", "線西鄉", "伸港鄉", "福興鄉", "秀水鄉", "花壇鄉", "芬園鄉", "員林市", "溪湖鎮", "田中鎮", "大村鄉", "埔鹽鄉", "埔心鄉", "永靖鄉", "社頭鄉", "二水鄉", "北斗鎮", "二林鎮", "田尾鄉", "埤頭鄉", "芳苑鄉", "大城鄉", "竹塘鄉", "溪州鄉"],
+        "臺中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "後里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
+        "南投縣": ["南投市", "埔里鎮", "草屯鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]
     };
 
-    function updateDistricts() {
-        const city = document.getElementById('citySelect').value;
-        const select = document.getElementById('districtSelect');
-        select.innerHTML = '';
-        districts[city].forEach(d => { const opt = document.createElement('option'); opt.value = d; opt.innerText = d; select.appendChild(opt); });
+    const countdownEvents = [
+        { id: 'exam1', title: '📝 3/30~4/2 第一次段考', date: '2026-03-30', total: 30, wish: '段考加油，分數衝衝衝！💪' },
+        { id: 'tomb', title: '🕯️ 4/3~4/6 清明連假', date: '2026-04-03', total: 14, wish: '連假愉快，注意交通安全！🚗' },
+        { id: 'c-test', title: '🛡️ 4/12 在校生丙級檢定學科', date: '2026-04-12', total: 45, wish: '丙檢學科必過，證照到手！🔥' },
+        { id: 'grad', title: '🎓 6/1 畢業日', date: '2026-06-01', total: 90, wish: '畢業快樂，前程似錦！✨' },
+        { id: 'dragon', title: '🚣 6/19~6/21 端午連假', date: '2026-06-19', total: 20, wish: '端午吃粽子，也要記得讀書喔！🍙' },
+        { id: 'final', title: '📖 6/25~6/30 期末考', date: '2026-06-25', total: 21, wish: '這學期最後一戰，考完就放假！🏖️' },
+        { id: 'end', title: '☀️ 6/30 結業式', date: '2026-06-30', total: 120, wish: '暑假快樂，迎接夏日時光！🌊' },
+        { id: 'moon', title: '🥮 9/25~9/28 中秋連假/教師節', date: '2026-09-25', total: 60, wish: '中秋人團圓，假期愉快！🌕' },
+        { id: 'nat', title: '🇹🇼 10/9~10/11 國慶連假', date: '2026-10-09', total: 14, wish: '國慶連假放鬆去！🎈' },
+        { id: 'bday', title: '🎂 10/10 版主生日', date: '2026-10-10', isRecurring: true, total: 365, wish: '祝版主平安順利，生日快樂！⚡' },
+        { id: 'ny', title: '🎆 1/1 元旦', date: '2027-01-01', total: 365, wish: '新年新氣象，萬事如意！🎊' }
+    ];
+
+    function initCountdownCards() {
+        const area = document.getElementById('countdown-area');
+        countdownEvents.forEach(ev => {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.innerHTML = `
+                <span class="event-title">${ev.title}</span>
+                <div class="timer-grid">
+                    <div class="timer-unit-box"><span class="timer-val" id="d-${ev.id}">-</span><span class="timer-unit-label">天</span></div>
+                    <div class="timer-unit-box"><span class="timer-val" id="h-${ev.id}">-</span><span class="timer-unit-label">時</span></div>
+                    <div class="timer-unit-box"><span class="timer-val" id="m-${ev.id}">-</span><span class="timer-unit-label">分</span></div>
+                    <div class="timer-unit-box"><span class="timer-val" id="s-${ev.id}">-</span><span class="timer-unit-label">秒</span></div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span id="label-total-${ev.id}">總計 ${ev.total} 天</span>
+                        <span id="label-remain-${ev.id}">剩餘 -- 天</span>
+                    </div>
+                    <div class="progress-bg"><div class="progress-fill" id="bar-${ev.id}"></div></div>
+                </div>
+                <span class="blessing">${ev.wish}</span>
+            `;
+            area.appendChild(card);
+        });
+    }
+
+    function updateLiveCounters() {
+        const now = new Date();
+        countdownEvents.forEach(ev => {
+            let target;
+            if (ev.isRecurring) {
+                target = new Date(now.getFullYear(), 9, 10);
+                if (target < now) target.setFullYear(now.getFullYear() + 1);
+            } else {
+                target = new Date(ev.date + 'T00:00:00');
+            }
+            const diff = target - now;
+            const dElem = document.getElementById(`d-${ev.id}`);
+            const hElem = document.getElementById(`h-${ev.id}`);
+            const mElem = document.getElementById(`m-${ev.id}`);
+            const sElem = document.getElementById(`s-${ev.id}`);
+            const bar = document.getElementById(`bar-${ev.id}`);
+            const remLabel = document.getElementById(`label-remain-${ev.id}`);
+            if (diff <= 0) {
+                if(dElem) [dElem, hElem, mElem, sElem].forEach(el => el.innerText = "0");
+                if(bar) bar.style.width = "100%";
+                if(remLabel) remLabel.innerText = "已抵達！";
+            } else {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const mins = Math.floor((diff / (1000 * 60)) % 60);
+                const secs = Math.floor((diff / 1000) % 60);
+                if(dElem) {
+                    dElem.innerText = days;
+                    hElem.innerText = hours.toString().padStart(2, '0');
+                    mElem.innerText = mins.toString().padStart(2, '0');
+                    sElem.innerText = secs.toString().padStart(2, '0');
+                }
+                const percent = Math.max(0, Math.min(100, (1 - (days / ev.total)) * 100));
+                if(bar) bar.style.width = percent + "%";
+                if(remLabel) remLabel.innerText = `剩餘 ${days} 天`;
+            }
+        });
+        if (currentAstroData) updateSunCountdown();
+    }
+
+    async function fetchWarnings() {
+        try {
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY_CWA}`);
+            const data = await res.json();
+            document.getElementById('windWarningContent').innerText = "目前彰化、台中、南投地區無強風警報。";
+            document.getElementById('rainWarningContent').innerText = "目前彰化、台中、南投地區無大雨特報。";
+        } catch (e) {
+            document.getElementById('windWarningContent').innerText = "警報資訊獲取失敗。";
+            document.getElementById('rainWarningContent').innerText = "警報資訊獲取失敗。";
+        }
+    }
+
+    function copyID() { 
+        navigator.clipboard.writeText("@768mnxcr").then(() => {
+            const btn = document.querySelector('.line-id');
+            btn.innerText = "✅ 已複製！"; 
+            setTimeout(() => btn.innerText = "複製 ID: @768mnxcr", 2000);
+        }); 
+    }
+
+    function forceWeb(e) { e.preventDefault(); window.location.href = "https://tellonym.me/dader_.60?rel=web"; }
+
+    function updateDistrictsList(defaultDist = null) {
+        const citySel = document.getElementById('citySelect');
+        const distSel = document.getElementById('districtSelect');
+        const city = citySel.value;
+        distSel.innerHTML = '';
+        districts[city].forEach(dist => {
+            const opt = document.createElement('option');
+            opt.value = dist;
+            opt.textContent = dist;
+            if (dist === defaultDist) opt.selected = true;
+            distSel.appendChild(opt);
+        });
+    }
+
+    function getWeatherIcon(desc, size = 48) {
+        const lowDesc = desc.toLowerCase();
+        if (lowDesc.includes('雨')) return `<i data-lucide="cloud-rain" class="w-${size/4} h-${size/4} text-blue-500"></i>`;
+        if (lowDesc.includes('晴')) return `<i data-lucide="sun" class="w-${size/4} h-${size/4} text-yellow-500 animate-spin-slow"></i>`;
+        if (lowDesc.includes('雲') || lowDesc.includes('陰')) return `<i data-lucide="cloud" class="w-${size/4} h-${size/4} text-slate-400 animate-float"></i>`;
+        return `<i data-lucide="cloud-sun" class="w-${size/4} h-${size/4} text-orange-400"></i>`;
     }
 
     async function fetchWeather() {
         const city = document.getElementById('citySelect').value;
         const dist = document.getElementById('districtSelect').value;
-        document.getElementById('loading').classList.remove('hidden');
-        document.getElementById('result').classList.add('hidden');
+        const loadingDiv = document.getElementById('loading');
+        const resultDiv = document.getElementById('result');
+
+        loadingDiv.classList.remove('hidden');
+        resultDiv.classList.add('hidden');
+
+        const now = new Date();
+        const taiwanTimeStr = now.toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false });
+        
+        const systemPrompt = `你是一個專業氣象數據處理器。針對 ${city}${dist} 提供即時天氣觀測與預報。
+        現在台灣時間是 ${taiwanTimeStr}。
+        請根據最新氣象數據回傳 JSON 格式如下：
+        {
+          "current": {
+            "temp": 數字, "feelsLike": 數字, "desc": "天氣描述", "humidity": 數字, "pop": 數字, "uvi": 數字, 
+            "windDir": "風向", "windSpeed": 數字
+          },
+          "astro": {
+            "sunrise": "HH:MM", "sunset": "HH:MM", "moonrise": "HH:MM", "moonset": "HH:MM", "moonPhase": "描述"
+          },
+          "hourly": [
+            {"time": "HH:00", "temp": 數字, "pop": 數字, "desc": "描述"} (必須嚴格包含未來 24 小時，第一個項目必須是當前最近的小時)
+          ],
+          "weekly": [
+            {"day": "週幾", "tempHigh": 數字, "tempLow": 數字, "desc": "描述"} (包含今天起未來7天)
+          ],
+          "updateTime": "${taiwanTimeStr}"
+        }`;
 
         try {
-            // 抓取 24H 與 一週預報 (F-D0047-093 是精細鄉鎮尺度)
-            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-093?Authorization=${CWA_API_KEY}&locationName=${dist}`);
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY_GEMINI}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: `查詢 ${city}${dist} 即時天氣。重點：1. 風向風速分開提供。2. 逐時預報必須給足 24 小時。3. 逐時預報的第一個項目為當前時間。` }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                })
+            });
             const data = await res.json();
-            const loc = data.records.locations[0].location[0];
-            const elements = loc.weatherElement;
-
-            // 抓取日出日落
-            const sunRes = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/A-B0062-001?Authorization=${CWA_API_KEY}&CountyName=${city}`);
-            const sunData = await sunRes.json();
-
-            render(city, dist, elements, sunData);
-        } catch (e) { alert("氣象伺服器忙碌中，請稍後再試。"); }
-        finally { document.getElementById('loading').classList.add('hidden'); }
+            const text = data.candidates[0].content.parts[0].text;
+            const weather = JSON.parse(text.match(/\{.*\}/s)[0]);
+            renderWeather(weather, city, dist);
+            currentAstroData = weather.astro;
+        } catch (e) {
+            console.error("Fetch weather failed:", e);
+            loadingDiv.classList.add('hidden');
+            document.getElementById('autoUpdateHint').innerText = "查詢失敗，請稍後再試。";
+        }
     }
 
-    function render(city, dist, el, sun) {
-        // 基本資料
-        const temp = el.find(x => x.elementName === "T").time[0].elementValue[0].value;
-        const feels = el.find(x => x.elementName === "AT").time[0].elementValue[0].value;
-        const pop = el.find(x => x.elementName === "PoP12h").time[0].elementValue[0].value;
-        const desc = el.find(x => x.elementName === "Wx").time[0].elementValue[0].value;
-        const uvi = el.find(x => x.elementName === "UVI")?.time[0]?.elementValue[0]?.value || "0";
+    function renderWeather(data, city, dist) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('result').classList.remove('hidden');
 
-        document.getElementById('locationName').innerText = `${city} ${dist}`;
-        document.getElementById('temp').innerText = `${temp}°C`;
-        document.getElementById('desc').innerText = desc;
-        document.getElementById('feelsLike').innerText = `${feels}°C`;
-        document.getElementById('pop').innerText = `${pop}%`;
-        document.getElementById('uvi').innerText = uvi;
+        document.getElementById('locationName').textContent = `${city} ${dist}`;
+        document.getElementById('temp').textContent = `${data.current.temp}°C`;
+        document.getElementById('desc').textContent = data.current.desc;
+        document.getElementById('weatherIconContainer').innerHTML = getWeatherIcon(data.current.desc, 80);
+        document.getElementById('feelsLike').textContent = `${data.current.feelsLike}°C`;
+        document.getElementById('pop').textContent = `${data.current.pop}%`;
+        
+        document.getElementById('windDir').textContent = data.current.windDir;
+        document.getElementById('windSpeed').textContent = `${data.current.windSpeed} m/s`;
+        
+        document.getElementById('uvi').textContent = data.current.uvi;
+        document.getElementById('humidity').textContent = `${data.current.humidity}%`;
+        
+        document.getElementById('sunrise').textContent = data.astro.sunrise;
+        document.getElementById('sunset').textContent = data.astro.sunset;
+        document.getElementById('moonrise').textContent = data.astro.moonrise;
+        document.getElementById('moonset').textContent = data.astro.moonset;
+        document.getElementById('moonPhase').textContent = data.astro.moonPhase;
+        document.getElementById('lastUpdate').textContent = `更新：${data.updateTime}`;
 
-        const tip = document.getElementById('umbrellaTip');
-        tip.innerText = pop >= 30 ? "☔ 建議攜帶雨具" : "☀️ 紫外線注意";
-        tip.className = pop >= 30 ? "text-[10px] px-3 py-1 rounded-full font-bold bg-blue-100 text-blue-600" : "text-[10px] px-3 py-1 rounded-full font-bold bg-yellow-100 text-yellow-700";
+        const umbrella = document.getElementById('umbrellaTip');
+        if (data.current.pop >= 30) {
+            umbrella.innerHTML = `<i data-lucide="umbrella" class="w-4 h-4"></i> 建議帶傘`;
+            umbrella.className = "mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold bg-blue-100 text-blue-700 shadow-sm";
+        } else {
+            umbrella.innerHTML = `<i data-lucide="sun" class="w-4 h-4"></i> 無需雨具`;
+            umbrella.className = "mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold bg-green-100 text-green-700 shadow-sm";
+        }
 
-        // 天文
-        const daySun = sun.records.locations.location[0].time[0];
-        document.getElementById('sunrise').innerText = daySun.SunRiseTime;
-        document.getElementById('sunset').innerText = daySun.SunSetTime;
-        document.getElementById('moonrise').innerText = daySun.MoonRiseTime || "--:--";
-        document.getElementById('moonset').innerText = daySun.MoonSetTime || "--:--";
-
-        // 24H 趨勢
-        document.getElementById('hourlyForecast').innerHTML = el.find(x => x.elementName === "T").time.slice(0, 12).map(t => `
-            <div class="flex-shrink-0 text-center min-w-[50px]"><div class="text-[8px] opacity-50">${t.startTime.substring(11, 16)}</div><div class="font-bold text-xs">${t.elementValue[0].value}°</div></div>
+        const hCont = document.getElementById('hourlyForecast');
+        hCont.innerHTML = data.hourly.map(h => `
+            <div class="flex-shrink-0 bg-white p-4 rounded-2xl border border-slate-100 text-center min-w-[85px] shadow-sm">
+                <div class="text-[10px] text-slate-400 font-bold mb-2">${h.time}</div>
+                <div class="flex justify-center mb-2">${getWeatherIcon(h.desc || data.current.desc, 32)}</div>
+                <div class="font-bold text-slate-700 text-lg">${h.temp}°</div>
+                <div class="text-[10px] text-blue-500 font-black mt-1">💧${h.pop}%</div>
+            </div>
         `).join('');
 
-        // 一週預報邏輯
-        const weekWx = el.find(x => x.elementName === "Wx").time;
-        const weekT = el.find(x => x.elementName === "T").time;
-        let weekHtml = "";
-        for(let i=0; i<weekWx.length; i+=2) {
-            const date = new Date(weekWx[i].startTime);
-            const dayName = ["週日","週一","週二","週三","週四","週五","週六"][date.getDay()];
-            weekHtml += `<div class="week-item"><span class="w-12">${dayName}</span><span class="text-xs text-slate-500">${weekWx[i].elementValue[0].value}</span><span class="font-bold text-blue-600">${weekT[i].elementValue[0].value}°C</span></div>`;
-        }
-        document.getElementById('weekForecast').innerHTML = weekHtml;
+        const wCont = document.getElementById('weeklyForecast');
+        wCont.innerHTML = data.weekly.map(w => `
+            <div class="flex-shrink-0 bg-slate-50/50 p-3 rounded-2xl border border-slate-200 text-center min-w-[75px]">
+                <div class="text-[11px] font-bold text-slate-600 mb-1">${w.day}</div>
+                <div class="flex justify-center mb-1">${getWeatherIcon(w.desc, 24)}</div>
+                <div class="text-xs font-bold text-blue-800">${w.tempHigh}°</div>
+                <div class="text-[10px] text-slate-400">${w.tempLow}°</div>
+            </div>
+        `).join('');
 
-        document.getElementById('result').classList.remove('hidden');
         lucide.createIcons();
     }
 
-    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => alert("LINE ID 已複製！")); }
+    function updateSunCountdown() {
+        const now = new Date();
+        const [srH, srM] = currentAstroData.sunrise.split(':').map(Number);
+        const [ssH, ssM] = currentAstroData.sunset.split(':').map(Number);
+        const sunriseDate = new Date(); sunriseDate.setHours(srH, srM, 0);
+        const sunsetDate = new Date(); sunsetDate.setHours(ssH, ssM, 0);
+        let label = "";
+        let target = null;
+        if (now < sunriseDate) { label = "距離日出還有"; target = sunriseDate; }
+        else if (now < sunsetDate) { label = "距離日落還有"; target = sunsetDate; }
+        else { label = "距離明日日出還有"; target = new Date(sunriseDate.getTime() + 24 * 60 * 60 * 1000); }
+        const diff = target - now;
+        const h = Math.floor(diff / (1000 * 60 * 60));
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+        document.getElementById('sunCountdown').innerText = `${label} ${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
 
-    window.onload = () => {
-        updateDistricts();
-        document.getElementById('citySelect').addEventListener('change', updateDistricts);
-        document.getElementById('searchBtn').addEventListener('click', fetchWeather);
-        lucide.createIcons();
-    };
+    window.onload = function() {
+        initCountdownCards();
+        setInterval(updateLiveCounters, 1000);
+        fetchWarnings();
+        setInterval(fetchWarnings, 3600000);
+        
+        // 修正預設值：初始化彰化縣田中鎮
+        updateDistrictsList("田中鎮"); 
+        fetchWeather();
+        setInterval(fetchWeather, 3600000);
+    }
 </script>
+
 </body>
 </html>
+
