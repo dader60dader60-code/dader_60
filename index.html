@@ -339,7 +339,7 @@
 
     async function fetchWarnings() {
         try {
-            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${CWA-E16D81B4-7836-43CA-95E5-51D9A434B120}`);
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY_CWA}`);
             const data = await res.json();
             document.getElementById('windWarningContent').innerText = "目前彰化、台中、南投地區無強風警報。";
             document.getElementById('rainWarningContent').innerText = "目前彰化、台中、南投地區無大雨特報。";
@@ -509,14 +509,16 @@
     }
 
     window.onload = function() {
-        updateDistrictsList("田中鎮");
         initCountdownCards();
-        updateLiveCounters();
-        fetchWarnings();
         setInterval(updateLiveCounters, 1000);
-        setInterval(fetchWarnings, 600000);
-        lucide.createIcons();
-    };
+        fetchWarnings();
+        setInterval(fetchWarnings, 3600000);
+        
+        // 修正預設值：初始化彰化縣田中鎮
+        updateDistrictsList("田中鎮"); 
+        fetchWeather();
+        setInterval(fetchWeather, 3600000);
+    }
 </script>
 
 </body>
