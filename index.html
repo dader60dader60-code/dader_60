@@ -220,8 +220,9 @@
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     let weatherDataCache = null;
 
-    // 倒數日資料 (修改點：total 全部統一為 365)
+    // 倒數日資料 (針對載具發票開獎名稱進行動態修改邏輯)
     const countdownEvents = [
+        { id: 'receipt', title: '🧾 載具發票開獎 (日期 14:00)', isReceipt: true, total: 60, wish: '祝大家發票中大獎，財源滾滾！💰' },
         { id: 'exam1', title: '📝 3/30~4/2 第一次段考', date: '2026-03-30', total: 365, wish: '段考加油，分數衝衝衝！💪' },
         { id: 'tomb', title: '🕯️ 4/3~4/6 清明連假', date: '2026-04-03', total: 365, wish: '連假愉快，注意交通安全！🚗' },
         { id: 'c-test', title: '🛡️ 4/12 在校生丙級檢定學科', date: '2026-04-12', total: 365, wish: '丙檢學科必過，證照到手！🔥' },
@@ -243,7 +244,7 @@
             const card = document.createElement('div');
             card.className = 'event-card';
             card.innerHTML = `
-                <span class="event-title">${ev.title}</span>
+                <span class="event-title" id="title-${ev.id}">${ev.title}</span>
                 <div class="timer-grid">
                     <div class="timer-unit-box"><span class="timer-val" id="d-${ev.id}">-</span><span class="timer-unit-label">天</span></div>
                     <div class="timer-unit-box"><span class="timer-val" id="h-${ev.id}">-</span><span class="timer-unit-label">時</span></div>
@@ -252,7 +253,7 @@
                 </div>
                 <div class="progress-container">
                     <div class="progress-info">
-                        <span id="label-total-${ev.id}">年度週期 (365天)</span>
+                        <span id="label-total-${ev.id}">${ev.isReceipt ? '雙月週期' : '年度週期 (365天)'}</span>
                         <span id="label-remain-${ev.id}">剩餘 -- 天</span>
                     </div>
                     <div class="progress-bg"><div class="progress-fill" id="bar-${ev.id}"></div></div>
@@ -267,7 +268,37 @@
         const now = new Date();
         countdownEvents.forEach(ev => {
             let target;
-            if (ev.isRecurring) {
+            
+            if (ev.isReceipt) {
+                // 發票開獎邏輯：每逢單月 25 號 14:00 (1, 3, 5, 7, 9, 11)
+                let year = now.getFullYear();
+                let month = now.getMonth(); // 0-11
+                
+                // 找出下一個開獎月份 (0=1月, 2=3月, 4=5月...)
+                let targetMonth;
+                if (month % 2 === 0) {
+                    targetMonth = month;
+                } else {
+                    targetMonth = month + 1;
+                }
+                
+                target = new Date(year, targetMonth, 25, 14, 0, 0);
+                
+                // 如果已過下午兩點，跳下一個單月
+                if (target < now) {
+                    targetMonth += 2;
+                    if (targetMonth > 11) {
+                        targetMonth = 0;
+                        year += 1;
+                    }
+                    target = new Date(year, targetMonth, 25, 14, 0, 0);
+                }
+                // 修改標題名稱為 (日期 14:00)
+                const titleElem = document.getElementById(`title-${ev.id}`);
+                if (titleElem) {
+                    titleElem.innerText = `🧾 載具發票開獎 (${targetMonth + 1}月25號 14:00)`;
+                }
+            } else if (ev.isRecurring) {
                 target = new Date(now.getFullYear(), 9, 10);
                 if (target < now) target.setFullYear(now.getFullYear() + 1);
             } else {
@@ -286,7 +317,7 @@
                 if (dElem) {
                     [dElem, hElem, mElem, sElem].forEach(el => el.innerText = "0");
                     bar.style.width = "100%";
-                    remLabel.innerText = "已抵達！";
+                    remLabel.innerText = "開獎中/已抵達！";
                 }
             } else {
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -300,8 +331,9 @@
                     mElem.innerText = mins.toString().padStart(2, '0');
                     sElem.innerText = secs.toString().padStart(2, '0');
 
-                    // 修改點：根據一整年 365 天計算百分比進度
-                    const percent = Math.max(0, Math.min(100, (1 - (days / 365)) * 100));
+                    // 進度條計算
+                    const divisor = ev.isReceipt ? 60 : 365;
+                    const percent = Math.max(0, Math.min(100, (1 - (days / divisor)) * 100));
                     bar.style.width = percent + "%";
                     remLabel.innerText = `剩餘 ${days} 天`;
                 }
