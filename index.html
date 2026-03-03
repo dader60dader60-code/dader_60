@@ -181,17 +181,19 @@
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     let weatherDataCache = null;
 
-    // 倒數日資料
+    // 倒數日資料 (修改點：total 全部統一為 365)
     const countdownEvents = [
-        { id: 'exam1', title: '📝 3/30~4/2 第一次段考', date: '2026-03-30', total: 30, wish: '段考加油，分數衝衝衝！💪' },
-        { id: 'tomb', title: '🕯️ 4/3~4/6 清明連假', date: '2026-04-03', total: 14, wish: '連假愉快，注意交通安全！🚗' },
-        { id: 'c-test', title: '🛡️ 4/12 在校生丙級檢定學科', date: '2026-04-12', total: 45, wish: '丙檢學科必過，證照到手！🔥' },
-        { id: 'grad', title: '🎓 6/1 畢業日', date: '2026-06-01', total: 90, wish: '畢業快樂，前程似錦！✨' },
-        { id: 'dragon', title: '🚣 6/19~6/21 端午連假', date: '2026-06-19', total: 20, wish: '端午吃粽子，也要記得讀書喔！🍙' },
-        { id: 'final', title: '📖 6/25~6/30 期末考', date: '2026-06-25', total: 21, wish: '這學期最後一戰，考完就放假！🏖️' },
-        { id: 'end', title: '☀️ 6/30 結業式', date: '2026-06-30', total: 120, wish: '暑假快樂，迎接夏日時光！🌊' },
-        { id: 'moon', title: '🥮 9/25~9/28 中秋連假/教師節', date: '2026-09-25', total: 60, wish: '中秋人團圓，假期愉快！🌕' },
-        { id: 'nat', title: '🇹🇼 10/9~10/11 國慶連假', date: '2026-10-09', total: 14, wish: '國慶連假放鬆去！🎈' },
+        { id: 'exam1', title: '📝 3/30~4/2 第一次段考', date: '2026-03-30', total: 365, wish: '段考加油，分數衝衝衝！💪' },
+        { id: 'tomb', title: '🕯️ 4/3~4/6 清明連假', date: '2026-04-03', total: 365, wish: '連假愉快，注意交通安全！🚗' },
+        { id: 'c-test', title: '🛡️ 4/12 在校生丙級檢定學科', date: '2026-04-12', total: 365, wish: '丙檢學科必過，證照到手！🔥' },
+        { id: 'exam2-3', title: '📝 4/27~4/30 第二次段考(三年級)', date: '2026-04-27', total: 365, wish: '學長姐加油，最後衝刺！💪' },
+        { id: 'exam2-12', title: '📝 5/11~5/15 第二次段考(一、二年級)', date: '2026-05-11', total: 365, wish: '再接再厲，二段必勝！🔥' },
+        { id: 'grad', title: '🎓 6/1 畢業日', date: '2026-06-01', total: 365, wish: '畢業快樂，前程似錦！✨' },
+        { id: 'dragon', title: '🚣 6/19~6/21 端午連假', date: '2026-06-19', total: 365, wish: '端午吃粽子，也要記得讀書喔！🍙' },
+        { id: 'final', title: '📖 6/25~6/30 期末考', date: '2026-06-25', total: 365, wish: '這學期最後一戰，考完就放假！🏖️' },
+        { id: 'end', title: '☀️ 6/30 結業式', date: '2026-06-30', total: 365, wish: '暑假快樂，迎接夏日時光！🌊' },
+        { id: 'moon', title: '🥮 9/25~9/28 中秋連假/教師節', date: '2026-09-25', total: 365, wish: '中秋人團圓，假期愉快！🌕' },
+        { id: 'nat', title: '🇹🇼 10/9~10/11 國慶連假', date: '2026-10-09', total: 365, wish: '國慶連假放鬆去！🎈' },
         { id: 'bday', title: '🎂 10/10 版主生日', date: '2026-10-10', isRecurring: true, total: 365, wish: '祝版主平安順利，生日快樂！⚡' },
         { id: 'ny', title: '🎆 1/1 元旦', date: '2027-01-01', total: 365, wish: '新年新氣象，萬事如意！🎊' }
     ];
@@ -211,7 +213,7 @@
                 </div>
                 <div class="progress-container">
                     <div class="progress-info">
-                        <span id="label-total-${ev.id}">總計 ${ev.total} 天</span>
+                        <span id="label-total-${ev.id}">年度週期 (365天)</span>
                         <span id="label-remain-${ev.id}">剩餘 -- 天</span>
                     </div>
                     <div class="progress-bg"><div class="progress-fill" id="bar-${ev.id}"></div></div>
@@ -242,28 +244,33 @@
             const remLabel = document.getElementById(`label-remain-${ev.id}`);
 
             if (diff <= 0) {
-                [dElem, hElem, mElem, sElem].forEach(el => el.innerText = "0");
-                bar.style.width = "100%";
-                remLabel.innerText = "已抵達！";
+                if (dElem) {
+                    [dElem, hElem, mElem, sElem].forEach(el => el.innerText = "0");
+                    bar.style.width = "100%";
+                    remLabel.innerText = "已抵達！";
+                }
             } else {
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
                 const mins = Math.floor((diff / (1000 * 60)) % 60);
                 const secs = Math.floor((diff / 1000) % 60);
 
-                dElem.innerText = days;
-                hElem.innerText = hours.toString().padStart(2, '0');
-                mElem.innerText = mins.toString().padStart(2, '0');
-                sElem.innerText = secs.toString().padStart(2, '0');
+                if (dElem) {
+                    dElem.innerText = days;
+                    hElem.innerText = hours.toString().padStart(2, '0');
+                    mElem.innerText = mins.toString().padStart(2, '0');
+                    sElem.innerText = secs.toString().padStart(2, '0');
 
-                const percent = Math.max(0, Math.min(100, (1 - (days / ev.total)) * 100));
-                bar.style.width = percent + "%";
-                remLabel.innerText = `剩餘 ${days} 天`;
+                    // 修改點：根據一整年 365 天計算百分比進度
+                    const percent = Math.max(0, Math.min(100, (1 - (days / 365)) * 100));
+                    bar.style.width = percent + "%";
+                    remLabel.innerText = `剩餘 ${days} 天`;
+                }
             }
         });
     }
 
-    // --- 保留天氣與影像邏輯 ---
+    // --- 保留天氣與影像邏輯 (完全不變動) ---
     function getWeatherSVG(wxCode, size = 24) {
         const code = parseInt(wxCode);
         if (code === 1) return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M17.66 6.34l1.42-1.42"/></svg>`;
@@ -323,7 +330,7 @@
 
     const areaData = {
         "彰化縣": ["田中鎮", "彰化市", "員林市", "和美鎮", "鹿港鎮", "溪湖鎮", "二林鎮", "北斗鎮", "花壇鄉", "芬園鄉", "大村鄉", "永靖鄉", "伸港鄉", "線西鄉", "福興鄉", "秀水鄉", "埔鹽鄉", "埔心鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "田尾鄉", "二水鄉", "社頭鄉", "芳苑鄉", "大城鄉"],
-        "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "後里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
+        "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "後里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "進水區", "大甲區", "外埔區", "大安區"],
         "南投縣": ["南投市", "草屯鎮", "埔里鎮", "竹山鎮", "集集鎮", "名間鄉", "鹿谷鄉", "中寮鄉", "魚池鄉", "國姓鄉", "水里鄉", "信義鄉", "仁愛鄉"]
     };
 
@@ -346,8 +353,6 @@
 
     async function fetchWarnings() {
         try {
-            const windCard = document.getElementById('windWarningCard');
-            const rainCard = document.getElementById('rainWarningCard');
             const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY}`);
             const data = await res.json();
             document.getElementById('windWarningContent').innerText = "目前彰化、台中、南投地區無強風警報。";
