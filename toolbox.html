@@ -32,7 +32,6 @@
 
         .tech-font { font-family: 'Orbitron', sans-serif; }
 
-        /* 旋轉盤樣式優化 */
         .wheel-container {
             position: relative;
             width: 260px;
@@ -61,7 +60,6 @@
             display: block;
         }
 
-        /* 結果彈窗樣式 */
         #result-modal {
             display: none;
             position: fixed;
@@ -82,7 +80,6 @@
             to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
 
-        /* 底部標籤：確保完全不換行且字體大小適中 */
         .footer-tag {
             background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(12px);
@@ -110,7 +107,6 @@
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
 
-        /* 月曆樣式 */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -138,7 +134,7 @@
 
     <!-- 結果彈窗 -->
     <div id="result-modal" class="p-6 md:p-8 rounded-2xl text-center">
-        <div class="text-blue-400 text-[10px] tracking-widest uppercase mb-2 tech-font">系統決策</div>
+        <div class="text-blue-400 text-[10px] tracking-widest uppercase mb-2 tech-font">系統決定</div>
         <div id="result-text" class="text-2xl md:text-3xl font-bold text-white mb-6 break-words">---</div>
         <button onclick="closeModal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg font-bold transition-all text-sm tracking-widest">確定</button>
     </div>
@@ -169,7 +165,7 @@
     <!-- 主內容 -->
     <main class="flex-1 max-w-5xl mx-auto w-full p-4 md:p-8">
         
-        <!-- 極簡時間 - 優化手機字體縮放 -->
+        <!-- 極簡時間 -->
         <div id="minimal-clock" class="panel active mech-card p-6 md:p-12 rounded-2xl text-center">
             <div id="clock-val" class="text-4xl sm:text-6xl md:text-9xl font-bold text-blue-500 tracking-tighter tech-font drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">00:00:00</div>
             <p id="date-val" class="mt-4 md:mt-8 text-sm md:text-xl text-slate-400 font-medium tracking-widest"></p>
@@ -286,7 +282,7 @@
 
         <!-- 生肖對照 -->
         <div id="zodiac-panel" class="panel mech-card p-4 md:p-8 rounded-2xl">
-            <h2 class="text-lg md:text-2xl font-bold mb-1 text-blue-400">生肖年齡對照表</h2>
+            <h2 class="text-lg md:text-2xl font-bold mb-1 text-blue-400">生肖對照表</h2>
             <p class="text-slate-500 mb-4 md:mb-8 text-[10px] uppercase tracking-widest">排序：2028 年至 2000 年（龍年）</p>
             <div class="table-container border border-slate-800 rounded-xl no-scrollbar">
                 <table class="w-full border-collapse">
@@ -294,7 +290,6 @@
                         <tr class="text-slate-500 text-[10px] md:text-xs uppercase">
                             <th class="p-2 md:p-4 text-left border-b border-slate-800">西元</th>
                             <th class="p-2 md:p-4 text-left border-b border-slate-800">民國</th>
-                            <th class="p-2 md:p-4 text-left border-b border-slate-800">年齡</th>
                             <th class="p-2 md:p-4 text-left border-b border-slate-800">生肖</th>
                         </tr>
                     </thead>
@@ -305,7 +300,7 @@
         
     </main>
 
-    <!-- 固定底部標籤 - 適配各種螢幕寬度，保證單行不溢出 -->
+    <!-- 固定底部標籤 -->
     <footer class="footer-tag fixed bottom-0 left-0 w-full py-3 px-4 text-center z-[100]">
         <div class="max-w-6xl mx-auto flex items-center justify-center overflow-hidden">
             <p class="text-slate-400 text-[9px] sm:text-xs md:text-sm font-medium tracking-tighter whitespace-nowrap">
@@ -322,6 +317,62 @@
         const ctx = canvas.getContext('2d');
         const darkColors = ['#1e3a8a', '#1e40af', '#1d4ed8', '#2563eb', '#3b82f6', '#1d4ed8', '#1e3a8a'];
 
+        // --- 音效系統 (Web Audio API) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playTickSound() {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        // 修改後的刮刮樂中獎音效：多頻率上升音效，帶有歡慶感
+        function playScratchWinSound() {
+            const now = audioCtx.currentTime;
+            const freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 琶音
+            
+            freqs.forEach((f, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(f, now + (i * 0.1));
+                osc.frequency.exponentialRampToValueAtTime(f * 1.5, now + (i * 0.1) + 0.3);
+                
+                gain.gain.setValueAtTime(0.2, now + (i * 0.1));
+                gain.gain.exponentialRampToValueAtTime(0.01, now + (i * 0.1) + 0.4);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start(now + (i * 0.1));
+                osc.stop(now + (i * 0.1) + 0.4);
+            });
+        }
+
+        function playAlarmSound() {
+            const now = audioCtx.currentTime;
+            for(let i=0; i<10; i++) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.frequency.setValueAtTime(880, now + i*0.3);
+                gain.gain.setValueAtTime(0.2, now + i*0.3);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + i*0.3 + 0.2);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + i*0.3);
+                osc.stop(now + i*0.3 + 0.2);
+            }
+        }
+
         // 月曆邏輯
         let currentCalDate = new Date();
         function drawCalendar() {
@@ -329,19 +380,13 @@
             const title = document.getElementById('calendar-title');
             if(!body) return;
             body.innerHTML = '';
-            
             const year = currentCalDate.getFullYear();
             const month = currentCalDate.getMonth();
             title.innerText = `${year}年 ${String(month + 1).padStart(2, '0')}月`;
-
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const today = new Date();
-
-            for (let i = 0; i < firstDay; i++) {
-                body.innerHTML += '<div></div>';
-            }
-
+            for (let i = 0; i < firstDay; i++) { body.innerHTML += '<div></div>'; }
             for (let day = 1; day <= daysInMonth; day++) {
                 const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
                 body.innerHTML += `<div class="calendar-day ${isToday ? 'today' : 'text-slate-300 hover:bg-slate-700'}">${day}</div>`;
@@ -421,6 +466,7 @@
                     clearInterval(tIdx); 
                     tIdx = null; 
                     btn.innerText = "開始倒數"; 
+                    playAlarmSound();
                     return; 
                 }
                 total--;
@@ -471,23 +517,18 @@
         function initWheel() {
             const textInput = document.getElementById('w-opts');
             if(!textInput) return;
-            const text = textInput.value;
-            wheelOpts = text.split('\n').filter(o => o.trim() !== '');
+            wheelOpts = textInput.value.split('\n').filter(o => o.trim() !== '');
             drawWheel();
         }
 
         function drawWheel() {
             const len = wheelOpts.length;
-            if (len === 0) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                return;
-            }
+            if (len === 0) { ctx.clearRect(0, 0, canvas.width, canvas.height); return; }
             const arc = (Math.PI * 2) / len;
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             const radius = centerX;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
             wheelOpts.forEach((opt, i) => {
                 const angle = i * arc;
                 ctx.beginPath();
@@ -499,7 +540,6 @@
                 ctx.strokeStyle = "rgba(255,255,255,0.1)";
                 ctx.lineWidth = 1;
                 ctx.stroke();
-                
                 ctx.save();
                 ctx.translate(centerX, centerY);
                 ctx.rotate(angle + arc / 2);
@@ -511,48 +551,45 @@
                 ctx.fillText(displayText, radius - 25, 5);
                 ctx.restore();
             });
-            
-            // 中心裝飾
-            ctx.beginPath(); 
-            ctx.arc(centerX, centerY, 15, 0, Math.PI * 2); 
-            ctx.fillStyle = "#0f172a"; 
-            ctx.fill(); 
-            ctx.strokeStyle = "#3b82f6"; 
-            ctx.lineWidth = 2; 
-            ctx.stroke();
+            ctx.beginPath(); ctx.arc(centerX, centerY, 15, 0, Math.PI * 2); ctx.fillStyle = "#0f172a"; ctx.fill(); ctx.strokeStyle = "#3b82f6"; ctx.lineWidth = 2; ctx.stroke();
         }
 
         function spin() {
             if (isSpinning || wheelOpts.length < 2) return;
+            audioCtx.resume(); 
             isSpinning = true;
             const btn = document.getElementById('spin-btn');
-            btn.disabled = true; 
-            btn.innerText = "轉動中...";
-            const len = wheelOpts.length;
+            btn.disabled = true; btn.innerText = "轉動中...";
+            
             const spins = 8 + Math.floor(Math.random() * 5); 
             const deg = Math.floor(Math.random() * 360);
             const totalDeg = spins * 360 + deg;
             currentRotation += totalDeg;
             canvas.style.transform = `rotate(${currentRotation}deg)`;
             
+            const tickCount = spins * wheelOpts.length;
+            const tickInterval = 5000 / tickCount;
+            for(let i=0; i<tickCount; i++) {
+                setTimeout(() => { if(isSpinning) playTickSound(); }, i * tickInterval * 1.5); 
+            }
+
             setTimeout(() => {
-                isSpinning = false; 
-                btn.disabled = false; 
-                btn.innerText = "開始旋轉";
+                isSpinning = false; btn.disabled = false; btn.innerText = "開始旋轉";
+                
+                // --- 修改處：中獎時改用刮刮樂音效 ---
+                playScratchWinSound();
+                
                 const normalizedDeg = (currentRotation % 360);
-                const arcDeg = 360 / len;
+                const arcDeg = 360 / wheelOpts.length;
                 const index = Math.floor(((270 - normalizedDeg + 360) % 360) / arcDeg);
                 showResult(wheelOpts[index]);
             }, 5000);
         }
 
         function showResult(text) {
-            const modal = document.getElementById('result-modal');
-            const resText = document.getElementById('result-text');
-            resText.innerText = text; 
-            modal.style.display = 'block';
+            document.getElementById('result-text').innerText = text; 
+            document.getElementById('result-modal').style.display = 'block';
         }
-
         function closeModal() { document.getElementById('result-modal').style.display = 'none'; }
 
         function doWC() {
@@ -575,23 +612,18 @@
                     <tr class="${isBase ? 'bg-blue-900/30 font-bold' : 'hover:bg-slate-800/50 transition-colors'}">
                         <td class="p-2 md:p-4 border-b border-slate-800 tech-font text-blue-300">${yr}</td>
                         <td class="p-2 md:p-4 border-b border-slate-800">${yr - 1911}</td>
-                        <td class="p-2 md:p-4 border-b border-slate-800">${yr - 2000}</td>
-                        <td class="p-2 md:p-4 border-b border-slate-800">
-                            <span class="px-2 md:px-3 py-0.5 md:py-1 ${isBase ? 'bg-blue-600' : 'bg-slate-800'} rounded text-white font-bold border border-slate-700 text-[10px] md:text-sm">
-                                ${zodiacs[zIdx]}
-                            </span>
-                        </td>
-                    </tr>`;
+                        <td class="p-2 md:p-4 border-b border-slate-800">${zodiacs[zIdx]}</td>
+                    </tr>
+                `;
             }
             tbody.innerHTML = rows;
         }
 
-        window.onload = () => { 
-            initWheel(); 
-            initZodiac(); 
-            drawCalendar(); 
-            tick(); 
-            setInterval(tick, 1000); 
+        window.onload = () => {
+            setInterval(tick, 1000);
+            tick();
+            initZodiac();
+            initWheel();
         };
     </script>
 </body>
