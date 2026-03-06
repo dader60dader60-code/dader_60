@@ -13,6 +13,12 @@
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .owner-tiktok { background: #000000; color: #ffffff; border: 2px solid #25F4EE; }
         
+        /* NBA 專屬樣式 */
+        .nba-section { background: #002B5C; color: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid #F58426; }
+        .nba-title { color: #F58426; font-size: 18px; margin-bottom: 10px; display: block; }
+        .nba-game-item { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 8px; margin-top: 8px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .nba-live-tag { background: #ff0000; color: white; padding: 2px 5px; border-radius: 4px; font-size: 10px; animation: blink 1s infinite; }
+
         /* 萬用工具箱閃爍按鈕樣式 */
         .toolbox-card { 
             background: linear-gradient(135deg, #6e8efb, #a777e3); 
@@ -119,7 +125,7 @@
     <a href="https://www.tiktok.com/@hbingzhe10.10" target="_blank" class="card owner-tiktok">🎵 版主抖音 (TikTok)</a>
     
     <!-- 新增萬用工具箱按鈕 -->
-    <a href="toolbox.html" target="_blank" class="card toolbox-card">🧰 萬用工具箱 (New)</a>
+    <a href="toolbox.html" target="_blank" class="card toolbox-card">🧰 萬用工具箱 </a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
@@ -174,6 +180,18 @@
     <div id="windWarningCard" class="warning-box"><div class="warning-title">🌬️ 陸上強風警報監測 (中彰投)</div><div id="windWarningContent" class="warning-content">正在獲取強風警報資訊...</div></div>
     <div id="rainWarningCard" class="warning-box"><div class="warning-title">🌧️ 大雨特報監測 (中彰投)</div><div id="rainWarningContent" class="warning-content">正在獲取大雨特報資訊...</div></div>
 
+    <!-- NBA 球賽專區 (新增部分) -->
+    <div class="nba-section">
+        <strong class="nba-title">🏀 NBA 賽事 & 直播專區</strong>
+        <div class="video-container">
+            <!-- 自動偵測 NBA 頻道最新直播/影片 -->
+            <iframe src="https://www.youtube.com/embed/live_stream?channel=UCWJ2lWNubArHWmf3FIHbfcQ&mute=1" allowfullscreen></iframe>
+        </div>
+        <div id="nba-game-list" style="margin-top:10px;">
+            <div style="text-align:center; font-size:12px; color:#aaa;">正在獲取即時比分...</div>
+        </div>
+    </div>
+
     <!-- 地震直播 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
@@ -221,9 +239,39 @@
 
 <script>
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
+    const NBA_API_KEY = "2ea271de-38b5-4828-85b9-5f21a1c39083";
     let weatherDataCache = null;
 
-    // 倒數日資料 (針對載具發票開獎名稱進行動態修改邏輯)
+    // NBA 數據抓取
+    async function fetchNBAData() {
+        const list = document.getElementById('nba-game-list');
+        const today = new Date().toISOString().split('T')[0];
+        try {
+            const res = await fetch(`https://api.balldontlie.io/v1/games?dates[]=${today}`, {
+                headers: { 'Authorization': NBA_API_KEY }
+            });
+            const result = await res.json();
+            const games = result.data;
+            if (!games || games.length === 0) {
+                list.innerHTML = `<div style="text-align:center; font-size:12px; color:#aaa;">今日暫無 NBA 賽事</div>`;
+                return;
+            }
+            list.innerHTML = '';
+            games.slice(0, 3).forEach(g => {
+                const isLive = g.status.includes('Qtr') || g.status.includes('Half');
+                list.innerHTML += `
+                    <div class="nba-game-item">
+                        <span>${isLive ? '<span class="nba-live-tag">LIVE</span>' : ''} ${g.status}</span>
+                        <span><b>${g.home_team.abbreviation}</b> ${g.home_team_score} : ${g.visitor_team_score} <b>${g.visitor_team.abbreviation}</b></span>
+                    </div>
+                `;
+            });
+        } catch (e) {
+            list.innerHTML = `<div style="text-align:center; font-size:12px; color:#aaa;">無法載入賽事比分</div>`;
+        }
+    }
+
+    // 倒數日資料
     const countdownEvents = [
         { id: 'receipt', title: '🧾 載具發票開獎 (日期 14:00)', isReceipt: true, total: 60, wish: '祝大家發票中大獎，財源滾滾！💰' },
         { id: 'exam1', title: '📝 3/30~4/2 第一次段考', date: '2026-03-30', total: 365, wish: '段考加油，分數衝衝衝！💪' },
@@ -271,32 +319,18 @@
         const now = new Date();
         countdownEvents.forEach(ev => {
             let target;
-            
             if (ev.isReceipt) {
                 let year = now.getFullYear();
                 let month = now.getMonth(); 
-                
-                let targetMonth;
-                if (month % 2 === 0) {
-                    targetMonth = month;
-                } else {
-                    targetMonth = month + 1;
-                }
-                
+                let targetMonth = (month % 2 === 0) ? month : month + 1;
                 target = new Date(year, targetMonth, 25, 14, 0, 0);
-                
                 if (target < now) {
                     targetMonth += 2;
-                    if (targetMonth > 11) {
-                        targetMonth = 0;
-                        year += 1;
-                    }
+                    if (targetMonth > 11) { targetMonth = 0; year += 1; }
                     target = new Date(year, targetMonth, 25, 14, 0, 0);
                 }
                 const titleElem = document.getElementById(`title-${ev.id}`);
-                if (titleElem) {
-                    titleElem.innerText = `🧾 載具發票開獎 (${targetMonth + 1}月25號 14:00)`;
-                }
+                if (titleElem) titleElem.innerText = `🧾 載具發票開獎 (${targetMonth + 1}月25號 14:00)`;
             } else if (ev.isRecurring) {
                 target = new Date(now.getFullYear(), 9, 10);
                 if (target < now) target.setFullYear(now.getFullYear() + 1);
@@ -323,13 +357,11 @@
                 const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
                 const mins = Math.floor((diff / (1000 * 60)) % 60);
                 const secs = Math.floor((diff / 1000) % 60);
-
                 if (dElem) {
                     dElem.innerText = days;
                     hElem.innerText = hours.toString().padStart(2, '0');
                     mElem.innerText = mins.toString().padStart(2, '0');
                     sElem.innerText = secs.toString().padStart(2, '0');
-
                     const divisor = ev.isReceipt ? 60 : 365;
                     const percent = Math.max(0, Math.min(100, (1 - (days / divisor)) * 100));
                     bar.style.width = percent + "%";
@@ -343,9 +375,7 @@
         const code = parseInt(wxCode);
         if (code === 1) return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M17.66 6.34l1.42-1.42"/></svg>`;
         if (code >= 2 && code <= 4) return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#f0f0f0" stroke-width="2"><path d="M17.5 19c2.5 0 4.5-2 4.5-4.5 0-2.4-1.9-4.3-4.3-4.5-.4-3.1-3-5.5-6.2-5.5-2.7 0-5 1.7-5.9 4.1C3.2 9.1 1 11.3 1 14c0 2.8 2.2 5 5 5h11.5z"/></svg>`;
-        if (code >= 5 && code <= 7) return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#bdc3c7" stroke-width="2"><path d="M17.5 19c2.5 0 4.5-2 4.5-4.5 0-2.4-1.9-4.3-4.3-4.5-.4-3.1-3-5.5-6.2-5.5-2.7 0-5 1.7-5.9 4.1C3.2 9.1 1 11.3 1 14c0 2.8 2.2 5 5 5h11.5z"/><path d="M12 12v.01" stroke-width="3"/></svg>`;
-        if (code >= 8) return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#7fbfff" stroke-width="2"><path d="M17.5 19c2.5 0 4.5-2 4.5-4.5 0-2.4-1.9-4.3-4.3-4.5-.4-3.1-3-5.5-6.2-5.5-2.7 0-5 1.7-5.9 4.1C3.2 9.1 1 11.3 1 14c0 2.8 2.2 5 5 5h11.5z"/><path d="M8 20v2m4-2v2m4-2v2"/></svg>`;
-        return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M17.5 19c2.5 0 4.5-2 4.5-4.5 0-2.4-1.9-4.3-4.3-4.5-.4-3.1-3-5.5-6.2-5.5-2.7 0-5 1.7-5.9 4.1C3.2 9.1 1 11.3 1 14c0 2.8 2.2 5 5 5h11.5z"/></svg>`;
+        return `<svg class="mini-icon" style="width:${size}px; height:${size}px" viewBox="0 0 24 24" fill="none" stroke="#7fbfff" stroke-width="2"><path d="M17.5 19c2.5 0 4.5-2 4.5-4.5 0-2.4-1.9-4.3-4.3-4.5-.4-3.1-3-5.5-6.2-5.5-2.7 0-5 1.7-5.9 4.1C3.2 9.1 1 11.3 1 14c0 2.8 2.2 5 5 5h11.5z"/><path d="M8 20v2m4-2v2m4-2v2"/></svg>`;
     }
 
     async function fetchWeatherData() {
@@ -370,7 +400,6 @@
             const wx = cityData.weatherElement.find(e => e.elementName === "Wx").time[0].parameter;
             const maxT = cityData.weatherElement.find(e => e.elementName === "MaxT").time[0].parameter;
             const pop = cityData.weatherElement.find(e => e.elementName === "PoP").time[0].parameter;
-
             document.getElementById('currentWeatherIcon').innerHTML = getWeatherSVG(wx.parameterValue, 60);
             document.getElementById('weatherMain').innerText = `目前溫度 ${maxT.parameterName}°C`;
             document.getElementById('mainRainProb').innerText = `${pop.parameterName}%`;
@@ -440,44 +469,31 @@
         initCountdownCards();
         fetchWeatherData();
         fetchWarnings();
+        fetchNBAData(); // 啟動 NBA 抓取
         updateLiveCounters();
-        startRealtimeCounter(); // 啟動 Firebase 瀏覽計數器
+        startRealtimeCounter();
         setInterval(updateLiveCounters, 1000);
         setInterval(() => updateSunCountdown(new Date()), 1000);
+        setInterval(fetchNBAData, 600000); // NBA 10分鐘更新一次
     };
 </script>
 
-<!-- Firebase SDK 嵌入 (不影響原本邏輯) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 <script>
-    const firebaseConfig = {
-        databaseURL: "https://total-views-969ba-default-rtdb.asia-southeast1.firebasedatabase.app/" 
-    };
-    
+    const firebaseConfig = { databaseURL: "https://total-views-969ba-default-rtdb.asia-southeast1.firebasedatabase.app/" };
     function startRealtimeCounter() {
         try {
             firebase.initializeApp(firebaseConfig);
             const db = firebase.database();
             const viewsRef = db.ref('total_views');
-
-            // 增加瀏覽次數
-            viewsRef.transaction((currentValue) => {
-                return (currentValue || 0) + 1;
-            });
-
-            // 實時監聽並更新 UI
+            viewsRef.transaction((currentValue) => { return (currentValue || 0) + 1; });
             viewsRef.on('value', (snapshot) => {
                 const count = snapshot.val();
                 const viewElem = document.getElementById('total_view_display');
-                if (viewElem && count !== null) {
-                    viewElem.innerText = count.toLocaleString();
-                }
+                if (viewElem && count !== null) viewElem.innerText = count.toLocaleString();
             });
-        } catch (err) {
-            console.error("Firebase Error:", err);
-            document.getElementById('total_view_display').innerText = "暫時無法顯示";
-        }
+        } catch (err) { console.error("Firebase Error:", err); }
     }
 </script>
 </body>
