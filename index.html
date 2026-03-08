@@ -5,7 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>靠北達德速度版⚡⚡⚡</title>
     <style>
-        body { font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 80px; }
+        /* 新增：跑馬燈樣式 (固定在最上方) */
+        .marquee-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            color: #d32f2f;
+            z-index: 2000;
+            height: 35px;
+            line-height: 35px;
+            overflow: hidden;
+            font-weight: bold;
+            font-size: 14px;
+            border-bottom: 2px solid #ff0000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .marquee-text {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: marquee 25s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* 修正：body padding-top 避免內容被跑馬燈遮住 */
+        body { font-family: "Microsoft JhengHei", Arial, sans-serif; background-color: #ADD8E6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 55px 20px 80px 20px; }
+        
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
@@ -105,6 +135,13 @@
     </style>
 </head>
 <body>
+
+<!-- 新增跑馬燈 HTML -->
+<div class="marquee-container">
+    <div class="marquee-text">
+        因版主住院調養關係版主位置會暫時由副版主代理一段時間，其餘作業會由副版主暫時領導小編一同完成不會因版主住院調養而停工，不確定什麼時候會出院會再另行通知，等小編的通知有任何問題歡迎詢問Ig 後台或是官方賴id:@768mnxcr(記得要打@)
+    </div>
+</div>
 
 <div class="container">
     <img src="avatar.jpg" alt="版主頭像" class="profile-pic">
