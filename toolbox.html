@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>我的萬用工具箱 - 繁體中文版</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Orbitron:wght@400;700&display=swap');
         
@@ -128,6 +129,8 @@
             font-weight: bold;
             box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
         }
+        /* QR Code 修正樣式 */
+        #qrcode-img img { margin: 0 auto; border: 8px solid white; border-radius: 4px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col pb-24 md:pb-28">
@@ -151,6 +154,7 @@
                     <option value="minimal-clock" selected>🕒 極簡時間</option>
                     <option value="world-clock">🌍 世界時區</option>
                     <option value="calendar-panel">📅 萬用月曆</option>
+                    <option value="qr-panel">🔗 QR Code 快速生成器</option>
                     <option value="timer-panel">⏲️ 倒數計時</option>
                     <option value="stopwatch-panel">⏱️ 碼表計時</option>
                     <option value="period-panel">🌸 生理預測</option>
@@ -196,6 +200,19 @@
                     <div class="text-center text-[10px] md:text-xs text-slate-500 py-2">六</div>
                 </div>
                 <div id="calendar-body" class="calendar-grid"></div>
+            </div>
+        </div>
+
+        <!-- QR Code 生成器 -->
+        <div id="qr-panel" class="panel mech-card p-4 md:p-8 rounded-2xl text-center">
+            <h2 class="text-lg md:text-2xl font-bold mb-6 text-blue-400">QR Code 快速生成器</h2>
+            <div class="max-w-md mx-auto space-y-4">
+                <input type="text" id="qr-input" placeholder="請貼上網址或輸入文字..." class="w-full p-3 md:p-4 bg-[#0f172a] border border-slate-700 rounded-lg text-white text-sm focus:border-blue-500 outline-none">
+                <button onclick="generateQR()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 md:py-4 rounded-lg font-bold transition-all text-sm tracking-widest">生成 QR CODE</button>
+                
+                <div id="qrcode-img" class="py-6 flex justify-center"></div>
+                
+                <button id="qr-download" onclick="downloadQR()" class="hidden w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-lg font-bold transition-all text-sm tracking-widest">📥 下載 QR CODE 圖片</button>
             </div>
         </div>
 
@@ -334,25 +351,20 @@
             osc.stop(audioCtx.currentTime + 0.1);
         }
 
-        // 修改後的刮刮樂中獎音效：多頻率上升音效，帶有歡慶感
         function playScratchWinSound() {
             const now = audioCtx.currentTime;
-            const freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 琶音
+            const freqs = [523.25, 659.25, 783.99, 1046.50]; 
             
             freqs.forEach((f, i) => {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(f, now + (i * 0.1));
                 osc.frequency.exponentialRampToValueAtTime(f * 1.5, now + (i * 0.1) + 0.3);
-                
                 gain.gain.setValueAtTime(0.2, now + (i * 0.1));
                 gain.gain.exponentialRampToValueAtTime(0.01, now + (i * 0.1) + 0.4);
-                
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-                
                 osc.start(now + (i * 0.1));
                 osc.stop(now + (i * 0.1) + 0.4);
             });
@@ -447,6 +459,38 @@
                     container.querySelector('.tz-date').innerText = formatterDate.format(now);
                 }
             });
+        }
+
+        // --- QR Code 邏輯 ---
+        let qrcodeObj = null;
+        function generateQR() {
+            const input = document.getElementById('qr-input').value;
+            const container = document.getElementById('qrcode-img');
+            const downloadBtn = document.getElementById('qr-download');
+            
+            if(!input) return;
+            
+            container.innerHTML = "";
+            qrcodeObj = new QRCode(container, {
+                text: input,
+                width: 200,
+                height: 200,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+            
+            downloadBtn.classList.remove('hidden');
+        }
+
+        function downloadQR() {
+            const img = document.querySelector("#qrcode-img img");
+            if (img) {
+                const link = document.createElement("a");
+                link.href = img.src;
+                link.download = "qrcode.png";
+                link.click();
+            }
         }
 
         let tIdx;
@@ -561,69 +605,74 @@
             const btn = document.getElementById('spin-btn');
             btn.disabled = true; btn.innerText = "轉動中...";
             
-            const spins = 8 + Math.floor(Math.random() * 5); 
-            const deg = Math.floor(Math.random() * 360);
-            const totalDeg = spins * 360 + deg;
-            currentRotation += totalDeg;
+            const spins = 5 + Math.random() * 5;
+            const extraDegrees = Math.random() * 360;
+            const totalRotation = spins * 360 + extraDegrees;
+            currentRotation += totalRotation;
+            
             canvas.style.transform = `rotate(${currentRotation}deg)`;
             
-            const tickCount = spins * wheelOpts.length;
-            const tickInterval = 5000 / tickCount;
-            for(let i=0; i<tickCount; i++) {
-                setTimeout(() => { if(isSpinning) playTickSound(); }, i * tickInterval * 1.5); 
-            }
+            let lastTickerAngle = 0;
+            const tickInterval = setInterval(() => {
+                const style = window.getComputedStyle(canvas);
+                const matrix = new DOMMatrix(style.transform);
+                const angle = Math.atan2(matrix.b, matrix.a) * (180 / Math.PI);
+                const sliceAngle = 360 / wheelOpts.length;
+                if (Math.abs(angle - lastTickerAngle) > sliceAngle) {
+                    playTickSound();
+                    lastTickerAngle = angle;
+                }
+            }, 50);
 
             setTimeout(() => {
-                isSpinning = false; btn.disabled = false; btn.innerText = "開始旋轉";
+                clearInterval(tickInterval);
+                isSpinning = false;
+                btn.disabled = false;
+                btn.innerText = "開始旋轉";
                 
-                // --- 修改處：中獎時改用刮刮樂音效 ---
+                const finalAngle = (currentRotation % 360);
+                const slice = 360 / wheelOpts.length;
+                const index = Math.floor(((360 - finalAngle + 270) % 360) / slice);
+                
+                document.getElementById('result-text').innerText = wheelOpts[index];
+                document.getElementById('result-modal').style.display = 'block';
                 playScratchWinSound();
-                
-                const normalizedDeg = (currentRotation % 360);
-                const arcDeg = 360 / wheelOpts.length;
-                const index = Math.floor(((270 - normalizedDeg + 360) % 360) / arcDeg);
-                showResult(wheelOpts[index]);
             }, 5000);
         }
 
-        function showResult(text) {
-            document.getElementById('result-text').innerText = text; 
-            document.getElementById('result-modal').style.display = 'block';
-        }
         function closeModal() { document.getElementById('result-modal').style.display = 'none'; }
 
         function doWC() {
-            const v = document.getElementById('wc-in').value;
-            document.getElementById('wc-t').innerText = v.length;
-            document.getElementById('wc-ns').innerText = v.replace(/\s/g,'').length;
-            document.getElementById('wc-cn').innerText = (v.match(/[\u4e00-\u9fa5]/g)||[]).length;
-            document.getElementById('wc-p').innerText = v.split(/\n+/).filter(p=>p.trim()).length;
+            const val = document.getElementById('wc-in').value;
+            document.getElementById('wc-t').innerText = val.length;
+            document.getElementById('wc-ns').innerText = val.replace(/\s/g, '').length;
+            document.getElementById('wc-cn').innerText = (val.match(/[\u4e00-\u9fa5]/g) || []).length;
+            document.getElementById('wc-p').innerText = val.split(/\n+/).filter(p => p.trim() !== '').length;
         }
 
-        const zodiacs = ['龍', '蛇', '馬', '羊', '猴', '雞', '狗', '豬', '鼠', '牛', '虎', '兔'];
+        const zodiacArr = ["鼠", "牛", "虎", "兔", "龍", "蛇", "馬", "羊", "猴", "雞", "狗", "豬"];
         function initZodiac() {
             const tbody = document.getElementById('z-tbody');
-            if (!tbody) return;
-            let rows = '';
-            for(let yr = 2028; yr >= 2000; yr--) {
-                const zIdx = (yr - 2000) % 12;
-                const isBase = (yr === 2000);
-                rows += `
-                    <tr class="${isBase ? 'bg-blue-900/30 font-bold' : 'hover:bg-slate-800/50 transition-colors'}">
-                        <td class="p-2 md:p-4 border-b border-slate-800 tech-font text-blue-300">${yr}</td>
-                        <td class="p-2 md:p-4 border-b border-slate-800">${yr - 1911}</td>
-                        <td class="p-2 md:p-4 border-b border-slate-800">${zodiacs[zIdx]}</td>
+            if(!tbody) return;
+            let html = '';
+            for (let y = 2028; y >= 2000; y--) {
+                const zIndex = (y - 4) % 12;
+                html += `
+                    <tr class="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+                        <td class="p-3 md:p-4 tech-font">${y}</td>
+                        <td class="p-3 md:p-4">民國 ${y - 1911} 年</td>
+                        <td class="p-3 md:p-4 font-bold text-blue-400">${zodiacArr[zIndex]}</td>
                     </tr>
                 `;
             }
-            tbody.innerHTML = rows;
+            tbody.innerHTML = html;
         }
 
         window.onload = () => {
             setInterval(tick, 1000);
             tick();
             initZodiac();
-            initWheel();
+            drawCalendar();
         };
     </script>
 </body>
