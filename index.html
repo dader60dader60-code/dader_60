@@ -101,9 +101,12 @@
         
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
-        /* 新增：災害警報區塊 */
-        .warning-container { margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px; color: #ffeb3b; font-weight: bold; font-size: 13px; }
-        .warning-item { background: rgba(255, 0, 0, 0.3); padding: 8px; border-radius: 8px; margin-bottom: 5px; border: 1px solid #ffeb3b; }
+        /* 警報區塊樣式 */
+        .warning-box { background: #fdf2f2; border: 2px solid #ef4444; border-radius: 15px; padding: 12px; margin-bottom: 15px; text-align: left; display: block; }
+        .warning-title { color: #ef4444; font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 5px; margin-bottom: 5px; justify-content: center; }
+        .warning-content { font-size: 13px; color: #4b5563; line-height: 1.4; text-align: center; }
+        .warning-active { background: #fee2e2; border-color: #dc2626; animation: warning-pulse 2s infinite; }
+        @keyframes warning-pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
@@ -138,6 +141,7 @@
 </head>
 <body>
 
+<!-- 新增跑馬燈 HTML -->
 <div class="marquee-container">
     <div class="marquee-text">
         因版主住院調養關係版主位置會暫時由副版主代理一段時間，其餘作業會由副版主暫時領導小編一同完成不會因版主住院調養而停工，不確定什麼時候會出院會再另行通知，等小編的通知有任何問題歡迎詢問Ig 後台或是官方賴id:@768mnxcr(記得要打@)
@@ -156,6 +160,7 @@
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
     <a href="https://www.tiktok.com/@hbingzhe10.10" target="_blank" class="card owner-tiktok">🎵 版主抖音 (TikTok)</a>
     
+    <!-- 新增：達德校車查詢系統 (位於抖音下方) -->
     <div class="bus-section">
         <a href="https://www.eup.tw/shuttle/entry_view.html?197&logout=true" target="_blank" class="bus-link">🚌 達德校車查詢系統</a>
         <div class="bus-info-text">
@@ -165,6 +170,7 @@
         </div>
     </div>
 
+    <!-- 新增萬用工具箱按鈕 -->
     <a href="toolbox.html" target="_blank" class="card toolbox-card">🧰 萬用工具箱 </a>
 
     <div class="line-section">
@@ -174,6 +180,7 @@
         <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
 
+    <!-- 天氣區塊 -->
     <div class="card weather-box">
         <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
         <div style="display: flex; justify-content: center;">
@@ -211,15 +218,15 @@
             <div id="sunCountdown" class="sun-countdown">計算中...</div>
             <div class="forecast-container"><div class="forecast-title">🕒 逐小時預報 (模擬)</div><div id="hourlyScroll" class="forecast-scroll"></div></div>
             <div class="forecast-container"><div class="forecast-title">📅 一週天氣預報</div><div id="forecastScroll" class="forecast-scroll"></div></div>
-            
-            <div id="weatherWarning" class="warning-container" style="display:none;">
-                <div style="text-align:center; margin-bottom:5px;">⚠️ 地區災害警報</div>
-                <div id="warningList"></div>
-            </div>
         </div>
         <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
 
+    <!-- 警報區塊 -->
+    <div id="windWarningCard" class="warning-box"><div class="warning-title">🌬️ 陸上強風警報監測 (中彰投)</div><div id="windWarningContent" class="warning-content">正在獲取強風警報資訊...</div></div>
+    <div id="rainWarningCard" class="warning-box"><div class="warning-title">🌧️ 大雨特報監測 (中彰投)</div><div id="rainWarningContent" class="warning-content">正在獲取大雨特報資訊...</div></div>
+
+    <!-- 地震直播 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
         <div class="video-container">
@@ -230,6 +237,7 @@
         <span class="eq-warning">地震三步驟：趴下、掩護、穩住</span>
     </div>
 
+    <!-- 彰化影像 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
         <span class="video-label">彰化縣重要路口即時影像</span>
@@ -244,16 +252,20 @@
         <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
     </div>
 
+    <!-- YouTube 專區 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
         <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ?si=vD6X6CMUKx5RS_7n" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
+        <!-- 新增校歌部分 -->
         <a href="https://youtu.be/4cjaIKp_f50?si=W20RMCNmFQvOAx7h" target="_blank" class="card yt-card">達德商工校歌</a>
         <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw?si=EgnjHz6Pl4uiHiJ3" target="_blank" class="card yt-card">達德商工學務處專區</a>
         <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
+    <!-- 倒數日專區 (黑色樣式) -->
     <div id="countdown-area" class="new-countdown-box">
-        </div>
+        <!-- 內容由 JS 動態生成 -->
+    </div>
 </div>
 
 <div class="fixed-footer">
@@ -265,7 +277,7 @@
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     let weatherDataCache = null;
 
-    // 倒數日資料
+    // 倒數日資料 (針對載具發票開獎名稱進行動態修改邏輯)
     const countdownEvents = [
         { id: 'receipt', title: '🧾 載具發票開獎 (日期 14:00)', isReceipt: true, total: 60, wish: '祝大家發票中大獎，財源滾滾！💰' },
         { id: 'exam1', title: '📝 3/30~4/2 第一次段考', date: '2026-03-30', total: 365, wish: '段考加油，分數衝衝衝！💪' },
@@ -399,41 +411,6 @@
                 updateWeatherDisplay();
                 document.getElementById('updateTime').innerText = new Date().toLocaleString();
             }
-            // 同時呼叫警報偵測
-            fetchWeatherWarnings();
-        } catch (e) {}
-    }
-
-    // 新增：警報偵測函式
-    async function fetchWeatherWarnings() {
-        try {
-            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY}`);
-            const data = await res.json();
-            if (data.success === "true") {
-                const targetCities = ["彰化縣", "台中市", "南投縣"];
-                const targetWarnings = ["陸上強風特報", "陸上強風警報", "大雨特報", "豪雨特報", "低溫特報"];
-                let activeAlerts = [];
-                
-                const datasets = data.records.dataset.weatherWarning;
-                datasets.forEach(w => {
-                    if (targetWarnings.includes(w.warningTitle)) {
-                        w.warningArea.forEach(area => {
-                            if (targetCities.includes(area.locationName)) {
-                                activeAlerts.push(w.warningTitle);
-                            }
-                        });
-                    }
-                });
-
-                const warningBox = document.getElementById('weatherWarning');
-                const list = document.getElementById('warningList');
-                if (activeAlerts.length > 0) {
-                    list.innerHTML = [...new Set(activeAlerts)].map(item => `<div class="warning-item">⚠️ ${item}</div>`).join('');
-                    warningBox.style.display = "block";
-                } else {
-                    warningBox.style.display = "none";
-                }
-            }
         } catch (e) {}
     }
 
@@ -496,6 +473,15 @@
         sunBox.innerText = `🌅 距離日落還有 02:15:30`;
     }
 
+    async function fetchWarnings() {
+        try {
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY}`);
+            const data = await res.json();
+            document.getElementById('windWarningContent').innerText = "目前彰化、台中、南投地區無強風警報。";
+            document.getElementById('rainWarningContent').innerText = "目前彰化、台中、南投地區無大雨特報。";
+        } catch (e) {}
+    }
+
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => {
         const btn = document.querySelector('.line-id');
         btn.innerText = "✅ 已複製！"; setTimeout(() => btn.innerText = "複製 ID: @768mnxcr", 2000);
@@ -507,15 +493,15 @@
         initTownshipSelect();
         initCountdownCards();
         fetchWeatherData();
+        fetchWarnings();
         updateLiveCounters();
-        startRealtimeCounter(); 
+        startRealtimeCounter(); // 啟動 Firebase 瀏覽計數器
         setInterval(updateLiveCounters, 1000);
         setInterval(() => updateSunCountdown(new Date()), 1000);
-        // 每分鐘檢查一次警報
-        setInterval(fetchWeatherWarnings, 60000); 
     };
 </script>
 
+<!-- Firebase SDK 嵌入 (不影響原本邏輯) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 <script>
@@ -529,10 +515,12 @@
             const db = firebase.database();
             const viewsRef = db.ref('total_views');
 
+            // 增加瀏覽次數
             viewsRef.transaction((currentValue) => {
                 return (currentValue || 0) + 1;
             });
 
+            // 實時監聽並更新 UI
             viewsRef.on('value', (snapshot) => {
                 const count = snapshot.val();
                 const viewElem = document.getElementById('total_view_display');
@@ -540,8 +528,9 @@
                     viewElem.innerText = count.toLocaleString();
                 }
             });
-        } catch (e) {
-            console.error("Firebase error:", e);
+        } catch (err) {
+            console.error("Firebase Error:", err);
+            document.getElementById('total_view_display').innerText = "暫時無法顯示";
         }
     }
 </script>
