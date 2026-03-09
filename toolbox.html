@@ -130,7 +130,7 @@
             box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
         }
         /* QR Code 修正樣式 */
-        #qrcode-img img { margin: 0 auto; border: 8px solid white; border-radius: 4px; }
+        #qrcode-img img, #qrcode-img canvas { margin: 0 auto; border: 8px solid white; border-radius: 4px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col pb-24 md:pb-28">
@@ -212,7 +212,7 @@
                 
                 <div id="qrcode-img" class="py-6 flex justify-center"></div>
                 
-                <button id="qr-download" onclick="downloadQR()" class="hidden w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-lg font-bold transition-all text-sm tracking-widest">📥 下載 QR CODE 圖片</button>
+                <button id="qr-download" onclick="downloadQR()" class="hidden w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-lg font-bold transition-all text-sm tracking-widest">📥 下載 QR CODE 圖片 (JPG)</button>
             </div>
         </div>
 
@@ -461,7 +461,7 @@
             });
         }
 
-        // --- QR Code 邏輯 ---
+        // --- [QR Code 修正部分] ---
         let qrcodeObj = null;
         function generateQR() {
             const input = document.getElementById('qr-input').value;
@@ -473,8 +473,8 @@
             container.innerHTML = "";
             qrcodeObj = new QRCode(container, {
                 text: input,
-                width: 200,
-                height: 200,
+                width: 256,
+                height: 256,
                 colorDark : "#000000",
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
@@ -484,14 +484,42 @@
         }
 
         function downloadQR() {
-            const img = document.querySelector("#qrcode-img img");
-            if (img) {
+            // 獲取生成出的 canvas 或 img
+            const qrCanvas = document.querySelector("#qrcode-img canvas");
+            const qrImg = document.querySelector("#qrcode-img img");
+            
+            // 創建一個臨時 canvas 用於處理 JPG (添加白色背景，因為 JPG 不支援透明)
+            const tempCanvas = document.createElement("canvas");
+            const tCtx = tempCanvas.getContext("2d");
+            
+            const source = qrCanvas || qrImg;
+            if (!source) return;
+
+            // 設置大小
+            tempCanvas.width = source.width || 256;
+            tempCanvas.height = source.height || 256;
+
+            // 1. 填滿白色背景
+            tCtx.fillStyle = "#FFFFFF";
+            tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+            // 2. 將 QR Code 畫上去
+            tCtx.drawImage(source, 0, 0);
+
+            // 3. 轉存為 JPG 並下載
+            try {
+                const jpgData = tempCanvas.toDataURL("image/jpeg", 0.9);
                 const link = document.createElement("a");
-                link.href = img.src;
-                link.download = "qrcode.png";
+                link.href = jpgData;
+                link.download = "qrcode_export.jpg";
+                document.body.appendChild(link);
                 link.click();
+                document.body.removeChild(link);
+            } catch (e) {
+                console.error("下載失敗", e);
             }
         }
+        // --- [修正結束] ---
 
         let tIdx;
         function runTimer() {
@@ -605,22 +633,19 @@
             const btn = document.getElementById('spin-btn');
             btn.disabled = true; btn.innerText = "轉動中...";
             
-            const spins = 5 + Math.random() * 5;
-            const extraDegrees = Math.random() * 360;
-            const totalRotation = spins * 360 + extraDegrees;
-            currentRotation += totalRotation;
-            
+            const extraDeg = Math.floor(Math.random() * 360) + 3600;
+            currentRotation += extraDeg;
             canvas.style.transform = `rotate(${currentRotation}deg)`;
             
-            let lastTickerAngle = 0;
+            let lastTickAngle = 0;
             const tickInterval = setInterval(() => {
                 const style = window.getComputedStyle(canvas);
-                const matrix = new DOMMatrix(style.transform);
+                const matrix = new WebKitCSSMatrix(style.transform);
                 const angle = Math.atan2(matrix.b, matrix.a) * (180 / Math.PI);
-                const sliceAngle = 360 / wheelOpts.length;
-                if (Math.abs(angle - lastTickerAngle) > sliceAngle) {
+                const arcSize = 360 / wheelOpts.length;
+                if (Math.abs(angle - lastTickAngle) > arcSize) {
                     playTickSound();
-                    lastTickerAngle = angle;
+                    lastTickAngle = angle;
                 }
             }, 50);
 
@@ -630,11 +655,10 @@
                 btn.disabled = false;
                 btn.innerText = "開始旋轉";
                 
-                const finalAngle = (currentRotation % 360);
-                const slice = 360 / wheelOpts.length;
-                const index = Math.floor(((360 - finalAngle + 270) % 360) / slice);
+                const finalAngle = (360 - (currentRotation % 360)) % 360;
+                const idx = Math.floor(finalAngle / (360 / wheelOpts.length));
                 
-                document.getElementById('result-text').innerText = wheelOpts[index];
+                document.getElementById('result-text').innerText = wheelOpts[idx];
                 document.getElementById('result-modal').style.display = 'block';
                 playScratchWinSound();
             }, 5000);
@@ -643,29 +667,26 @@
         function closeModal() { document.getElementById('result-modal').style.display = 'none'; }
 
         function doWC() {
-            const val = document.getElementById('wc-in').value;
-            document.getElementById('wc-t').innerText = val.length;
-            document.getElementById('wc-ns').innerText = val.replace(/\s/g, '').length;
-            document.getElementById('wc-cn').innerText = (val.match(/[\u4e00-\u9fa5]/g) || []).length;
-            document.getElementById('wc-p').innerText = val.split(/\n+/).filter(p => p.trim() !== '').length;
+            const v = document.getElementById('wc-in').value;
+            document.getElementById('wc-t').innerText = v.length;
+            document.getElementById('wc-ns').innerText = v.replace(/\s+/g, '').length;
+            document.getElementById('wc-cn').innerText = (v.match(/[\u4e00-\u9fa5]/g) || []).length;
+            document.getElementById('wc-p').innerText = v.split(/\n+/).filter(p => p.trim() !== '').length;
         }
 
-        const zodiacArr = ["鼠", "牛", "虎", "兔", "龍", "蛇", "馬", "羊", "猴", "雞", "狗", "豬"];
         function initZodiac() {
-            const tbody = document.getElementById('z-tbody');
-            if(!tbody) return;
-            let html = '';
+            const tb = document.getElementById('z-tbody');
+            if(!tb) return;
+            const animals = ["猴", "雞", "狗", "豬", "鼠", "牛", "虎", "兔", "龍", "蛇", "馬", "羊"];
+            let html = "";
             for (let y = 2028; y >= 2000; y--) {
-                const zIndex = (y - 4) % 12;
-                html += `
-                    <tr class="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
-                        <td class="p-3 md:p-4 tech-font">${y}</td>
-                        <td class="p-3 md:p-4">民國 ${y - 1911} 年</td>
-                        <td class="p-3 md:p-4 font-bold text-blue-400">${zodiacArr[zIndex]}</td>
-                    </tr>
-                `;
+                html += `<tr class="hover:bg-slate-800/50 transition-colors">
+                    <td class="p-2 md:p-4 border-b border-slate-800/50 font-medium">${y}</td>
+                    <td class="p-2 md:p-4 border-b border-slate-800/50">民國 ${y - 1911} 年</td>
+                    <td class="p-2 md:p-4 border-b border-slate-800/50 font-bold text-blue-400">${animals[y % 12]}</td>
+                </tr>`;
             }
-            tbody.innerHTML = html;
+            tb.innerHTML = html;
         }
 
         window.onload = () => {
@@ -673,6 +694,8 @@
             tick();
             initZodiac();
             drawCalendar();
+            // 監聽轉盤輸入變化
+            document.getElementById('w-opts').addEventListener('input', initWheel);
         };
     </script>
 </body>
