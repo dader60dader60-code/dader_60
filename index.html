@@ -520,14 +520,51 @@
 
     window.onload = function() {
         initTownshipSelect();
-        fetchWeatherData();
-        fetchEarthquakeData();
         initCountdownCards();
+        fetchWeatherData();
+        fetchWarnings();
+        fetchEarthquakeData(); // 初始抓取地震資料
+        updateLiveCounters();
+        startRealtimeCounter(); // 啟動 Firebase 瀏覽計數器
         setInterval(updateLiveCounters, 1000);
-        setInterval(fetchEarthquakeData, 60000);
-        // 模擬瀏覽次數
-        document.getElementById('total_view_display').innerText = "1,234,567";
+        setInterval(fetchEarthquakeData, 60000); // 每分鐘更新一次地震資料
+        setInterval(() => updateSunCountdown(new Date()), 1000);
     };
 </script>
+
+<!-- Firebase SDK 嵌入 (不影響原本邏輯) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script>
+    const firebaseConfig = {
+        databaseURL: "https://total-views-969ba-default-rtdb.asia-southeast1.firebasedatabase.app/" 
+    };
+    
+    function startRealtimeCounter() {
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.database();
+            const viewsRef = db.ref('total_views');
+
+            // 增加瀏覽次數
+            viewsRef.transaction((currentValue) => {
+                return (currentValue || 0) + 1;
+            });
+
+            // 實時監聽並更新 UI
+            viewsRef.on('value', (snapshot) => {
+                const count = snapshot.val();
+                const viewElem = document.getElementById('total_view_display');
+                if (viewElem && count !== null) {
+                    viewElem.innerText = count.toLocaleString();
+                }
+            });
+        } catch (err) {
+            console.error("Firebase Error:", err);
+        }
+    }
+</script>
+
 </body>
 </html>
+
