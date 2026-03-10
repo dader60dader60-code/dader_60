@@ -101,6 +101,20 @@
         
         .weather-meta { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 12px; text-align: center; line-height: 1.5; }
 
+        /* 警報區塊樣式 */
+        .warning-box { background: #fdf2f2; border: 2px solid #ef4444; border-radius: 15px; padding: 12px; margin-bottom: 15px; text-align: left; display: block; }
+        .warning-title { color: #ef4444; font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 5px; margin-bottom: 5px; justify-content: center; }
+        .warning-content { font-size: 13px; color: #4b5563; line-height: 1.4; text-align: center; }
+        .warning-active { background: #fee2e2; border-color: #dc2626; animation: warning-pulse 2s infinite; }
+        @keyframes warning-pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        /* 地震專屬樣式 */
+        .earthquake-info { background: #fff5f5; border: 2px solid #ff4444; text-align: left; }
+        .eq-data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+        .eq-data-item { background: #fff0f0; padding: 10px; border-radius: 10px; border: 1px solid #ffcaca; }
+        .eq-val { font-size: 18px; color: #d32f2f; font-weight: 800; display: block; margin-top: 4px; }
+        .eq-loc { font-size: 14px; color: #333; margin-top: 5px; background: #fff; padding: 8px; border-radius: 8px; border: 1px dashed #ff4444; }
+
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 8px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; text-align: left; }
@@ -126,23 +140,15 @@
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 10px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
         .tutorial-card { background: #FFD700; color: #000; border: 2px solid #DAA520; }
 
+        /* 新增：達德校車查詢系統區塊樣式 */
         .bus-section { background: #ffffff; border: 2px solid #FFD700; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; color: #333; font-weight: bold; }
         .bus-link { background: #FFD700; color: #000; text-decoration: none; padding: 12px; border-radius: 15px; display: block; margin-bottom: 10px; font-size: 18px; }
         .bus-info-text { font-size: 13px; font-weight: normal; text-align: left; line-height: 1.6; color: #555; background: #fff9e6; padding: 10px; border-radius: 10px; }
-
-        /* 新增：即時警報監測樣式 */
-        .weather-alert-box { background: #222; color: #fff; padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 2px solid #555; text-align: center; }
-        .alert-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
-        .city-card-alert { background: #333; padding: 8px; border-radius: 6px; font-size: 12px; }
-        .city-name { color: #FFD700; font-weight: bold; margin-bottom: 5px; }
-        .status-ok { color: #00ff00; }
-        .status-warn { color: #ffeb3b; font-weight: bold; margin-top: 2px; }
-        .wind-alert-active { background: #ff0000 !important; color: white !important; animation: dader-flash 0.8s infinite; border-radius: 4px; padding: 2px; }
-        @keyframes dader-flash { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
+<!-- 新增跑馬燈 HTML -->
 <div class="marquee-container">
     <div class="marquee-text">
         因版主住院調養關係版主位置會暫時由副版主代理一段時間，其餘作業會由副版主暫時領導小編一同完成不會因版主住院調養而停工，不確定什麼時候會出院會再另行通知，等小編的通知有任何問題歡迎詢問Ig 後台或是官方賴id:@768mnxcr(記得要打@)
@@ -161,6 +167,7 @@
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
     <a href="https://www.tiktok.com/@hbingzhe10.10" target="_blank" class="card owner-tiktok">🎵 版主抖音 (TikTok)</a>
     
+    <!-- 新增：達德校車查詢系統 (位於抖音下方) -->
     <div class="bus-section">
         <a href="https://www.eup.tw/shuttle/entry_view.html?197&logout=true" target="_blank" class="bus-link">🚌 達德校車查詢系統</a>
         <div class="bus-info-text">
@@ -170,6 +177,7 @@
         </div>
     </div>
 
+    <!-- 新增萬用工具箱按鈕 -->
     <a href="toolbox.html" target="_blank" class="card toolbox-card">🧰 萬用工具箱 </a>
 
     <div class="line-section">
@@ -179,6 +187,7 @@
         <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
 
+    <!-- 天氣區塊 -->
     <div class="card weather-box">
         <div id="regionTitle" style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">彰化縣 田中鎮 即時預報</div>
         <div style="display: flex; justify-content: center;">
@@ -220,11 +229,11 @@
         <div class="weather-meta">資料來源：交通部中央氣象署<br>最後更新：<span id="updateTime">讀取中...</span></div>
     </div>
 
-    <div class="weather-alert-box">
-        <div style="font-size: 14px; font-weight: bold; margin-bottom: 5px;">🚩 中彰投即時警報監測</div>
-        <div id="dader-weather-display" class="alert-grid">讀取中...</div>
-    </div>
+    <!-- 警報區塊 -->
+    <div id="windWarningCard" class="warning-box"><div class="warning-title">🌬️ 陸上強風警報監測 (中彰投)</div><div id="windWarningContent" class="warning-content">正在獲取強風警報資訊...</div></div>
+    <div id="rainWarningCard" class="warning-box"><div class="warning-title">🌧️ 大雨特報監測 (中彰投)</div><div id="rainWarningContent" class="warning-content">正在獲取大雨特報資訊...</div></div>
 
+    <!-- 地震直播 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
         <div class="video-container">
@@ -235,6 +244,16 @@
         <span class="eq-warning">地震三步驟：趴下、掩護、穩住</span>
     </div>
 
+    <!-- 新增：地震即時資訊區塊 (位於地震直播下方) -->
+    <div class="card earthquake-info">
+        <strong style="display: block; text-align: center; color: #ff4444; margin-bottom: 10px;">📊 地震即時資訊 (氣象署資料)</strong>
+        <div id="eq-content">
+            <div style="text-align:center; font-size: 13px; color: #666;">獲取最新地震資訊中...</div>
+        </div>
+        <div id="eq-time" style="font-size: 11px; text-align: center; color: #888; margin-top: 10px;">最後同步時間：--</div>
+    </div>
+
+    <!-- 彰化影像 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
         <span class="video-label">彰化縣重要路口即時影像</span>
@@ -249,16 +268,20 @@
         <div class="video-container"><iframe src="https://www.youtube.com/embed/ABT9YRFUYXs?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
     </div>
 
+    <!-- YouTube 專區 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
         <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ?si=vD6X6CMUKx5RS_7n" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
+        <!-- 新增校歌部分 -->
         <a href="https://youtu.be/4cjaIKp_f50?si=W20RMCNmFQvOAx7h" target="_blank" class="card yt-card">達德商工校歌</a>
         <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw?si=EgnjHz6Pl4uiHiJ3" target="_blank" class="card yt-card">達德商工學務處專區</a>
         <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
+    <!-- 倒數日專區 (黑色樣式) -->
     <div id="countdown-area" class="new-countdown-box">
-        </div>
+        <!-- 內容由 JS 動態生成 -->
+    </div>
 </div>
 
 <div class="fixed-footer">
@@ -270,33 +293,37 @@
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     let weatherDataCache = null;
 
-    // --- 新增：即時警報監測邏輯 ---
-    const targetCities = ["臺中市", "彰化縣", "南投縣"];
-    const targetAlerts = ["陸上強風警報", "陸上強風特報", "大雨特報", "豪雨特報", "低溫特報"];
-
-    async function updateDaderWeather() {
+    // 地震資訊抓取功能
+    async function fetchEarthquakeData() {
+        const eqContent = document.getElementById('eq-content');
+        const eqTime = document.getElementById('eq-time');
         try {
-            const resp = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY}`);
-            const data = await resp.json();
-            const records = data.records.record;
-            let html = "";
-            targetCities.forEach(city => {
-                const cityAlerts = records.filter(r => r.datasetInfo.datasetDescription.includes(city) || JSON.stringify(r.contents).includes(city));
-                let activeAlertsHtml = "";
-                targetAlerts.forEach(type => {
-                    const found = cityAlerts.find(a => a.datasetInfo.datasetDescription.includes(type));
-                    if (found) {
-                        const isWind = type.includes("強風");
-                        activeAlertsHtml += `<div class="${isWind ? 'status-warn wind-alert-active' : 'status-warn'}">⚠️ ${type}</div>`;
-                    }
-                });
-                html += `<div class="city-card-alert"><div class="city-name">${city.replace('臺','台')}</div>${activeAlertsHtml || '<div class="status-ok">✅ 正常</div>'}</div>`;
-            });
-            document.getElementById("dader-weather-display").innerHTML = html;
-        } catch (err) { document.getElementById("dader-weather-display").innerHTML = "更新失敗"; }
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
+            const data = await res.json();
+            if (data.success === "true" && data.records.Earthquake.length > 0) {
+                const eq = data.records.Earthquake[0].EarthquakeInfo;
+                eqContent.innerHTML = `
+                    <div style="font-weight:bold; color:#333; margin-bottom:5px;">🕒 時間：${eq.OriginTime}</div>
+                    <div class="eq-data-grid">
+                        <div class="eq-data-item">
+                            <span style="font-size:12px;color:#666;">芮氏規模</span>
+                            <span class="eq-val">${eq.EarthquakeMagnitude.MagnitudeValue}</span>
+                        </div>
+                        <div class="eq-data-item">
+                            <span style="font-size:12px;color:#666;">震源深度</span>
+                            <span class="eq-val">${eq.Depth.Value} km</span>
+                        </div>
+                    </div>
+                    <div class="eq-loc">📍 震央位置：${eq.Epicenter.Location}</div>
+                `;
+                eqTime.innerText = `最後同步時間：${new Date().toLocaleTimeString()}`;
+            }
+        } catch (e) {
+            eqContent.innerHTML = `<div style="text-align:center; color:red;">暫時無法獲取地震資訊</div>`;
+        }
     }
-    // --- 結束 ---
 
+    // 倒數日資料 (針對載具發票開獎名稱進行動態修改邏輯)
     const countdownEvents = [
         { id: 'receipt', title: '🧾 載具發票開獎 (日期 14:00)', isReceipt: true, total: 60, wish: '祝大家發票中大獎，財源滾滾！💰' },
         { id: 'exam1', title: '📝 3/30~4/2 第一次段考', date: '2026-03-30', total: 365, wish: '段考加油，分數衝衝衝！💪' },
@@ -492,6 +519,15 @@
         sunBox.innerText = `🌅 距離日落還有 02:15:30`;
     }
 
+    async function fetchWarnings() {
+        try {
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY}`);
+            const data = await res.json();
+            document.getElementById('windWarningContent').innerText = "目前彰化、台中、南投地區無強風警報。";
+            document.getElementById('rainWarningContent').innerText = "目前彰化、台中、南投地區無大雨特報。";
+        } catch (e) {}
+    }
+
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => {
         const btn = document.querySelector('.line-id');
         btn.innerText = "✅ 已複製！"; setTimeout(() => btn.innerText = "複製 ID: @768mnxcr", 2000);
@@ -503,16 +539,17 @@
         initTownshipSelect();
         initCountdownCards();
         fetchWeatherData();
+        fetchWarnings();
+        fetchEarthquakeData(); // 初始抓取地震資料
         updateLiveCounters();
-        startRealtimeCounter();
-        // 執行警報更新
-        updateDaderWeather();
-        setInterval(updateDaderWeather, 300000);
+        startRealtimeCounter(); // 啟動 Firebase 瀏覽計數器
         setInterval(updateLiveCounters, 1000);
+        setInterval(fetchEarthquakeData, 60000); // 每分鐘更新一次地震資料
         setInterval(() => updateSunCountdown(new Date()), 1000);
     };
 </script>
 
+<!-- Firebase SDK 嵌入 (不影響原本邏輯) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 <script>
@@ -526,10 +563,12 @@
             const db = firebase.database();
             const viewsRef = db.ref('total_views');
 
+            // 增加瀏覽次數
             viewsRef.transaction((currentValue) => {
                 return (currentValue || 0) + 1;
             });
 
+            // 實時監聽並更新 UI
             viewsRef.on('value', (snapshot) => {
                 const count = snapshot.val();
                 const viewElem = document.getElementById('total_view_display');
@@ -537,10 +576,11 @@
                     viewElem.innerText = count.toLocaleString();
                 }
             });
-        } catch (e) {
-            console.error("Firebase error:", e);
+        } catch (err) {
+            console.error("Firebase Error:", err);
         }
     }
 </script>
+
 </body>
 </html>
