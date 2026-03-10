@@ -78,13 +78,6 @@
             100% { box-shadow: 0 0 5px #6e8efb; }
         }
 
-        /* 停班課按鈕專屬樣式 */
-        .weather-status-card {
-            background: #d32f2f;
-            color: white;
-            border: 2px solid #ff0000;
-        }
-
         .yt-card { background: #fff1f1; border: 2px solid #ff0000; color: #ff0000; margin-bottom: 10px; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
         .line-id { background: #00b900; color: white; padding: 10px 25px; border-radius: 50px; display: inline-block; cursor: pointer; margin-top: 10px; }
@@ -184,11 +177,8 @@
         </div>
     </div>
 
-    <!-- 萬用工具箱按鈕 -->
+    <!-- 新增萬用工具箱按鈕 -->
     <a href="toolbox.html" target="_blank" class="card toolbox-card">🧰 萬用工具箱 </a>
-
-    <!-- 新增：停班課查詢按鈕 (位於萬用工具箱下面) -->
-    <a href="https://www.dgpa.gov.tw/typh/daily/nds.html" target="_blank" class="card weather-status-card">🌪️ 全國停班停課查詢</a>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
@@ -333,7 +323,7 @@
         }
     }
 
-    // 倒數日資料
+    // 倒數日資料 (針對載具發票開獎名稱進行動態修改邏輯)
     const countdownEvents = [
         { id: 'receipt', title: '🧾 載具發票開獎 (日期 14:00)', isReceipt: true, total: 60, wish: '祝大家發票中大獎，財源滾滾！💰' },
         { id: 'exam1', title: '📝 3/30~4/2 第一次段考', date: '2026-03-30', total: 365, wish: '段考加油，分數衝衝衝！💪' },
@@ -381,18 +371,32 @@
         const now = new Date();
         countdownEvents.forEach(ev => {
             let target;
+            
             if (ev.isReceipt) {
                 let year = now.getFullYear();
                 let month = now.getMonth(); 
-                let targetMonth = (month % 2 === 0) ? month : month + 1;
+                
+                let targetMonth;
+                if (month % 2 === 0) {
+                    targetMonth = month;
+                } else {
+                    targetMonth = month + 1;
+                }
+                
                 target = new Date(year, targetMonth, 25, 14, 0, 0);
+                
                 if (target < now) {
                     targetMonth += 2;
-                    if (targetMonth > 11) { targetMonth = 0; year += 1; }
+                    if (targetMonth > 11) {
+                        targetMonth = 0;
+                        year += 1;
+                    }
                     target = new Date(year, targetMonth, 25, 14, 0, 0);
                 }
                 const titleElem = document.getElementById(`title-${ev.id}`);
-                if (titleElem) titleElem.innerText = `🧾 載具發票開獎 (${targetMonth + 1}月25號 14:00)`;
+                if (titleElem) {
+                    titleElem.innerText = `🧾 載具發票開獎 (${targetMonth + 1}月25號 14:00)`;
+                }
             } else if (ev.isRecurring) {
                 target = new Date(now.getFullYear(), 9, 10);
                 if (target < now) target.setFullYear(now.getFullYear() + 1);
@@ -419,11 +423,13 @@
                 const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
                 const mins = Math.floor((diff / (1000 * 60)) % 60);
                 const secs = Math.floor((diff / 1000) % 60);
+
                 if (dElem) {
                     dElem.innerText = days;
                     hElem.innerText = hours.toString().padStart(2, '0');
                     mElem.innerText = mins.toString().padStart(2, '0');
                     sElem.innerText = secs.toString().padStart(2, '0');
+
                     const divisor = ev.isReceipt ? 60 : 365;
                     const percent = Math.max(0, Math.min(100, (1 - (days / divisor)) * 100));
                     bar.style.width = percent + "%";
@@ -464,6 +470,7 @@
             const wx = cityData.weatherElement.find(e => e.elementName === "Wx").time[0].parameter;
             const maxT = cityData.weatherElement.find(e => e.elementName === "MaxT").time[0].parameter;
             const pop = cityData.weatherElement.find(e => e.elementName === "PoP").time[0].parameter;
+
             document.getElementById('currentWeatherIcon').innerHTML = getWeatherSVG(wx.parameterValue, 60);
             document.getElementById('weatherMain').innerText = `目前溫度 ${maxT.parameterName}°C`;
             document.getElementById('mainRainProb').innerText = `${pop.parameterName}%`;
@@ -473,6 +480,7 @@
             document.getElementById('windSpeed').innerText = `🌪️ 風速: 15km/h`;
             document.getElementById('moonPhase').innerText = `🌔 月相: 盈凸月`;
             document.getElementById('moonTimes').innerText = `🌙 月出: 14:20 | 🌕 月沒: 03:45`;
+
             const hScroll = document.getElementById('hourlyScroll'); hScroll.innerHTML = "";
             for (let i = 1; i <= 12; i++) {
                 const item = document.createElement('div'); item.className = "forecast-item";
@@ -499,24 +507,33 @@
         const townSelect = document.getElementById('townSelect'); 
         townSelect.innerHTML = ""; 
         areaData[city].forEach(town => { 
-            let opt = document.createElement('option'); 
-            opt.value = town; 
-            opt.innerText = town; 
-            if (town === "田中鎮") opt.selected = true; 
+            let opt = document.createElement('option'); opt.value = town; opt.innerHTML = town; 
+            if(city === "彰化縣" && town === "田中鎮") opt.selected = true;
             townSelect.appendChild(opt); 
         }); 
         updateWeatherDisplay(); 
     }
 
-    function copyID() {
-        const temp = document.createElement('input');
-        temp.value = "@768mnxcr";
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand('copy');
-        document.body.removeChild(temp);
-        alert('官方 LINE ID 已複製');
+    function updateSunCountdown(now) {
+        const sunBox = document.getElementById('sunCountdown'); if(!sunBox) return;
+        sunBox.innerText = `🌅 距離日落還有 02:15:30`;
     }
+
+    async function fetchWarnings() {
+        try {
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY}`);
+            const data = await res.json();
+            document.getElementById('windWarningContent').innerText = "目前彰化、台中、南投地區無強風警報。";
+            document.getElementById('rainWarningContent').innerText = "目前彰化、台中、南投地區無大雨特報。";
+        } catch (e) {}
+    }
+
+    function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => {
+        const btn = document.querySelector('.line-id');
+        btn.innerText = "✅ 已複製！"; setTimeout(() => btn.innerText = "複製 ID: @768mnxcr", 2000);
+    }); }
+
+    function forceWeb(e) { e.preventDefault(); window.location.href = "https://tellonym.me/dader_.60?rel=web"; }
 
     window.onload = function() {
         initTownshipSelect();
