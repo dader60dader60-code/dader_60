@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>天氣查詢系統 · 動態地區</title>
+    <title>天氣查詢系統-彰化縣田中鎮</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -45,6 +45,7 @@
             margin-bottom: clamp(0.5rem, 2vw, 1rem);
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: clamp(0.3rem, 2vw, 0.8rem);
             flex-wrap: wrap;
             line-height: 1.3;
@@ -323,7 +324,7 @@
 <body>
 <div class="weather-dashboard" id="app">
     <h1>
-        <i class="fas fa-cloud-sun"></i> 天氣查詢系統 · {{ displayCity }}{{ displayTown }}
+        <i class="fas fa-cloud-sun"></i> 天氣查詢系統
     </h1>
 
     <div class="selector-area">
@@ -378,8 +379,9 @@
                     <span><i class="fas fa-sunrise"></i> {{ current.sunrise }}</span>
                     <span><i class="fas fa-sunset"></i> {{ current.sunset }}</span>
                 </div>
+                <!-- 修改區塊：動態顯示日出或日落倒數，只保留一個 -->
                 <div class="countdown">
-                    <i class="far fa-clock"></i> 距日出/日落: {{ current.countdown }}
+                    <i class="far fa-clock"></i> {{ current.countdownLabel }}: {{ current.countdown }}
                 </div>
                 <div style="margin-top: 0.8rem; display: flex; gap: 1rem; justify-content: center; font-size: 2rem;">
                     <span class="sun-icon"><i class="fas fa-sun"></i></span>
@@ -461,7 +463,6 @@
             lastUpdated: ''
         },
         computed: {
-            // 動態標題顯示
             displayCity() {
                 return this.selectedCity;
             },
@@ -482,71 +483,91 @@
             updateWeather() {
                 this.loaded = false;
                 
-                // 產生根據地區和時間變化的真實數據
                 setTimeout(() => {
                     const now = new Date();
                     const seed = this.selectedTown.length + now.getDate() + now.getHours() + this.selectedCity.length;
                     
-                    // 基礎溫度 (依地區不同)
                     let baseTemp = 24;
                     if (this.selectedCity === '臺中市') baseTemp = 26;
                     if (this.selectedCity === '南投縣') baseTemp = 23;
                     if (this.selectedTown.includes('山') || this.selectedTown.includes('和平')) baseTemp -= 3;
                     if (this.selectedTown.includes('海') || this.selectedTown.includes('線西')) baseTemp += 1;
                     
-                    // 當前溫度
                     const currentTemp = baseTemp + (seed % 5) - 2;
                     const feelsLike = currentTemp - 2 + (seed % 4);
                     
-                    // 降雨機率
                     const hour = now.getHours();
                     let popBase = 30;
                     if (hour >= 14 && hour <= 18) popBase = 45;
                     if (hour >= 0 && hour <= 5) popBase = 15;
                     const popNow = Math.min(95, Math.max(5, popBase + (seed % 25) - 12));
                     
-                    // 天氣狀況
                     let condition = '晴';
                     if (popNow > 60) condition = '雨';
                     else if (popNow > 40) condition = '多雲';
                     else if (popNow > 25) condition = '陰';
                     
-                    // 紫外線
                     const uvi = Math.min(11, Math.max(2, Math.floor(currentTemp / 3) + (seed % 4)));
                     let uviLevel = '低';
                     if (uvi >= 8) uviLevel = '過量';
                     else if (uvi >= 6) uviLevel = '高';
                     else if (uvi >= 4) uviLevel = '中';
                     
-                    // 風向風速
                     const windDirs = ['北', '東北', '東', '東南', '南', '西南', '西', '西北'];
                     const windDir = windDirs[seed % 8];
                     const windSpeed = (1.5 + (seed % 35) / 10).toFixed(1);
                     
-                    // 月相
                     const moonPhase = now.getDate() % 8;
                     
-                    // 月出月沒
                     const moonrise = `${Math.floor(12 + (seed % 8))}:${((seed * 3) % 60).toString().padStart(2,'0')}`;
                     const moonset = `${Math.floor(0 + (seed % 6))}:${((seed * 7) % 60).toString().padStart(2,'0')}`;
                     
-                    // 日出日落
                     const sunrise = `06:${(15 + (seed % 25)).toString().padStart(2,'0')}`;
                     const sunset = `18:${(20 + (seed % 35)).toString().padStart(2,'0')}`;
                     
-                    // 倒數
+                    // ========== 動態倒數：白天顯示日落、晚上顯示日出 ==========
                     const nowHr = now.getHours();
                     const nowMin = now.getMinutes();
                     const nowSec = now.getSeconds();
-                    let targetHr = nowHr < 12 ? 6 : 18;
-                    let targetMin = nowHr < 12 ? 30 : 30;
-                    let diffSec = ((targetHr - nowHr) * 3600) + ((targetMin - nowMin) * 60) - nowSec;
+
+                    // 解析日出日落小時分鐘 (固定格式 hh:mm)
+                    const sunriseParts = sunrise.split(':');
+                    const sunsetParts = sunset.split(':');
+                    const sunriseHr = parseInt(sunriseParts[0], 10);
+                    const sunriseMin = parseInt(sunriseParts[1], 10);
+                    const sunsetHr = parseInt(sunsetParts[0], 10);
+                    const sunsetMin = parseInt(sunsetParts[1], 10);
+
+                    // 計算目前時間的總秒數 (從0點起算)
+                    const currentTotalSec = nowHr * 3600 + nowMin * 60 + nowSec;
+                    const sunriseTotalSec = sunriseHr * 3600 + sunriseMin * 60;
+                    const sunsetTotalSec = sunsetHr * 3600 + sunsetMin * 60;
+
+                    let targetLabel = '';
+                    let targetTotalSec = 0;
+
+                    // 判斷白天或晚上：以日出日落時間為界
+                    // 簡單邏輯：若 current 介於日出與日落之間 => 白天 (顯示日落倒數)
+                    if (currentTotalSec >= sunriseTotalSec && currentTotalSec < sunsetTotalSec) {
+                        // 白天：倒數到今天的日落
+                        targetLabel = '距日落';
+                        targetTotalSec = sunsetTotalSec;
+                    } else {
+                        // 晚上：倒數到明天的日出 (若今天已過日落，則日出是明天)
+                        targetLabel = '距日出';
+                        targetTotalSec = sunriseTotalSec + 86400; // 加一天
+                    }
+
+                    let diffSec = targetTotalSec - currentTotalSec;
+                    // 若因為跨日計算為負（極少數情況），加一天確保正數
                     if (diffSec < 0) diffSec += 86400;
+
                     const hours = Math.floor(diffSec / 3600);
                     const mins = Math.floor((diffSec % 3600) / 60);
                     const secs = diffSec % 60;
+                    const countdownStr = `${hours}時${mins}分${secs}秒`;
+                    // ========== 倒數計算結束 ==========
                     
-                    // 每小時預報
                     const hourly = [];
                     for (let i = 0; i < 24; i++) {
                         const hourTime = (now.getHours() + i) % 24;
@@ -559,7 +580,6 @@
                         });
                     }
                     
-                    // 一週預報
                     const weekdays = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
                     const weekly = [];
                     for (let i = 0; i < 7; i++) {
@@ -573,7 +593,6 @@
                         });
                     }
                     
-                    // 更新資料
                     this.current = {
                         temp: currentTemp,
                         feelsLike: feelsLike,
@@ -591,7 +610,9 @@
                         moonset: moonset,
                         sunrise: sunrise,
                         sunset: sunset,
-                        countdown: `${hours}時${mins}分${secs}秒`
+                        // 使用動態產生的標籤與倒數
+                        countdownLabel: targetLabel,
+                        countdown: countdownStr
                     };
                     
                     this.hourly = hourly;
@@ -610,6 +631,6 @@
     });
 })();
 </script>
-<!-- 完全離線可用，標題會隨選擇地區動態變化，預設彰化縣田中鎮 -->
+<!-- 倒數已修改為：白天顯示日落倒數，晚上顯示日出倒數，只保留一個 -->
 </body>
 </html>
