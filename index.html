@@ -108,6 +108,13 @@
         .warning-active { background: #fee2e2; border-color: #dc2626; animation: warning-pulse 2s infinite; }
         @keyframes warning-pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
+        /* 地震專屬樣式 */
+        .earthquake-info { background: #fff5f5; border: 2px solid #ff4444; text-align: left; }
+        .eq-data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+        .eq-data-item { background: #fff0f0; padding: 10px; border-radius: 10px; border: 1px solid #ffcaca; }
+        .eq-val { font-size: 18px; color: #d32f2f; font-weight: 800; display: block; margin-top: 4px; }
+        .eq-loc { font-size: 14px; color: #333; margin-top: 5px; background: #fff; padding: 8px; border-radius: 8px; border: 1px dashed #ff4444; }
+
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; margin-bottom: 5px; background: #000; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0; }
         .video-label { font-size: 14px; color: #333; margin-top: 15px; margin-bottom: 8px; font-weight: bold; display: block; border-left: 4px solid #4A90E2; padding-left: 10px; text-align: left; }
@@ -237,6 +244,15 @@
         <span class="eq-warning">地震三步驟：趴下、掩護、穩住</span>
     </div>
 
+    <!-- 新增：地震即時資訊區塊 (位於地震直播下方) -->
+    <div class="card earthquake-info">
+        <strong style="display: block; text-align: center; color: #ff4444; margin-bottom: 10px;">📊 地震即時資訊 (氣象署資料)</strong>
+        <div id="eq-content">
+            <div style="text-align:center; font-size: 13px; color: #666;">獲取最新地震資訊中...</div>
+        </div>
+        <div id="eq-time" style="font-size: 11px; text-align: center; color: #888; margin-top: 10px;">最後同步時間：--</div>
+    </div>
+
     <!-- 彰化影像 -->
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📹 彰化縣即時直播專區</strong>
@@ -276,6 +292,36 @@
 <script>
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
     let weatherDataCache = null;
+
+    // 地震資訊抓取功能
+    async function fetchEarthquakeData() {
+        const eqContent = document.getElementById('eq-content');
+        const eqTime = document.getElementById('eq-time');
+        try {
+            const res = await fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`);
+            const data = await res.json();
+            if (data.success === "true" && data.records.Earthquake.length > 0) {
+                const eq = data.records.Earthquake[0].EarthquakeInfo;
+                eqContent.innerHTML = `
+                    <div style="font-weight:bold; color:#333; margin-bottom:5px;">🕒 時間：${eq.OriginTime}</div>
+                    <div class="eq-data-grid">
+                        <div class="eq-data-item">
+                            <span style="font-size:12px;color:#666;">芮氏規模</span>
+                            <span class="eq-val">${eq.EarthquakeMagnitude.MagnitudeValue}</span>
+                        </div>
+                        <div class="eq-data-item">
+                            <span style="font-size:12px;color:#666;">震源深度</span>
+                            <span class="eq-val">${eq.Depth.Value} km</span>
+                        </div>
+                    </div>
+                    <div class="eq-loc">📍 震央位置：${eq.Epicenter.Location}</div>
+                `;
+                eqTime.innerText = `最後同步時間：${new Date().toLocaleTimeString()}`;
+            }
+        } catch (e) {
+            eqContent.innerHTML = `<div style="text-align:center; color:red;">暫時無法獲取地震資訊</div>`;
+        }
+    }
 
     // 倒數日資料 (針對載具發票開獎名稱進行動態修改邏輯)
     const countdownEvents = [
@@ -494,9 +540,11 @@
         initCountdownCards();
         fetchWeatherData();
         fetchWarnings();
+        fetchEarthquakeData(); // 初始抓取地震資料
         updateLiveCounters();
         startRealtimeCounter(); // 啟動 Firebase 瀏覽計數器
         setInterval(updateLiveCounters, 1000);
+        setInterval(fetchEarthquakeData, 60000); // 每分鐘更新一次地震資料
         setInterval(() => updateSunCountdown(new Date()), 1000);
     };
 </script>
@@ -530,9 +578,10 @@
             });
         } catch (err) {
             console.error("Firebase Error:", err);
-            document.getElementById('total_view_display').innerText = "暫時無法顯示";
         }
     }
 </script>
+
 </body>
 </html>
+
