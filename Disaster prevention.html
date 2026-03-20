@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>中彰投 · 防災儀表板｜氣象特報+地震即時資訊</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(145deg, #d4e0f0 0%, #b8c7e0 100%);
+            min-height: 100vh;
+            padding: 20px 16px 50px 16px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            font-size: clamp(1.5rem, 6vw, 2.2rem);
+            background: linear-gradient(135deg, #1e3c72, #2b4c7c);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.05);
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        .header p {
+            color: #2c3e4e;
+            font-weight: 500;
+            margin-top: 8px;
+            background: rgba(255,255,240,0.7);
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+            font-size: clamp(0.75rem, 3vw, 0.9rem);
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+            background: rgba(0,0,0,0.35);
+            padding: 10px 20px;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            color: white;
+            font-weight: 500;
+            gap: 12px;
+        }
+        .update-time {
+            background: #0a2f44;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        .auto-badge {
+            background: #2e7d64;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .earthquake-section {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .quake-card {
+            background: rgba(20, 30, 45, 0.95);
+            backdrop-filter: blur(8px);
+            border-radius: 42px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
+            overflow: hidden;
+            border: 1px solid rgba(255,200,150,0.5);
+        }
+        .quake-header {
+            background: linear-gradient(120deg, #c44536, #a33324);
+            padding: 18px 24px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: clamp(1.2rem, 5vw, 1.7rem);
+            font-weight: 800;
+            flex-wrap: wrap;
+        }
+        .quake-header span:first-child {
+            font-size: clamp(1.5rem, 6vw, 2rem);
+        }
+        .quake-content {
+            padding: 20px 24px 28px;
+            color: #f0f3f8;
+        }
+        .latest-quake {
+            background: #2c3e4ecc;
+            border-radius: 32px;
+            padding: 18px 22px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ff8c42;
+        }
+        .quake-time {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            word-break: break-word;
+        }
+        .quake-loc {
+            font-size: clamp(1rem, 4vw, 1.4rem);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin: 10px 0;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+        .quake-mag-box {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .quake-mag {
+            display: inline-block;
+            background: #ff8c42;
+            padding: 6px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .quake-level {
+            display: inline-block;
+            background: #d45a3a;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .depth-info {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .no-quake {
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        .quake-list {
+            margin-top: 24px;
+            max-height: 320px;
+            overflow-y: auto;
+            border-top: 1px solid rgba(255,255,200,0.2);
+            padding-top: 18px;
+        }
+        .quake-list-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            display: block;
+        }
+        .quake-item {
+            background: rgba(0,0,0,0.35);
+            border-radius: 28px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .quake-item-left {
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex: 2;
+            min-width: 150px;
+        }
+        .quake-item-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .quake-item-mag {
+            background: #dc6b4a;
+            border-radius: 40px;
+            padding: 4px 14px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        .badge-small {
+            font-size: 0.7rem;
+            background: #00000066;
+            border-radius: 20px;
+            padding: 4px 12px;
+            white-space: nowrap;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            border-radius: 36px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.25);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.5);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-header {
+            padding: 16px 20px;
+            font-size: clamp(1.2rem, 5vw, 1.5rem);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 3px solid rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+        }
+        .card-content {
+            padding: 18px 20px 24px;
+            flex: 1;
+        }
+        .strong-wind-alert { background: linear-gradient(120deg, #f9d56e, #f8b56c); }
+        .strong-wind-watch { background: linear-gradient(120deg, #ffe2b5, #ffce94); }
+        .heavy-rain { background: linear-gradient(120deg, #9bc5e0, #6fa3c9); }
+        .torrential-rain { background: linear-gradient(120deg, #5b8cae, #3e6b8f); color: white; }
+        .cold-warning { background: linear-gradient(120deg, #b0d4ff, #7bb3db); }
+        
+        .city-tag {
+            display: inline-block;
+            background: rgba(0,0,0,0.08);
+            padding: 5px 12px;
+            border-radius: 40px;
+            margin: 0 6px 6px 0;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+        .city-active {
+            background: #d32f2f;
+            color: white;
+            font-weight: bold;
+        }
+        .warning-item {
+            background: #fff3e0;
+            border-left: 6px solid #f39c12;
+            padding: 10px 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+        }
+        .warning-title {
+            font-weight: 800;
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+        .warning-desc {
+            color: #2c3e50;
+            margin-top: 6px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .status-ok {
+            text-align: center;
+            padding: 20px 10px;
+            color: #2e7d32;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .footer-note {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #2c3e4e;
+            background: rgba(255,255,240,0.6);
+            padding: 12px;
+            border-radius: 60px;
+            line-height: 1.4;
+        }
+        .loading {
+            text-align: center;
+            padding: 30px 20px;
+            color: #1f3a4b;
+            font-weight: 500;
+        }
+        
+        .quake-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .quake-list::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        .quake-list::-webkit-scrollbar-thumb {
+            background: #ff8c42;
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 640px) {
+            body { padding: 16px 12px 40px 12px; }
+            .quake-item { flex-direction: column; align-items: flex-start; }
+            .quake-item-right { margin-top: 6px; }
+            .card-header { padding: 14px 16px; }
+            .card-content { padding: 14px 16px 18px; }
+            .latest-quake { padding: 14px 16px; }
+        }
+        @media (max-width: 480px) {
+            .info-bar { flex-direction: column; align-items: stretch; text-align: center; border-radius: 32px; }
+            .quake-mag-box { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🌋 中彰投 · 防災儀表板</h1>
+        <p>⚡ 陸上強風 · 大雨 · 豪雨 · 低溫特報 ＋ 地震即時資訊（自動更新）</p>
+    </div>
+    <div class="info-bar">
+        <span>📡 資料來源：交通部中央氣象署 API</span>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <span class="update-time" id="updateTimeDisplay">更新時間：--</span>
+            <span class="auto-badge">🔄 自動更新 (每10分鐘)</span>
+        </div>
+    </div>
+
+    <div class="grid" id="cardsGrid"></div>
+
+    <div class="earthquake-section">
+        <div class="quake-card">
+            <div class="quake-header">
+                <span>🌍</span> 地震即時資訊 · 顯著有感 & 小區域地震
+            </div>
+            <div class="quake-content" id="quakeContent">
+                <div class="loading">⏳ 正在獲取最新地震資料...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        📍 監測範圍：彰化縣、南投縣、台中市 ｜ 特報種類：陸上強風警報/特報、大雨/豪雨、低溫特報<br>
+        ⚠️ 地震規模顯示芮氏規模(ML)，自動每10分鐘更新。實際請以氣象署發布為準。
+    </div>
+</div>
+
+<script>
+    const API_KEY = "CWA-8C9C7FFC-7887-498F-88E5-6B6A78D8A802";
+    const WARNINGS_API_URL = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/W-C0033-001?Authorization=${API_KEY}&format=JSON`;
+    const EARTHQUAKE_API_URL = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=${API_KEY}&format=JSON`;
+    
+    const targetCounties = ["彰化縣", "南投縣", "臺中市", "台中市"];
+    const targetSet = new Set(["彰化縣", "南投縣", "臺中市", "台中市"]);
+    
+    const cardDefs = [
+        { id: "strongWindWarning", title: "🌬️ 陸上強風警報", typeKey: "strongWindWarning", matchPatterns: [/陸上強風警報/, /強風警報/] },
+        { id: "strongWindWatch", title: "💨 陸上強風特報", typeKey: "strongWindWatch", matchPatterns: [/陸上強風特報/, /強風特報/] },
+        { id: "heavyRain", title: "🌧️ 大雨特報", typeKey: "heavyRain", matchPatterns: [/大雨特報/] },
+        { id: "torrentialRain", title: "⛈️ 豪雨特報", typeKey: "torrentialRain", matchPatterns: [/豪雨特報/] },
+        { id: "cold", title: "❄️ 低溫特報", typeKey: "cold", matchPatterns: [/低溫特報/] }
+    ];
+    
+    let rawWarningsData = null;
+    let rawEarthquakeData = null;
+    let lastFetchTime = null;
+    let autoUpdateInterval = null;
+    
+    function normalizeCityName(name) {
+        return name === "臺中市" ? "台中市" : name;
+    }
+    
+    function extractWarningsByType(warningsData, patterns) {
+        if (!warningsData?.records?.warning) return [];
+        const warningList = warningsData.records.warning;
+        const matched = [];
+        for (const warning of warningList) {
+            const eventName = warning.event || "";
+            if (!patterns.some(pat => pat.test(eventName))) continue;
+            
+            let affectedCities = [];
+            const areas = warning.area || [];
+            for (let areaItem of areas) {
+                let areaName = areaItem.areaName || "";
+                if (targetSet.has(areaName) || targetSet.has(normalizeCityName(areaName))) {
+                    let cityShow = normalizeCityName(areaName);
+                    if (!affectedCities.includes(cityShow)) affectedCities.push(cityShow);
+                }
+            }
+            if (affectedCities.length === 0 && warning.areaDescription) {
+                const desc = warning.areaDescription;
+                for (let city of targetCounties) {
+                    if (desc.includes(city) || desc.includes(city.replace("臺","台"))) {
+                        let norm = normalizeCityName(city);
+                        if (!affectedCities.includes(norm)) affectedCities.push(norm);
+                    }
+                }
+            }
+            if (affectedCities.length > 0) {
+                matched.push({
+                    event: eventName,
+                    description: warning.description || warning.areaDescription || "請留意即時資訊",
+                    issueTime: warning.issueTime || warning.startTime || "近期發布",
+                    affectedAreas: affectedCities
+                });
+            }
+        }
+        return matched;
+    }
+    
+    function getWarningsByCardType() {
+        if (!rawWarningsData) return {};
+        const result = {};
+        for (let card of cardDefs) {
+            result[card.typeKey] = extractWarningsByType(rawWarningsData, card.matchPatterns);
+        }
+        return result;
+    }
+    
+    function renderWeatherCards() {
+        const container = document.getElementById("cardsGrid");
+        if (!container) return;
+        const warningsByType = getWarningsByCardType();
+        container.innerHTML = "";
+        for (let card of cardDefs) {
+            const items = warningsByType[card.typeKey] || [];
+            const cardDiv = document.createElement("div");
+            cardDiv.className = "card";
+            let headerClass = "";
+            if (card.typeKey === "strongWindWarning") headerClass = "strong-wind-alert";
+            else if (card.typeKey === "strongWindWatch") headerClass = "strong-wind-watch";
+            else if (card.typeKey === "heavyRain") headerClass = "heavy-rain";
+            else if (card.typeKey === "torrentialRain") headerClass = "torrential-rain";
+            else if (card.typeKey === "cold") headerClass = "cold-warning";
+            
+            const headerDiv = document.createElement("div");
+            headerDiv.className = `card-header ${headerClass}`;
+            headerDiv.innerHTML = `${card.title}`;
+            const contentDiv = document.createElement("div");
+            contentDiv.className = "card-content";
+            
+            if (items.length === 0) {
+                contentDiv.innerHTML = `<div class="status-ok">✅ 目前無影響彰化縣、南投縣、台中市的特報</div>`;
+            } else {
+                let allCities = new Set();
+                items.forEach(it => it.affectedAreas.forEach(c => allCities.add(c)));
+                const cityTagsHtml = Array.from(allCities).map(city => `<span class="city-tag city-active">📍 ${city}</span>`).join('');
+                let warningsHtml = `<div style="margin-bottom: 12px;"><strong>⚠️ 影響範圍：</strong><br> ${cityTagsHtml}</div>`;
+                warningsHtml += `<div><strong>📢 詳細特報：</strong></div>`;
+                for (let w of items) {
+                    warningsHtml += `
+                        <div class="warning-item">
+                            <div class="warning-title">🔔 ${w.event}</div>
+                            <div class="warning-desc">📝 ${w.description.length > 130 ? w.description.substring(0,130)+"…" : w.description}</div>
+                            <div class="warning-desc" style="font-size:0.7rem; margin-top:6px;">🕒 ${w.issueTime}</div>
+                        </div>
+                    `;
+                }
+                contentDiv.innerHTML = warningsHtml;
+            }
+            cardDiv.appendChild(headerDiv);
+            cardDiv.appendChild(contentDiv);
+            container.appendChild(cardDiv);
+        }
+    }
+    
+    // ==================== 地震資料解析 - 直接讀取API原始數值 ====================
+    // 根據氣象署 E-A0015-001 實際資料結構解析
+    function parseEarthquakeDetail(earthquake) {
+        // 初始化
+        let originTime = "時間待確認";
+        let magnitude = null;
+        let depth = null;
+        let epicenter = "位置待確認";
+        
+        // 1. 時間: EarthquakeInfo.OriginTime
+        if (earthquake.EarthquakeInfo?.OriginTime) {
+            originTime = earthquake.EarthquakeInfo.OriginTime;
+        } else if (earthquake.OriginTime) {
+            originTime = earthquake.OriginTime;
+        }
+        
+        // 2. 規模: EarthquakeInfo.Magnitude.MagnitudeValue (這是數值)
+        if (earthquake.EarthquakeInfo?.Magnitude?.MagnitudeValue !== undefined && earthquake.EarthquakeInfo.Magnitude.MagnitudeValue !== null) {
+            magnitude = earthquake.EarthquakeInfo.Magnitude.MagnitudeValue;
+        } else if (earthquake.Magnitude?.MagnitudeValue !== undefined) {
+            magnitude = earthquake.Magnitude.MagnitudeValue;
+        } else if (earthquake.MagnitudeValue !== undefined) {
+            magnitude = earthquake.MagnitudeValue;
+        }
+        
+        // 3. 深度: EarthquakeInfo.Depth.Value (數值，單位公里)
+        if (earthquake.EarthquakeInfo?.Depth?.Value !== undefined && earthquake.EarthquakeInfo.Depth.Value !== null) {
+            depth = earthquake.EarthquakeInfo.Depth.Value;
+        } else if (earthquake.Depth?.Value !== undefined) {
+            depth = earthquake.Depth.Value;
+        } else if (earthquake.DepthValue !== undefined) {
+            depth = earthquake.DepthValue;
+        }
+        
+        // 4. 震央位置: EarthquakeInfo.Epicenter.Location
+        if (earthquake.EarthquakeInfo?.Epicenter?.Location) {
+            epicenter = earthquake.EarthquakeInfo.Epicenter.Location;
+        } else if (earthquake.Epicenter?.Location) {
+            epicenter = earthquake.Epicenter.Location;
+        } else if (earthquake.EpicenterName) {
+            epicenter = earthquake.EpicenterName;
+        }
+        
+        // 格式化輸出 - 確保數值正確顯示
+        return {
+            originTime: originTime,
+            magnitude: (magnitude !== null && !isNaN(magnitude)) ? parseFloat(magnitude).toFixed(1) : null,
+            depth: (depth !== null && !isNaN(depth)) ? parseFloat(depth).toFixed(1) : null,
+            epicenter: epicenter
+        };
+    }
+    
+    function getMagnitudeLevel(mag) {
+        if (mag === null || mag === undefined) return "資料取得中";
+        const m = parseFloat(mag);
+        if (isNaN(m)) return "規模解析中";
+        if (m < 3.0) return "小區域地震";
+        if (m < 4.0) return "微震 (有感範圍小)";
+        if (m < 5.0) return "中級地震";
+        if (m < 6.0) return "強震";
+        return "劇烈地震";
+    }
+    
+    function renderEarthquakeInfo() {
+        const quakeContainer = document.getElementById("quakeContent");
+        if (!quakeContainer) return;
+        
+        if (!rawEarthquakeData?.records?.Earthquake) {
+            quakeContainer.innerHTML = `<div class="no-quake">⚠️ 地震資料暫時無法取得，系統自動重試中。</div>`;
+            return;
+        }
+        
+        const earthquakes = rawEarthquakeData.records.Earthquake;
+        if (!Array.isArray(earthquakes) || earthquakes.length === 0) {
+            quakeContainer.innerHTML = `<div class="no-quake">📭 目前無顯著地震報告或小區域地震資料。</div>`;
+            return;
+        }
+        
+        const recentQuakes = earthquakes.slice(0, 12);
+        const latest = recentQuakes[0];
+        const latestDetail = parseEarthquakeDetail(latest);
+        
+        // 顯示最新地震資訊
+        const magDisplay = (latestDetail.magnitude !== null) ? latestDetail.magnitude : "資料取得中";
+        const magLevelText = getMagnitudeLevel(latestDetail.magnitude);
+        const depthDisplay = (latestDetail.depth !== null) ? `${latestDetail.depth} 公里` : "資料取得中";
+        
+        // 地震分類
+        let category = "小區域地震";
+        if (latest.EarthquakeInfo?.EarthquakeCategory) {
+            category = latest.EarthquakeInfo.EarthquakeCategory;
+        } else if (latestDetail.magnitude !== null && latestDetail.magnitude >= 4.0) {
+            category = "顯著有感地震";
+        }
+        
+        let latestHtml = `
+            <div class="latest-quake">
+                <div class="quake-time">🕒 發震時間：${latestDetail.originTime}</div>
+                <div class="quake-loc">📍 震央位置：${latestDetail.epicenter}</div>
+                <div class="quake-mag-box">
+                    <span class="quake-mag">⚡ 芮氏規模 ${magDisplay}</span>
+                    <span class="quake-level">📊 ${magLevelText}</span>
+                    <span class="badge-small">${category}</span>
+                </div>
+                <div class="depth-info">📐 地震深度：${depthDisplay}</div>
+            </div>
+        `;
+        
+        // 歷史地震列表
+        let listHtml = `<div class="quake-list"><span class="quake-list-title">📋 近期地震紀錄 (最近${recentQuakes.length}筆)</span>`;
+        for (let i = 0; i < recentQuakes.length; i++) {
+            const q = recentQuakes[i];
+            const det = parseEarthquakeDetail(q);
+            const magVal = (det.magnitude !== null) ? det.magnitude : "取得中";
+            const levelText = getMagnitudeLevel(det.magnitude);
+            const timeShort = det.originTime.length > 16 ? det.originTime.substring(0, 16) : det.originTime;
+            
+            let cat = "小區域";
+            if (q.EarthquakeInfo?.EarthquakeCategory) {
+                cat = q.EarthquakeInfo.EarthquakeCategory;
+            } else if (det.magnitude !== null && det.magnitude >= 4.0) {
+                cat = "顯著有感";
+            }
+            
+            listHtml += `
+                <div class="quake-item">
+                    <div class="quake-item-left">
+                        <div>${timeShort}</div>
+                        <div style="font-size:0.75rem; opacity:0.8;">${det.epicenter.substring(0, 35)}</div>
+                    </div>
+                    <div class="quake-item-right">
+                        <span class="quake-item-mag">M ${magVal}</span>
+                        <span class="badge-small">${levelText}</span>
+                        <span class="badge-small">${cat}</span>
+                    </div>
+                </div>
+            `;
+        }
+        listHtml += `</div>`;
+        quakeContainer.innerHTML = latestHtml + listHtml;
+    }
+    
+    function updateTimestamp() {
+        const timeElem = document.getElementById("updateTimeDisplay");
+        if (timeElem && lastFetchTime) {
+            timeElem.innerText = `更新時間：${lastFetchTime}`;
+        }
+    }
+    
+    async function fetchWarnings() {
+        try {
+            const response = await fetch(WARNINGS_API_URL);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (!data?.records?.warning) {
+                rawWarningsData = { records: { warning: [] } };
+            } else {
+                rawWarningsData = data;
+            }
+        } catch (error) {
+            console.error("特報API錯誤:", error);
+            rawWarningsData = null;
+        }
+    }
+    
+    async function fetchEarthquake() {
+        try {
+            const response = await fetch(EARTHQUAKE_API_URL);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            
+            if (!data?.records?.Earthquake) {
+                rawEarthquakeData = { records: { Earthquake: [] } };
+            } else {
+                rawEarthquakeData = data;
+                // 除錯：印出第一筆地震的原始資料，確認數值存在
+                if (data.records.Earthquake.length > 0) {
+                    const first = data.records.Earthquake[0];
+                    console.log("=== 地震原始資料範例 ===");
+                    console.log("規模路徑:", first.EarthquakeInfo?.Magnitude?.MagnitudeValue);
+                    console.log("深度路徑:", first.EarthquakeInfo?.Depth?.Value);
+                    console.log("時間:", first.EarthquakeInfo?.OriginTime);
+                    console.log("震央:", first.EarthquakeInfo?.Epicenter?.Location);
+                    const parsed = parseEarthquakeDetail(first);
+                    console.log("解析後:", parsed);
+                }
+            }
+        } catch (error) {
+            console.error("地震API錯誤:", error);
+            rawEarthquakeData = null;
+        }
+    }
+    
+    async function fetchAllData() {
+        // 載入中顯示
+        const container = document.getElementById("cardsGrid");
+        if (container && (!rawWarningsData || container.children.length === 0)) {
+            container.innerHTML = `<div class="loading" style="grid-column:1/-1;">🌀 載入氣象特報資料中...</div>`;
+        }
+        const qc = document.getElementById("quakeContent");
+        if (qc && (!rawEarthquakeData || qc.innerHTML.includes("正在獲取"))) {
+            qc.innerHTML = `<div class="loading">⏳ 載入地震即時資訊中...</div>`;
+        }
+        
+        await Promise.all([fetchWarnings(), fetchEarthquake()]);
+        
+        const now = new Date();
+        lastFetchTime = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+        
+        renderWeatherCards();
+        renderEarthquakeInfo();
+        updateTimestamp();
+    }
+    
+    function startAutoRefresh() {
+        if (autoUpdateInterval) clearInterval(autoUpdateInterval);
+        autoUpdateInterval = setInterval(() => {
+            fetchAllData();
+        }, 10 * 60 * 1000);
+    }
+    
+    async function init() {
+        await fetchAllData();
+        startAutoRefresh();
+    }
+    
+    init();
+</script>
+</body>
+</html>
