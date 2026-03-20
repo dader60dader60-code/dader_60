@@ -39,7 +39,7 @@
         .container { width: 100%; max-width: 400px; }
         .profile-pic { width: 110px; height: 110px; border-radius: 50%; background-color: white; border: 3px solid white; margin: 10px auto 15px auto; display: block; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; text-shadow: 1px 1px 2px white; margin-bottom: 25px; }
-        .card, .line-section, .live-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
+        .card, .line-section, .live-section, .shuttle-section { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; text-decoration: none; color: #333; display: block; font-weight: bold; box-sizing: border-box; }
         .owner-ig { background: #fff5f5; border: 2px solid #fd5d93; color: #fd5d93; }
         .owner-tiktok { background: #000000; color: #ffffff; border: 2px solid #25F4EE; }
         
@@ -77,6 +77,11 @@
             50% { box-shadow: 0 0 20px #a777e3; }
             100% { box-shadow: 0 0 5px #6e8efb; }
         }
+
+        /* 達德校車查詢系統樣式 */
+        .shuttle-section { border: 2px solid #4A90E2; background: #f0f7ff; }
+        .shuttle-title { color: #4A90E2; font-size: 18px; margin-bottom: 10px; display: block; }
+        .shuttle-info { font-size: 13px; color: #555; text-align: left; font-weight: normal; line-height: 1.6; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #d1e3f8; }
 
         .yt-card { background: #fff1f1; border: 2px solid #ff0000; color: #ff0000; margin-bottom: 10px; }
         .qrcode-img { width: 180px; height: 180px; margin: 10px auto; display: block; border-radius: 10px; }
@@ -155,8 +160,20 @@
     <a href="https://www.instagram.com/channel/AbZByxGjVLjC7N7H/" target="_blank" class="card">📸 版主專區 (IG 頻道)</a>
     <a href="https://www.tiktok.com/@hbingzhe10.10" target="_blank" class="card owner-tiktok">🎵 版主抖音 (TikTok)</a>
     
-    <!-- 新增萬用工具箱按鈕 -->
+    <!-- 萬用工具箱按鈕 -->
     <a href="toolbox.html" target="_blank" class="card toolbox-card">🧰 萬用工具箱 </a>
+
+    <!-- 新增：達德校車查詢系統 -->
+    <div class="shuttle-section">
+        <a href="https://www.eup.tw/shuttle/entry_view.html?197" target="_blank" style="text-decoration: none;">
+            <strong class="shuttle-title">🚌 達德校車查詢系統</strong>
+        </a>
+        <div class="shuttle-info">
+            使用單位：220 (達德商工) 請輸入數字<br>
+            學號：校車編號 (例如 125 校車請輸入 125)<br>
+            密碼：tdvs 車號 000 (例如 125 校車請輸入 tdvs125000)
+        </div>
+    </div>
 
     <div class="line-section">
         <strong>官方 LINE ⚡</strong><br>
@@ -168,7 +185,7 @@
     <!-- 新增：倒數日系統 -->
     <a href="Countdown.html" target="_blank" class="card countdown-card">📅 倒數日系統 ⏳</a>
 
-    <!-- 新增：天氣查詢系統 -->
+    <!-- 新增：天氣即時查詢系統 -->
     <a href="weather.html" target="_blank" class="card weather-card">☀️ 天氣即時查詢系統 ☁️</a>
     
     <!-- 新增：防災儀表板 -->
@@ -193,7 +210,7 @@
         <span class="video-label">八卦山美景即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/RaTbGYKMUtk?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
         <span class="video-label">彰化八卦山大佛即時影像</span>
-        <div class="video-container"><iframe src="https://www.youtube.com/embed/dQioeg3uTiA?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+        <div class="video-container"><iframe src="https://www.youtube.com/embed/_Ld7P-hMWDc?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
         <span class="video-label">台灣彰化溪湖即時影像</span>
         <div class="video-container"><iframe src="https://www.youtube.com/embed/7vNt6dkNt6I?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
         <span class="video-label">彰化王功漁港即時影像</span>
@@ -204,6 +221,8 @@
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🎬 達德商工 YouTube 專區</strong>
         <a href="https://youtube.com/channel/UCmvPBFxN0SJw9ATLiajD9vQ?si=vD6X6CMUKx5RS_7n" target="_blank" class="card yt-card">靠北達德速度版⚡⚡⚡</a>
+        <a href="https://youtu.be/4cjaIKp_f50?si=KHUVBdntugOWpmYc" target="_blank" class="card yt-card">達德校歌</a>
+        <a href="https://youtu.be/8B8pj3l6jDw?si=0Ylm50sRUQEqSq7R" target="_blank" class="card yt-card">達德電子書宣導</a>
         <a href="https://youtube.com/channel/UCQi21ZNZ5tZkVuhMABjxOIw?si=EgnjHz6Pl4uiHiJ3" target="_blank" class="card yt-card">達德商工學務處專區</a>
         <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
