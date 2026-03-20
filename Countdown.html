@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活動與節慶倒數系統</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #a5d8e1; /* 淺藍色背景 */
+            font-family: 'Noto Sans TC', sans-serif;
+            padding: 20px;
+        }
+        .main-title {
+            color: #1a1a1a;
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: 0.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .card {
+            background-color: #1a1a1a;
+            border-radius: 2rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .timer-box {
+            border: 2px solid #eab308; /* 黃色邊框 */
+            border-radius: 1rem;
+            width: 75px;
+            height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(234, 179, 8, 0.05);
+        }
+        .progress-container {
+            height: 12px;
+            background-color: #333;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #eab308 0%, #ca8a04 100%);
+            transition: width 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="main-title">倒數系統</h1>
+
+    <div id="countdown-container">
+        <!-- 卡片會由 JS 動態生成 -->
+    </div>
+
+    <script>
+        // 取得下一個發票開獎日 (單數月25號 14:00)
+        function getNextInvoiceDate() {
+            const now = new Date();
+            let year = now.getFullYear();
+            let month = now.getMonth() + 1;
+
+            let targetMonth;
+            if (month % 2 === 0) {
+                targetMonth = month + 1;
+            } else {
+                const drawTime = new Date(year, month - 1, 25, 14, 0, 0);
+                if (now > drawTime) {
+                    targetMonth = month + 2;
+                } else {
+                    targetMonth = month;
+                }
+            }
+
+            if (targetMonth > 12) {
+                targetMonth -= 12;
+                year += 1;
+            }
+            return new Date(year, targetMonth - 1, 25, 14, 0, 0);
+        }
+
+        const rawEvents = [
+            { title: "📄 載具發票開獎", targetDate: getNextInvoiceDate(), message: "祝您中大獎！ 💰", totalDays: 60 },
+            { title: "📝 3/30~4/2 第一次段考", targetDate: "2026-03-30T00:00:00", message: "考試順利，加油！ 📖", totalDays: 30 },
+            { title: "🕯️ 4/3~4/6 清明連假", targetDate: "2026-04-03T00:00:00", message: "慎終追遠，假期愉快 🌿", totalDays: 30 },
+            { title: "🛠️ 4/12 在校生丙級檢定學科", targetDate: "2026-04-12T00:00:00", message: "證照拿起來！ 💪", totalDays: 20 },
+            { title: "🎓 4/27~4/30 第二次段考(三年級)", targetDate: "2026-04-27T00:00:00", message: "高三同學最後衝刺！ 🔥", totalDays: 30 },
+            { title: "🎤 5/5 才藝表演", targetDate: "2026-05-05T00:00:00", message: "展現你的才華吧！ ✨", totalDays: 20 },
+            { title: "📚 5/11~5/15 第二次段考(一、二年級)", targetDate: "2026-05-11T00:00:00", message: "保持平常心應考 ✍️", totalDays: 30 },
+            { title: "👩‍🎓 6/1 畢業日", targetDate: "2026-06-01T00:00:00", message: "畢業快樂，前程似錦 🎓", totalDays: 60 },
+            { title: "🛶 6/19~6/21 端午連假", targetDate: "2026-06-19T00:00:00", message: "吃粽子、看龍舟 🛶", totalDays: 30 },
+            { title: "📑 6/25~6/30 期末考", targetDate: "2026-06-25T00:00:00", message: "最後一戰，考完放暑假！ 🏖️", totalDays: 30 },
+            { title: "☀️ 6/30 結業式", targetDate: "2026-06-30T00:00:00", message: "暑假快樂，迎接夏日時光！ 🌊", totalDays: 365 },
+            { title: "🌕 9/25~9/28 中秋連假/教師節", targetDate: "2026-09-25T00:00:00", message: "中秋人團圓，假期愉快！ 🥮", totalDays: 365 },
+            { title: "🎂 10/10 版主生日", targetDate: "2026-10-10T00:00:00", message: "生日快樂！Happy Birthday! 🎉", totalDays: 365 },
+            { title: "🇹🇼 10/9~10/11 國慶連假", targetDate: "2026-10-09T00:00:00", message: "國慶連假放鬆去！ 🎈", totalDays: 365 },
+            { title: "🎆 1/1 元旦", targetDate: "2027-01-01T00:00:00", message: "新年快樂，全新開始！ ✨", totalDays: 365 }
+        ];
+
+        function updateCountdowns() {
+            const container = document.getElementById('countdown-container');
+            container.innerHTML = '';
+
+            const now = new Date();
+
+            const activeEvents = rawEvents
+                .map(e => ({ ...e, target: new Date(e.targetDate) }))
+                .filter(e => (e.target - now) > -(1000 * 60 * 60 * 24)) 
+                .sort((a, b) => a.target - b.target);
+
+            activeEvents.forEach((event) => {
+                const diff = event.target - now;
+
+                const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+                const hours = Math.max(0, Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+                const minutes = Math.max(0, Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
+                const seconds = Math.max(0, Math.floor((diff % (1000 * 60)) / 1000));
+
+                const progressWidth = Math.max(0, Math.min(100, (1 - (days / event.totalDays)) * 100));
+
+                const cardHtml = `
+                    <div class="card text-white">
+                        <div class="text-center text-xl font-bold mb-6">${event.title}</div>
+                        
+                        <div class="flex justify-center gap-3 mb-6">
+                            <div class="timer-box">
+                                <span class="text-2xl font-bold text-yellow-400">${days}</span>
+                                <span class="text-xs text-gray-400 mt-1">天</span>
+                            </div>
+                            <div class="timer-box">
+                                <span class="text-2xl font-bold text-yellow-400">${hours}</span>
+                                <span class="text-xs text-gray-400 mt-1">時</span>
+                            </div>
+                            <div class="timer-box">
+                                <span class="text-2xl font-bold text-yellow-400">${minutes}</span>
+                                <span class="text-xs text-gray-400 mt-1">分</span>
+                            </div>
+                            <div class="timer-box">
+                                <span class="text-2xl font-bold text-yellow-400">${seconds}</span>
+                                <span class="text-xs text-gray-400 mt-1">秒</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between text-xs text-gray-400 mb-2 px-1">
+                            <span>週期估計 (${event.totalDays}天)</span>
+                            <span>剩餘 ${days} 天</span>
+                        </div>
+                        
+                        <div class="progress-container mb-6">
+                            <div class="progress-bar" style="width: ${progressWidth}%"></div>
+                        </div>
+
+                        <div class="text-center italic text-yellow-400 text-sm">
+                            ${event.message}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+
+            if (activeEvents.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-600 mt-10">目前沒有即將到來的活動</div>';
+            }
+        }
+
+        setInterval(updateCountdowns, 1000);
+        updateCountdowns();
+    </script>
+</body>
+</html>
