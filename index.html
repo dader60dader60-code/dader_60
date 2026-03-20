@@ -93,6 +93,17 @@
             gap: 10px;
         }
 
+        /* 倒數日系統按鈕樣式 */
+        .countdown-card {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            color: #d32f2f;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
         /* 防災儀表板按鈕樣式 */
         .disaster-card {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
@@ -118,20 +129,6 @@
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
         .mute-hint { font-size: 12px; color: #666; margin-top: 10px; display: block; font-weight: normal; }
-
-        /* 倒數日黑色版面樣式 */
-        .new-countdown-box { background: transparent; padding: 0; box-shadow: none; border: none; }
-        .event-card { background: #1a1a1a; border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 6px 15px rgba(0,0,0,0.3); text-align: center; border: 1px solid #333; }
-        .event-title { font-size: 15px; color: #ffffff; margin-bottom: 12px; font-weight: bold; display: block; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
-        .timer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
-        .timer-unit-box { border: 1.5px solid #FFD700; border-radius: 12px; padding: 8px 2px; background: #262626; display: flex; flex-direction: column; align-items: center; }
-        .timer-val { font-size: 20px; font-weight: 800; color: #FFD700; font-family: 'Courier New', Courier, monospace; }
-        .timer-unit-label { font-size: 9px; color: #bbb; margin-top: 2px; }
-        .progress-container { margin: 25px 0 10px 0; position: relative; }
-        .progress-info { position: absolute; top: -18px; width: 100%; display: flex; justify-content: space-between; font-size: 11px; color: #999; font-weight: normal; }
-        .progress-bg { background: #333; height: 10px; border-radius: 10px; overflow: hidden; }
-        .progress-fill { background: linear-gradient(90deg, #FFD700, #B8860B); height: 100%; width: 0%; border-radius: 10px; transition: width 0.5s ease; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
-        .blessing { font-size: 12px; color: #FFD700; font-style: italic; font-weight: normal; margin-top: 5px; display: block; opacity: 0.9; }
 
         .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; color: black; text-align: center; padding: 10px 0; font-size: 14px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999; }
         .tutorial-card { background: #FFD700; color: #000; border: 2px solid #DAA520; }
@@ -167,6 +164,9 @@
         <a href="https://lin.ee/94g8LGJ" target="_blank" style="color: #00b900; text-decoration: none; display: block; margin: 10px 0;">👉 點我加入好友 👈</a>
         <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
+
+    <!-- 新增：倒數日系統 -->
+    <a href="Countdown.html" target="_blank" class="card countdown-card">📅 倒數日系統 ⏳</a>
 
     <!-- 新增：天氣查詢系統 -->
     <a href="weather.html" target="_blank" class="card weather-card">☀️ 天氣即時查詢系統 ☁️</a>
@@ -208,10 +208,6 @@
         <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
-    <!-- 倒數日專區 (黑色樣式) -->
-    <div id="countdown-area" class="new-countdown-box">
-        <!-- 內容由 JS 動態生成 -->
-    </div>
 </div>
 
 <div class="fixed-footer">
@@ -222,122 +218,6 @@
 <script>
     const API_KEY = "CWA-E16D81B4-7836-43CA-95E5-51D9A434B120";
 
-    // 倒數日資料 (針對載具發票開獎名稱進行動態修改邏輯)
-    const countdownEvents = [
-        { id: 'receipt', title: '🧾 載具發票開獎 (日期 14:00)', isReceipt: true, total: 60, wish: '祝大家發票中大獎，財源滾滾！💰' },
-        { id: 'exam1', title: '📝 3/30~4/2 第一次段考', date: '2026-03-30', total: 365, wish: '段考加油，分數衝衝衝！💪' },
-        { id: 'tomb', title: '🕯️ 4/3~4/6 清明連假', date: '2026-04-03', total: 365, wish: '連假愉快，注意交通安全！🚗' },
-        { id: 'c-test', title: '🛡️ 4/12 在校生丙級檢定學科', date: '2026-04-12', total: 365, wish: '丙檢學科必過，證照到手！🔥' },
-        { id: 'exam2-3', title: '📝 4/27~4/30 第二次段考(三年級)', date: '2026-04-27', total: 365, wish: '學長姐加油，最後衝刺！💪' },
-        { id: 'exam2-12', title: '📝 5/11~5/15 第二次段考(一、二年級)', date: '2026-05-11', total: 365, wish: '再接再厲，二段必勝！🔥' },
-        { id: 'grad', title: '🎓 6/1 畢業日', date: '2026-06-01', total: 365, wish: '畢業快樂，前程似錦！✨' },
-        { id: 'dragon', title: '🚣 6/19~6/21 端午連假', date: '2026-06-19', total: 365, wish: '端午吃粽子，也要記得讀書喔！🍙' },
-        { id: 'final', title: '📖 6/25~6/30 期末考', date: '2026-06-25', total: 365, wish: '這學期最後一戰，考完就放假！🏖️' },
-        { id: 'end', title: '☀️ 6/30 結業式', date: '2026-06-30', total: 365, wish: '暑假快樂，迎接夏日時光！🌊' },
-        { id: 'moon', title: '🥮 9/25~9/28 中秋連假/教師節', date: '2026-09-25', total: 365, wish: '中秋人團圓，假期愉快！🌕' },
-        { id: 'nat', title: '🇹🇼 10/9~10/11 國慶連假', date: '2026-10-09', total: 365, wish: '國慶連假放鬆去！🎈' },
-        { id: 'bday', title: '🎂 10/10 版主生日', date: '2026-10-10', isRecurring: true, total: 365, wish: '祝版主平安順利，生日快樂！⚡' },
-        { id: 'ny', title: '🎆 1/1 元旦', date: '2027-01-01', total: 365, wish: '新年新氣象，萬事如意！🎊' }
-    ];
-
-    function initCountdownCards() {
-        const area = document.getElementById('countdown-area');
-        countdownEvents.forEach(ev => {
-            const card = document.createElement('div');
-            card.className = 'event-card';
-            card.innerHTML = `
-                <span class="event-title" id="title-${ev.id}">${ev.title}</span>
-                <div class="timer-grid">
-                    <div class="timer-unit-box"><span class="timer-val" id="d-${ev.id}">-</span><span class="timer-unit-label">天</span></div>
-                    <div class="timer-unit-box"><span class="timer-val" id="h-${ev.id}">-</span><span class="timer-unit-label">時</span></div>
-                    <div class="timer-unit-box"><span class="timer-val" id="m-${ev.id}">-</span><span class="timer-unit-label">分</span></div>
-                    <div class="timer-unit-box"><span class="timer-val" id="s-${ev.id}">-</span><span class="timer-unit-label">秒</span></div>
-                </div>
-                <div class="progress-container">
-                    <div class="progress-info">
-                        <span id="label-total-${ev.id}">${ev.isReceipt ? '雙月週期' : '年度週期 (365天)'}</span>
-                        <span id="label-remain-${ev.id}">剩餘 -- 天</span>
-                    </div>
-                    <div class="progress-bg"><div class="progress-fill" id="bar-${ev.id}"></div></div>
-                </div>
-                <span class="blessing">${ev.wish}</span>
-            `;
-            area.appendChild(card);
-        });
-    }
-
-    function updateLiveCounters() {
-        const now = new Date();
-        countdownEvents.forEach(ev => {
-            let target;
-            
-            if (ev.isReceipt) {
-                let year = now.getFullYear();
-                let month = now.getMonth(); 
-                
-                let targetMonth;
-                if (month % 2 === 0) {
-                    targetMonth = month;
-                } else {
-                    targetMonth = month + 1;
-                }
-                
-                target = new Date(year, targetMonth, 25, 14, 0, 0);
-                
-                if (target < now) {
-                    targetMonth += 2;
-                    if (targetMonth > 11) {
-                        targetMonth = 0;
-                        year += 1;
-                    }
-                    target = new Date(year, targetMonth, 25, 14, 0, 0);
-                }
-                const titleElem = document.getElementById(`title-${ev.id}`);
-                if (titleElem) {
-                    titleElem.innerText = `🧾 載具發票開獎 (${targetMonth + 1}月25號 14:00)`;
-                }
-            } else if (ev.isRecurring) {
-                target = new Date(now.getFullYear(), 9, 10);
-                if (target < now) target.setFullYear(now.getFullYear() + 1);
-            } else {
-                target = new Date(ev.date + 'T00:00:00');
-            }
-
-            const diff = target - now;
-            const dElem = document.getElementById(`d-${ev.id}`);
-            const hElem = document.getElementById(`h-${ev.id}`);
-            const mElem = document.getElementById(`m-${ev.id}`);
-            const sElem = document.getElementById(`s-${ev.id}`);
-            const bar = document.getElementById(`bar-${ev.id}`);
-            const remLabel = document.getElementById(`label-remain-${ev.id}`);
-
-            if (diff <= 0) {
-                if (dElem) {
-                    [dElem, hElem, mElem, sElem].forEach(el => el.innerText = "0");
-                    bar.style.width = "100%";
-                    remLabel.innerText = "開獎中/已抵達！";
-                }
-            } else {
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                const mins = Math.floor((diff / (1000 * 60)) % 60);
-                const secs = Math.floor((diff / 1000) % 60);
-
-                if (dElem) {
-                    dElem.innerText = days;
-                    hElem.innerText = hours.toString().padStart(2, '0');
-                    mElem.innerText = mins.toString().padStart(2, '0');
-                    sElem.innerText = secs.toString().padStart(2, '0');
-
-                    const divisor = ev.isReceipt ? 60 : 365;
-                    const percent = Math.max(0, Math.min(100, (1 - (days / divisor)) * 100));
-                    bar.style.width = percent + "%";
-                    remLabel.innerText = `剩餘 ${days} 天`;
-                }
-            }
-        });
-    }
-
     function copyID() { navigator.clipboard.writeText("@768mnxcr").then(() => {
         const btn = document.querySelector('.line-id');
         btn.innerText = "✅ 已複製！"; setTimeout(() => btn.innerText = "複製 ID: @768mnxcr", 2000);
@@ -346,10 +226,7 @@
     function forceWeb(e) { e.preventDefault(); window.location.href = "https://tellonym.me/dader_.60?rel=web"; }
 
     window.onload = function() {
-        initCountdownCards();
-        updateLiveCounters();
         startRealtimeCounter(); // 啟動 Firebase 瀏覽計數器
-        setInterval(updateLiveCounters, 1000);
     };
 </script>
 
