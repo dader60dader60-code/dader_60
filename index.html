@@ -5,6 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>靠北達德速度版⚡⚡⚡</title>
     <style>
+        /* --- 開場動畫專用樣式 (不影響原始碼) --- */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e90ff, #87cefa);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000; /* 確保在最上層 */
+            transition: opacity 0.8s ease-out;
+        }
+
+        .splash-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin-bottom: 20px;
+            animation: splashRotate 2s linear infinite;
+        }
+
+        @keyframes splashRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .splash-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 1px 1px 3px rgba(0,0,0,0.3);
+            display: flex;
+            gap: 3px;
+        }
+
+        .splash-text span {
+            display: inline-block;
+            animation: splashJump 0.8s ease-in-out infinite alternate;
+        }
+
+        /* 文字跳動延遲 */
+        .splash-text span:nth-child(1) { animation-delay: 0.0s; }
+        .splash-text span:nth-child(2) { animation-delay: 0.1s; }
+        .splash-text span:nth-child(3) { animation-delay: 0.2s; }
+        .splash-text span:nth-child(4) { animation-delay: 0.3s; }
+        .splash-text span:nth-child(5) { animation-delay: 0.4s; }
+        .splash-text span:nth-child(6) { animation-delay: 0.5s; }
+        .splash-text span:nth-child(7) { animation-delay: 0.6s; }
+        .splash-text span:nth-child(8) { animation-delay: 0.7s; }
+        .splash-text span:nth-child(9) { animation-delay: 0.8s; }
+
+        @keyframes splashJump {
+            0% { transform: translateY(0); filter: brightness(1); }
+            100% { transform: translateY(-15px); filter: brightness(1.5); }
+        }
+
+        /* 動畫結束後隱藏標記 */
+        .fade-out { opacity: 0; pointer-events: none; }
+
+        /* --- 以下為您的原始樣式，完全不變動 --- */
         /* 新增：跑馬燈樣式 (固定在最上方) */
         .marquee-container {
             position: fixed;
@@ -144,6 +208,14 @@
 </head>
 <body>
 
+<!-- 新增：開場動畫 HTML (顯示 3 秒後自動隱藏) -->
+<div id="splash-screen">
+    <img src="avatar.jpg" alt="Logo" class="splash-logo">
+    <div class="splash-text">
+        <span>歡</span><span>迎</span><span>使</span><span>用</span><span>靠</span><span>北</span><span>達</span><span>德</span><span>⚡</span>
+    </div>
+</div>
+
 <!-- 新增跑馬燈 HTML -->
 <div class="marquee-container">
     <div class="marquee-text">
@@ -198,7 +270,6 @@
     <div class="live-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">🚨 地震即時直播專區</strong>
         <div class="video-container">
-            <!-- 增加參數 iv_load_policy=3 與 modestbranding=1 儘可能減少廣告元素 -->
             <iframe src="https://www.youtube.com/embed/KyT4qSK8lJo?autoplay=1&mute=1&rel=0&iv_load_policy=3&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         <span class="mute-hint">🔊 由於自動播放，影片預設靜音，如需聲音請點擊播放器手動開啟。</span>
@@ -254,8 +325,20 @@
 
     function forceWeb(e) { e.preventDefault(); window.location.href = "https://tellonym.me/dader_.60?rel=web"; }
 
+    // --- 新增：控制開場動畫消失的邏輯 ---
     window.onload = function() {
-        startRealtimeCounter(); // 啟動 Firebase 瀏覽計數器
+        startRealtimeCounter(); // 啟動您的 Firebase 瀏覽計數器
+
+        // 動畫顯示 3 秒後開始淡出
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            splash.classList.add('fade-out');
+            
+            // 淡出完畢後徹底移除，以免阻礙點擊
+            setTimeout(() => {
+                splash.style.display = 'none';
+            }, 800);
+        }, 3000);
     };
 </script>
 
