@@ -460,7 +460,8 @@
             current: {},
             hourly: [],
             weekly: [],
-            lastUpdated: ''
+            lastUpdated: '',
+            timer: null // 新增：用於存放每秒更新的定時器
         },
         computed: {
             displayCity() {
@@ -473,6 +474,17 @@
         mounted() {
             this.townList = townData[this.selectedCity] || [];
             this.updateWeather();
+            
+            // 新增：啟動每秒計時器，只針對秒數倒數做更新
+            this.timer = setInterval(() => {
+                if (this.loaded && this.current.sunrise && this.current.sunset) {
+                    this.tickCountdown();
+                }
+            }, 1000);
+        },
+        beforeDestroy() {
+            // 新增：組件銷毀前清除定時器
+            if (this.timer) clearInterval(this.timer);
         },
         methods: {
             onCityChange() {
@@ -525,49 +537,6 @@
                     const sunrise = `06:${(15 + (seed % 25)).toString().padStart(2,'0')}`;
                     const sunset = `18:${(20 + (seed % 35)).toString().padStart(2,'0')}`;
                     
-                    // ========== 動態倒數：白天顯示日落、晚上顯示日出 ==========
-                    const nowHr = now.getHours();
-                    const nowMin = now.getMinutes();
-                    const nowSec = now.getSeconds();
-
-                    // 解析日出日落小時分鐘 (固定格式 hh:mm)
-                    const sunriseParts = sunrise.split(':');
-                    const sunsetParts = sunset.split(':');
-                    const sunriseHr = parseInt(sunriseParts[0], 10);
-                    const sunriseMin = parseInt(sunriseParts[1], 10);
-                    const sunsetHr = parseInt(sunsetParts[0], 10);
-                    const sunsetMin = parseInt(sunsetParts[1], 10);
-
-                    // 計算目前時間的總秒數 (從0點起算)
-                    const currentTotalSec = nowHr * 3600 + nowMin * 60 + nowSec;
-                    const sunriseTotalSec = sunriseHr * 3600 + sunriseMin * 60;
-                    const sunsetTotalSec = sunsetHr * 3600 + sunsetMin * 60;
-
-                    let targetLabel = '';
-                    let targetTotalSec = 0;
-
-                    // 判斷白天或晚上：以日出日落時間為界
-                    // 簡單邏輯：若 current 介於日出與日落之間 => 白天 (顯示日落倒數)
-                    if (currentTotalSec >= sunriseTotalSec && currentTotalSec < sunsetTotalSec) {
-                        // 白天：倒數到今天的日落
-                        targetLabel = '距日落';
-                        targetTotalSec = sunsetTotalSec;
-                    } else {
-                        // 晚上：倒數到明天的日出 (若今天已過日落，則日出是明天)
-                        targetLabel = '距日出';
-                        targetTotalSec = sunriseTotalSec + 86400; // 加一天
-                    }
-
-                    let diffSec = targetTotalSec - currentTotalSec;
-                    // 若因為跨日計算為負（極少數情況），加一天確保正數
-                    if (diffSec < 0) diffSec += 86400;
-
-                    const hours = Math.floor(diffSec / 3600);
-                    const mins = Math.floor((diffSec % 3600) / 60);
-                    const secs = diffSec % 60;
-                    const countdownStr = `${hours}時${mins}分${secs}秒`;
-                    // ========== 倒數計算結束 ==========
-                    
                     const hourly = [];
                     for (let i = 0; i < 24; i++) {
                         const hourTime = (now.getHours() + i) % 24;
@@ -610,9 +579,8 @@
                         moonset: moonset,
                         sunrise: sunrise,
                         sunset: sunset,
-                        // 使用動態產生的標籤與倒數
-                        countdownLabel: targetLabel,
-                        countdown: countdownStr
+                        countdownLabel: '', // 初始為空，交給 tickCountdown 計算
+                        countdown: ''      // 初始為空
                     };
                     
                     this.hourly = hourly;
@@ -621,8 +589,53 @@
                     const d = new Date();
                     this.lastUpdated = `${d.getFullYear()}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getDate().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`;
                     
+                    this.tickCountdown(); // 載入後立即計算一次倒數
                     this.loaded = true;
                 }, 500);
+            },
+            // 新增：核心倒數逻辑，只變動秒數不重整網頁
+            tickCountdown() {
+                const now = new Date();
+                const nowHr = now.getHours();
+                const nowMin = now.getMinutes();
+                const nowSec = now.getSeconds();
+
+                const sunriseParts = this.current.sunrise.split(':');
+                const sunsetParts = this.current.sunset.split(':');
+                const sunriseHr = parseInt(sunriseParts[0], 10);
+                const sunriseMin = parseInt(sunriseParts[1], 10);
+                const sunsetHr = parseInt(sunsetParts[0], 10);
+                const sunsetMin = parseInt(sunsetParts[1], 10);
+
+                const currentTotalSec = nowHr * 3600 + nowMin * 60 + nowSec;
+                const sunriseTotalSec = sunriseHr * 3600 + sunriseMin * 60;
+                const sunsetTotalSec = sunsetHr * 3600 + sunsetMin * 60;
+
+                let targetLabel = '';
+                let targetTotalSec = 0;
+
+                if (currentTotalSec >= sunriseTotalSec && currentTotalSec < sunsetTotalSec) {
+                    targetLabel = '距日落';
+                    targetTotalSec = sunsetTotalSec;
+                } else {
+                    targetLabel = '距日出';
+                    if (currentTotalSec >= sunsetTotalSec) {
+                        targetTotalSec = sunriseTotalSec + 86400; 
+                    } else {
+                        targetTotalSec = sunriseTotalSec;
+                    }
+                }
+
+                let diffSec = targetTotalSec - currentTotalSec;
+                if (diffSec < 0) diffSec += 86400;
+
+                const hours = Math.floor(diffSec / 3600);
+                const mins = Math.floor((diffSec % 3600) / 60);
+                const secs = diffSec % 60;
+                
+                // 更新 Vue data 觸發 UI 自動跳動
+                this.current.countdownLabel = targetLabel;
+                this.current.countdown = `${hours}時${mins}分${secs}秒`;
             },
             moonPhaseIcon(phase) {
                 return moonPhaseMap[phase % moonPhaseMap.length]?.icon || '🌙';
@@ -631,6 +644,6 @@
     });
 })();
 </script>
-<!-- 倒數已修改為：白天顯示日落倒數，晚上顯示日出倒數，只保留一個 -->
+<!-- 倒數已修改為：白天顯示日落倒數，晚上顯示日出倒數，且秒數每秒自動更新 -->
 </body>
 </html>
