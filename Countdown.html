@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>活動與節慶倒數系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
@@ -10,50 +10,77 @@
         body {
             background-color: #a5d8e1; /* 淺藍色背景 */
             font-family: 'Noto Sans TC', sans-serif;
-            padding: 20px;
+            padding: 10px;
+            margin: 0;
+            min-height: 100vh;
         }
         .main-title {
             color: #1a1a1a;
-            font-size: 2.5rem;
+            font-size: clamp(1.5rem, 8vw, 2.5rem); /* 自適應標題大小 */
             font-weight: 800;
             text-align: center;
-            margin-bottom: 2rem;
+            margin: 1.5rem 0;
             letter-spacing: 0.2rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* 自動填滿，最窄320px */
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
         .card {
             background-color: #1a1a1a;
-            border-radius: 2rem;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
             border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .timer-box {
-            border: 2px solid #eab308; /* 黃色邊框 */
-            border-radius: 1rem;
-            width: 75px;
-            height: 90px;
+            border: 2px solid #eab308;
+            border-radius: 0.75rem;
+            flex: 1; /* 讓方塊等寬 */
+            aspect-ratio: 1 / 1.1; /* 保持比例 */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             background: rgba(234, 179, 8, 0.05);
+            min-width: 0; /* 防止溢出 */
+        }
+        .timer-value {
+            font-size: clamp(1.1rem, 4vw, 1.5rem);
+            font-weight: 700;
+            color: #eab308;
+        }
+        .timer-label {
+            font-size: 0.7rem;
+            color: #9ca3af;
+            margin-top: 2px;
         }
         .progress-container {
-            height: 12px;
+            height: 10px;
             background-color: #333;
-            border-radius: 6px;
+            border-radius: 5px;
             overflow: hidden;
-            position: relative;
         }
         .progress-bar {
             height: 100%;
             background: linear-gradient(90deg, #eab308 0%, #ca8a04 100%);
-            transition: width 1s ease-in-out;
+            transition: width 1s linear;
+        }
+        /* 手機版微調 */
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.25rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr; /* 強制單欄 */
+            }
         }
     </style>
 </head>
@@ -61,36 +88,28 @@
 
     <h1 class="main-title">倒數系統</h1>
 
-    <div id="countdown-container">
+    <div id="countdown-container" class="cards-grid">
         <!-- 卡片會由 JS 動態生成 -->
     </div>
 
     <script>
-        // 取得下一個發票開獎日 (單數月25號 14:00)
         function getNextInvoiceDate() {
             const now = new Date();
             let year = now.getFullYear();
             let month = now.getMonth() + 1;
-
             let targetMonth;
             if (month % 2 === 0) {
                 targetMonth = month + 1;
             } else {
                 const drawTime = new Date(year, month - 1, 25, 14, 0, 0);
-                if (now > drawTime) {
-                    targetMonth = month + 2;
-                } else {
-                    targetMonth = month;
-                }
+                if (now > drawTime) targetMonth = month + 2;
+                else targetMonth = month;
             }
-
-            if (targetMonth > 12) {
-                targetMonth -= 12;
-                year += 1;
-            }
+            if (targetMonth > 12) { targetMonth -= 12; year += 1; }
             return new Date(year, targetMonth - 1, 25, 14, 0, 0);
         }
 
+        // 活動資料
         const rawEvents = [
             { title: "📄 載具發票開獎", targetDate: getNextInvoiceDate(), message: "祝您中大獎！ 💰", totalDays: 60 },
             { title: "📝 3/30~4/2 第一次段考", targetDate: "2026-03-30T00:00:00", message: "考試順利，加油！ 📖", totalDays: 30 },
@@ -111,8 +130,6 @@
 
         function updateCountdowns() {
             const container = document.getElementById('countdown-container');
-            container.innerHTML = '';
-
             const now = new Date();
 
             const activeEvents = rawEvents
@@ -120,9 +137,13 @@
                 .filter(e => (e.target - now) > -(1000 * 60 * 60 * 24)) 
                 .sort((a, b) => a.target - b.target);
 
-            activeEvents.forEach((event) => {
-                const diff = event.target - now;
+            // 僅在初始化或長度改變時重新渲染容器，避免每秒閃爍
+            if (container.children.length !== activeEvents.length) {
+                container.innerHTML = activeEvents.map((_, i) => `<div id="event-card-${i}"></div>`).join('');
+            }
 
+            activeEvents.forEach((event, i) => {
+                const diff = event.target - now;
                 const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
                 const hours = Math.max(0, Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
                 const minutes = Math.max(0, Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
@@ -130,48 +151,50 @@
 
                 const progressWidth = Math.max(0, Math.min(100, (1 - (days / event.totalDays)) * 100));
 
-                const cardHtml = `
-                    <div class="card text-white">
-                        <div class="text-center text-xl font-bold mb-6">${event.title}</div>
-                        
-                        <div class="flex justify-center gap-3 mb-6">
-                            <div class="timer-box">
-                                <span class="text-2xl font-bold text-yellow-400">${days}</span>
-                                <span class="text-xs text-gray-400 mt-1">天</span>
+                const cardElement = document.getElementById(`event-card-${i}`);
+                if (cardElement) {
+                    cardElement.innerHTML = `
+                        <div class="card text-white h-full">
+                            <div class="text-center text-lg font-bold mb-4 min-h-[3rem] flex items-center justify-center">${event.title}</div>
+                            
+                            <div class="flex justify-between gap-2 mb-4">
+                                <div class="timer-box">
+                                    <span class="timer-value">${days}</span>
+                                    <span class="timer-label">天</span>
+                                </div>
+                                <div class="timer-box">
+                                    <span class="timer-value">${hours}</span>
+                                    <span class="timer-label">時</span>
+                                </div>
+                                <div class="timer-box">
+                                    <span class="timer-value">${minutes}</span>
+                                    <span class="timer-label">分</span>
+                                </div>
+                                <div class="timer-box">
+                                    <span class="timer-value">${seconds}</span>
+                                    <span class="timer-label">秒</span>
+                                </div>
                             </div>
-                            <div class="timer-box">
-                                <span class="text-2xl font-bold text-yellow-400">${hours}</span>
-                                <span class="text-xs text-gray-400 mt-1">時</span>
-                            </div>
-                            <div class="timer-box">
-                                <span class="text-2xl font-bold text-yellow-400">${minutes}</span>
-                                <span class="text-xs text-gray-400 mt-1">分</span>
-                            </div>
-                            <div class="timer-box">
-                                <span class="text-2xl font-bold text-yellow-400">${seconds}</span>
-                                <span class="text-xs text-gray-400 mt-1">秒</span>
-                            </div>
-                        </div>
 
-                        <div class="flex justify-between text-xs text-gray-400 mb-2 px-1">
-                            <span>週期估計 (${event.totalDays}天)</span>
-                            <span>剩餘 ${days} 天</span>
-                        </div>
-                        
-                        <div class="progress-container mb-6">
-                            <div class="progress-bar" style="width: ${progressWidth}%"></div>
-                        </div>
+                            <div class="flex justify-between text-[10px] text-gray-400 mb-1">
+                                <span>進度 (${event.totalDays}天)</span>
+                                <span>剩 ${days} 天</span>
+                            </div>
+                            
+                            <div class="progress-container mb-4">
+                                <div class="progress-bar" style="width: ${progressWidth}%"></div>
+                            </div>
 
-                        <div class="text-center italic text-yellow-400 text-sm">
-                            ${event.message}
+                            <div class="text-center italic text-yellow-400 text-xs">
+                                ${event.message}
+                            </div>
                         </div>
-                    </div>
-                `;
-                container.innerHTML += cardHtml;
+                    `;
+                }
             });
 
             if (activeEvents.length === 0) {
-                container.innerHTML = '<div class="text-center text-gray-600 mt-10">目前沒有即將到來的活動</div>';
+                container.innerHTML = '<div class="col-span-full text-center text-gray-700 font-bold mt-10 text-xl">目前沒有活動</div>';
             }
         }
 
