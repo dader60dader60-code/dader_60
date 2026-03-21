@@ -13,6 +13,7 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 10000; 
             transition: opacity 0.5s ease;
+            perspective: 1000px;
         }
         .splash-logo-box {
             perspective: 1000px;
@@ -26,10 +27,11 @@
                 logo-spin-v 2s linear 2s 1;
         }
         
-        /* 逐字波動樣式 */
+        /* 逐字波動與旋轉樣式 */
         .wave-text {
             display: flex;
-            gap: 2px;
+            gap: 5px;
+            perspective: 1000px;
         }
         .wave-text span {
             display: inline-block;
@@ -37,7 +39,10 @@
             font-weight: bold;
             color: #333;
             text-shadow: 0 0 10px rgba(255,255,255,0.8);
-            animation: word-wave 1s ease-in-out infinite;
+            /* 同時執行波動(wave)與旋轉(rotate)動畫 */
+            animation: 
+                word-wave 1s ease-in-out infinite,
+                word-rotate 2.5s linear infinite;
         }
 
         @keyframes logo-spin-h { 
@@ -48,9 +53,17 @@
             from { transform: rotateX(0deg); } 
             to { transform: rotateX(720deg); } 
         }
+        
+        /* 上下波動動畫 */
         @keyframes word-wave {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-15px); color: #ff4500; }
+        }
+
+        /* 3D 旋轉動畫 */
+        @keyframes word-rotate {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
         }
 
         /* --- 以下為你原本的原始碼樣式，完全保留 --- */
@@ -198,7 +211,7 @@
     <div class="splash-logo-box">
         <img src="avatar.jpg" alt="Logo" class="splash-logo">
     </div>
-    <!-- 逐字波動效果 -->
+    <!-- 逐字波動與 3D 旋轉效果 -->
     <div class="wave-text">
         <span style="animation-delay: 0.1s;">歡</span>
         <span style="animation-delay: 0.2s;">迎</span>
@@ -212,7 +225,7 @@
     </div>
 </div>
 
-<!-- 新增跑馬燈 HTML -->
+<!-- 原本的跑馬燈 HTML -->
 <div class="marquee-container">
     <div class="marquee-text">
         因版主住院調養關係版主位置會暫時由副版主代理一段時間，其餘作業會由副版主暫時領導小編一同完成不會因版主住院調養而停工，不確定什麼時候會出院會再另行通知，等小編的通知有任何問題歡迎詢問Ig 後台或是官方賴id:@768mnxcr(記得要打@)
@@ -234,7 +247,7 @@
     <!-- 萬用工具箱按鈕 -->
     <a href="toolbox.html" target="_blank" class="card toolbox-card">🧰 萬用工具箱 </a>
 
-    <!-- 新增：達德校車查詢系統 -->
+    <!-- 原本的達德校車查詢系統 -->
     <div class="shuttle-section">
         <a href="https://www.eup.tw/shuttle/entry_view.html?197" target="_blank" style="text-decoration: none;">
             <strong class="shuttle-title">🚌 達德校車查詢系統</strong>
@@ -253,13 +266,13 @@
         <div class="line-id" onclick="copyID()">複製 ID: @768mnxcr</div>
     </div>
 
-    <!-- 新增：倒數日系統 -->
+    <!-- 原本的倒數日系統 -->
     <a href="Countdown.html" target="_blank" class="card countdown-card">📅 倒數日系統 ⏳</a>
 
-    <!-- 新增：天氣即時查詢系統 -->
+    <!-- 原本的天氣即時查詢系統 -->
     <a href="weather.html" target="_blank" class="card weather-card">☀️ 天氣即時查詢系統 ☁️</a>
     
-    <!-- 新增：防災儀表板 -->
+    <!-- 原本的防災儀表板 -->
     <a href="disaster.html" target="_blank" class="card disaster-card">📢 防災儀表板 🛡️</a>
 
     <!-- 地震直播 -->
@@ -298,7 +311,7 @@
         <a href="https://youtube.com/@dader520?si=YjGZfEZ0W1ysRggB" target="_blank" class="card yt-card">達德商工專區</a>
     </div>
 
-    <!-- 新增：意見改善單專區 (獨立區塊) -->
+    <!-- 原本的意見改善單專區 -->
     <div class="live-section feedback-section">
         <strong style="display: block; margin-bottom: 15px; text-align: center;">📝 意見回饋</strong>
         <a href="https://forms.gle/2BeEDdipjShpKbzh7" target="_blank" class="card" style="background: #666; color: white; border: none;">點此填寫意見改善單</a>
@@ -324,7 +337,7 @@
     window.onload = function() {
         startRealtimeCounter(); 
 
-        // 4秒後自動隱藏動畫層
+        // 4秒後自動隱藏啟動動畫層
         setTimeout(() => {
             const splash = document.getElementById('splash-overlay');
             if (splash) {
@@ -337,7 +350,7 @@
     };
 </script>
 
-<!-- Firebase SDK 嵌入 -->
+<!-- Firebase SDK 嵌入 (不影響原本邏輯) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 <script>
@@ -351,10 +364,12 @@
             const db = firebase.database();
             const viewsRef = db.ref('total_views');
 
+            // 增加瀏覽次數
             viewsRef.transaction((currentValue) => {
                 return (currentValue || 0) + 1;
             });
 
+            // 實時監聽並更新 UI
             viewsRef.on('value', (snapshot) => {
                 const count = snapshot.val();
                 const viewElem = document.getElementById('total_view_display');
