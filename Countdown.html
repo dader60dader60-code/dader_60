@@ -101,6 +101,7 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         .home-float-btn:hover {
             transform: translateY(-5px);
@@ -117,8 +118,8 @@
         <!-- 卡片會由 JS 動態生成 -->
     </div>
 
-    <!-- 新增：回首頁按鈕 -->
-    <a href="index.html" class="home-float-btn">
+    <!-- 修改：使用 history.back() 執行「上一頁」動作 -->
+    <a onclick="history.back()" class="home-float-btn">
         <span>🏠</span> 回首頁
     </a>
 
