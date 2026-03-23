@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歡迎使用靠北達德⚡</title>
+    <style>
+        :root {
+            --shiny-yellow: #ffff00;
+            --deep-blue: #003366; /* 背景藍色 */
+            --rotate-speed: 2s;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--deep-blue); /* 這裡是你要的藍色背景 */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            perspective: 1200px;
+            font-family: "Microsoft JhengHei", sans-serif;
+        }
+
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6vh;
+            width: 100%;
+        }
+
+        /* --- 圖片區塊 (保留你的圖片並旋轉) --- */
+        .logo-box {
+            width: 45vw;
+            height: 45vw;
+            max-width: 180px;
+            max-height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            /* 動作：左右旋轉 -> 上下旋轉 */
+            animation: 
+                rotate-y var(--rotate-speed) linear infinite,
+                rotate-x var(--rotate-speed) linear infinite var(--rotate-speed);
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 確保你的 avatar.jpg 填滿圓形 */
+        }
+
+        /* --- 文字容器 --- */
+        .text-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* --- 閃亮跳動文字 --- */
+        .char {
+            display: inline-block;
+            font-size: clamp(1.8rem, 10vw, 3.5rem);
+            font-weight: 900;
+            color: var(--shiny-yellow);
+            margin: 0 4px;
+            /* 核心：文字閃爍與跳動同步 */
+            animation: individual-jump-shiny 0.8s ease-in-out infinite;
+        }
+
+        /* 圖片旋轉定義 */
+        @keyframes rotate-y {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(720deg); }
+        }
+        @keyframes rotate-x {
+            0% { transform: rotateX(0deg); }
+            100% { transform: rotateX(720deg); }
+        }
+
+        /* 文字：向上跳動 + 極致閃亮效果 */
+        @keyframes individual-jump-shiny {
+            0%, 100% { 
+                transform: translateY(0); 
+                filter: brightness(1);
+                text-shadow: 0 0 10px var(--shiny-yellow);
+            }
+            50% { 
+                transform: translateY(-30px); /* 向上跳 */
+                filter: brightness(2); /* 變超亮 */
+                /* 多層發光陰影 */
+                text-shadow: 
+                    0 0 20px var(--shiny-yellow), 
+                    0 0 40px #fff, 
+                    0 0 60px var(--shiny-yellow);
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <div class="logo-box">
+            <img src="avatar.jpg" alt="Logo">
+        </div>
+
+        <div class="text-container" id="animatedText">歡迎使用靠北達德⚡</div>
+    </div>
+
+    <script>
+        const textElement = document.getElementById('animatedText');
+        const text = textElement.innerText;
+        textElement.innerHTML = '';
+
+        [...text].forEach((char, index) => {
+            const span = document.createElement('span');
+            span.innerText = char;
+            span.className = 'char';
+            // 波浪跳動延遲
+            span.style.animationDelay = `${index * 0.1}s`;
+            textElement.appendChild(span);
+        });
+
+        // 8秒後自動進入原本的首頁
+        setTimeout(() => {
+            window.location.href = "home.html"; 
+        }, 8000);
+    </script>
+</body>
+</html>
