@@ -82,6 +82,31 @@
                 grid-template-columns: 1fr; /* 強制單欄 */
             }
         }
+
+        /* 新增：回首頁懸浮按鈕樣式 */
+        .home-float-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: #1a1a1a;
+            color: #eab308;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 2px solid #eab308;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .home-float-btn:hover {
+            transform: translateY(-5px);
+            background-color: #eab308;
+            color: #1a1a1a;
+        }
     </style>
 </head>
 <body>
@@ -91,6 +116,11 @@
     <div id="countdown-container" class="cards-grid">
         <!-- 卡片會由 JS 動態生成 -->
     </div>
+
+    <!-- 新增：回首頁按鈕 -->
+    <a href="index.html" class="home-float-btn">
+        <span>🏠</span> 回首頁
+    </a>
 
     <script>
         function getNextInvoiceDate() {
